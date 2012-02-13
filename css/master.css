@@ -1,0 +1,126 @@
+/*
+
+	FLOWISH, a Flowur project.
+	http://www.flowur.me
+	VERSION 0.1 (alpha)
+
+	
+	CONTENTS ----------
+	
+        1.BODY
+	    2.DEFAULT STYLING
+	    3.HEADINGS
+	    4.LINKS
+	    5.IMAGES
+	    6.LAYOUT
+	    7.BRANDING/MASTHEAD
+	    8.NAVIGATION
+	    9.SITEINFO/FOOTER
+	    10.GLOBAL ELEMENTS
+	    11.HOMEPAGE
+	    12.ABOUT
+	    13.JOURNAL
+	    14.PRESS
+	    15.EQUIPMENT
+	    16.SPONSORS
+	    17.CONTACT
+	    18.USER MESSAGE
+
+    -------------------
+    
+    COLORS ------------
+    
+        blue #243757
+        dark blue #222c36
+        light grey #eeeeee
+        light blue #e6f1fa
+        orange #ff6600
+	light grey #f4f4f4 (background)
+    
+    -------------------
+    
+	Copyright 2011. All rights reserved.
+*/
+
+body
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #000000;
+	font-size: 62.5%;
+	background: #f4f4f4;
+	line-height: 10px;
+}
+
+h1
+{
+	font-size: 32px;
+	text-transform: uppercase;
+}
+
+h2
+{
+	font-size: 24px;
+}
+
+/* =links */
+
+a:link, a:visited
+{
+	color: #336699;
+	outline: none;
+}
+
+a:hover {color: #3399cc;}
+
+/* =structure
+------------------------------------------------------------*/
+
+#wrap{}
+#header{}
+#main{}
+#secondary{}
+#footer{}
+
+/* =header
+------------------------------------------------------------*/
+
+#logo{}
+
+/* =nav */
+
+#nav{}
+
+/* =main
+------------------------------------------------------------*/
+#main
+{
+	float: left;
+	width: 350px;
+}
+/* =secondary
+------------------------------------------------------------*/
+/* =footer
+------------------------------------------------------------*/
+/* =miscellaneous
+------------------------------------------------------------*/
+
+hr, .hide
+{
+	display: none;
+}
+
+a img
+{
+	border: none;
+}
+
+/* =clearfix renamed as group */
+
+.group:after
+{
+	content: ",";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
