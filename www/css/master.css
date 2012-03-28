@@ -1,0 +1,442 @@
+/**
+ *	GREY, a Flowur project.
+ *	http://flowur.me
+ *	VERSION 0.1 (alpha)
+ *
+ *	
+ *	CONTENTS ----------
+ *	
+ *      1.BODY
+ *	    2.DEFAULT STYLING
+ *	    3.HEADINGS
+ *
+ *   -------------------
+ *   
+ *   COLORS ------------
+ *   
+ *	black		75% opacity
+ *	black		25% opacity
+ *	
+ *	dark grey	#333333
+ *	turquoise	#00ccff;
+ *	light grey	#fafafa		(background)
+ *	lighy grey	#e0e0e0		(borders)
+ *   
+ *   -------------------
+ *   
+ *	Copyright 2012. All rights reserved.
+ */
+
+body {font-family: "Liberation Sans", Arial, sans-serif; color: #000000; font-size: 12px; background: #fafafa;}
+
+h1 {}
+h2 {font-size: 24px;}
+h3 {/*padding: 12px 0 6px 0;*/ font-size: 16px; line-height: 36px;}
+
+b{font-weight: bold;}
+
+::selection {background: #e0e0e0;}
+::-moz-selection {background: #e0e0e0;}
+h1, img, ul#navigation, ul#links{-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -o-user-select: none; user-select: none;}
+
+/* =wraps
+------------------------------------------------------------------------------*/
+.wrap
+{
+	width: 1008px;
+	margin: 0 auto;
+}
+
+/* =fixed header
+------------------------------------------------------------------------------*/
+#fixed-header
+{
+	position: fixed;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 35px;
+	/*background: transparent url(/images/fixed-header_bg.png);*/
+	background: #000000;
+
+	/* For web browsers who care */
+	opacity: 0.75;
+	/* For IE 5-7 */
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
+	/* For IE 8 (and 9, 10, 11?). Don't miss the added quotes */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+	
+	/* adopted from http://robertnyman.com/2008/09/16/you-want-css-opacity-to-go-with-that-well-suit-yourself/ */
+	font-size: 12px;
+	line-height: 36px;
+	color: #ffffff;
+	border-bottom: 1px solid #ffffff;
+	overflow: hidden;
+}
+
+#fixed-header p
+{
+	margin: 0 0 0 8px;
+	padding: 0;
+	z-index: 10;
+	display: block;
+	float: left;
+}
+
+ul#links
+{
+	height: 36px;
+	list-style: none;
+}
+
+	ul#links li
+	{
+		display: inline-block;
+		float: right;
+		text-align: center;
+	}
+
+	ul#links li a, ul#links a:visited
+	{
+		padding: 0 16px;
+		display: block;
+		text-decoration: none;
+		color: #ffffff;
+	}
+	
+	ul#links li a:hover, ul#links li a:active
+	{
+		color: #00ccff;
+	}
+
+/* =header
+------------------------------------------------------------------------------*/
+#header
+{
+	position: relative;
+	height: 191px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+@font-face 
+{  
+	font-family: "Tetre";  
+	src: url(/fonts/tetre_extra_bold.eot); /* IE */  
+	src: local("Tetre"), url( /fonts/tetre_extra_bold.ttf ) format("truetype"); /* non-IE */  
+}
+
+#header h1
+{
+	padding-top: 131px;
+	font-family: Tetre, Georgia, serif;
+	font-size: 48px;
+}
+
+#header h1 em
+{
+	color: #00ccff;
+}
+
+	#header a, #header a:visited, #header a:hover, #header a:active
+	{
+		color: #000000;
+		text-decoration: none;
+	}
+
+
+img#logo, ul#navigation
+{
+	position: absolute;
+}
+
+img#logo
+{
+	bottom: 35px;
+}
+
+/* =navigation */
+
+ul#navigation 
+{
+	bottom: 11px;
+	right: 0;
+}
+
+	ul#navigation li 
+	{
+		display: inline;
+		float: right;
+		text-align: center;
+	}
+	
+	ul#navigation li a.learn, ul#navigation li a.browse, ul#navigation li a.create
+	{ 
+		margin-right: 8px
+	}
+
+	ul#navigation li a, ul#navigation li a:visited
+	{
+		display: block;
+		width: 84px;
+		height: 36px;
+		font-size: 12px;
+		text-decoration: none;
+		color: #666666;
+		line-height: 38px;
+	}
+
+	ul#navigation li a.selected
+	{
+		background: url(/images/navigation_background_selected.png) no-repeat center center;
+		color: #ffffff;
+	}
+	
+	ul#navigation li a.selected:hover
+	{
+		background: url(/images/navigation_background_selected.png) no-repeat center center;
+		color: #ffffff;
+
+	}
+	
+	ul#navigation li a:hover
+	{
+		color: #000000;
+	}
+
+	ul#navigation li a:active
+	{
+	}
+
+#sign-in
+{
+	padding: 6px 12px 6px 12px;
+	position: absolute;
+	z-index: 50;
+	top: 192px;
+	right: 0;
+	display: block;
+	width: 234px;
+	background: url(/images/transparent_background.png) repeat 0 0;
+	color: #ffffff;
+}
+
+#sign-in p
+{
+	padding: 12px 0;
+	display: block;
+	line-height: 24px;
+	
+}
+
+#sign-in label
+{
+	padding-top: 6px 0;
+	line-height: 24px;
+}
+
+#sign-in input#password, #sign-in input#username
+{
+	height: 24px;
+	width: 100%;
+	margin: 6px 0;
+}
+
+#sign-in .submit
+{
+	margin: 12px 0;
+}
+
+#sign-in #keep-me, #sign-in .keep-me
+{
+	margin: 12px 0;
+}
+
+
+
+#sign-in .submit
+{
+	float: right;
+}
+
+#sign-in a, #sign-in a:visited, #sign-in a:hover, #sign-in a:active
+{
+		color: #ffffff;
+		text-decoration: none;
+		border-bottom: 1px dotted #ffffff;
+}
+
+#sign-in a:hover
+{
+	border-bottom-style: solid;
+}
+
+/* =main
+------------------------------------------------------------------------------*/
+#main
+{
+	display: block;
+	width: auto;
+}
+
+#application
+{
+	margin-top: 6px;
+	line-height: 24px;
+	position: relative;
+	display: block;
+	/*height: 384px;*/
+	height: 552px;
+}
+
+fieldset#register input,username, fieldset.register input.password
+{
+
+}
+
+	ul#slider
+	{
+		list-style: none;
+		overflow: hidden;
+	}
+	
+	img.left, img.right
+	{
+		position: absolute;
+		top: 126px;
+	}
+	img.left
+	{
+		left: 0;
+	}
+	
+	img.right
+	{
+		right: 0;
+	}
+	
+	ul#slider li img
+	{
+		width: 100%;
+	}
+
+
+/* =secondary
+------------------------------------------------------------------------------*/
+#secondary
+{
+	border-top: 1px solid #e0e0e0;
+	padding-top: 5px;
+	font-size: 12px;
+	line-height: 24px;
+	padding-bottom: 18px;
+}
+
+#secondary h3
+{
+	padding-bottom: 12px;
+	display: block;
+	height: 30px;
+	font-size: 12px; 
+	line-height: 48px;
+	font-weight: bold
+}
+
+#secondary p
+{
+	padding-top: 6px;
+}
+
+.four-column
+{
+	display: block;
+	width: 234px;
+	float: left;
+	overflow: hidden;
+}
+
+#create, #more, #share
+{
+	margin-right: 24px;
+}
+
+#secondary a:link, #secondary a:visited
+{
+	border-bottom: 1px dotted #00ccff;
+	color: #00ccff;
+	text-decoration: none;
+}
+
+#secondary a:hover 
+{
+	border-bottom: 1px solid #00ccff;
+}
+
+/* =baseline
+------------------------------------------------------------------------------*/
+#baseline
+{
+	border-top: 1px solid #cccccc;
+	background: #e0e0e0;
+	color: #787878;
+	line-height: 24px;
+	padding: 18px 0;
+	overflow: hidden;
+}
+
+#baseline p
+{
+	float: right;
+	display: block;
+}
+
+#baseline a:link, #baseline a:visited
+{
+	border-bottom: 1px solid #666666;
+	color: #666666;
+	text-decoration: none;
+}
+
+/* =footer
+------------------------------------------------------------------------------*/
+
+
+/* =miscellaneous
+------------------------------------------------------------------------------*/
+hr, .hide
+{
+	display: none;
+}
+
+a img
+{
+	border: none;
+}
+
+	div.box 
+	{
+		display: block;
+		float: left;
+		clear: none;
+	}
+	
+	.one, .three
+	{
+		margin-right: 12px;
+	}
+	
+	.one, .two
+	{
+		margin-bottom: 12px;
+	}
+
+/* =clearfix renamed as group */
+
+.group:after
+{
+	content: ",";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
