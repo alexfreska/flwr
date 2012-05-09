@@ -15,86 +15,70 @@
  * @since		0.0.1
  */
 
-// include($_SERVER['DOCUMENT_ROOT'] . 'databases/accounts.php');					
+//session_start();
 
 $title = 'Flowur';
+$pageId = 'index';
 
 include($_SERVER['DOCUMENT_ROOT'] . '/php/membership.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/databases/accounts.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/top.php');					
 include($_SERVER['DOCUMENT_ROOT'] . '/header.php');
 
-/*
-// Is the user logged in with a legitimate username?
-if(!empty($_SESSION['isSignedIn']) && !empty($_SESSION['username']()
-{
-}
-// Has the user already submitted their form details?
-
-else if (!empty($_POST['username'] && !empty($_POST['password']))
-{
-}
-else
-{
-}
-*/
-
 ?>
-		<div id = "main" class = "group">
-			<div id = "application" class = "group">
-			<p>Test text. Flowcharts are ideal tools for step-by-step visualizations. Start building your own flowcharts with our streamlined and intuitive application and finish them in a ridiculously short amount of time. Don't believe us? <a href = "/php/logout.php">Log out.</a></p>
-            <?php
-            
-            if(!isLoggedIn())
-            {
-            
-            ?>
-                <form action = "php/register.php" method = "post">
-                <p>Register with us now for free!</p>
-                    <fieldset id = "register">
-                        <input class = "username" type = "text" name = "username" placeholder = "Username" />
-					    <input class = "password" type = "password" name = "password" placeholder = "Password" />
-					    <input class = "email" type = "text" name = "emailAddress" placeholder = "Email Address" />
-					    <input class = "submit" type = "submit"  value = "Register" />
+        <div id = "main">
+            <div class = "two-column left">
+            </div>
+            <div class = "two-column right">
+                <form id = "log-in-register" name = "log-in" method = "post" action = "log_in.php">
+                    <fieldset>
+                        <div>
+                            <img class = "username" src = "/images/icons/input_username.gif" alt = "" />
+                            <input class = "username" type = "text" name = "username" />
+                        </div>
+                        <div>
+                            <img class = "password" src = "/images/icons/input_password.gif" alt = "" />
+                            <input class = "password" type = "password" name = "password" />
+                        </div>
+                        <div>
+                            <img class = "email-address" src = "/images/icons/input_email_address.gif" alt = "" />
+                            <input class = "email-address" type = "text" name = "emailAddress"  />
+                        </div>
+                        <input class = "log-in" type = "submit" name = "submit" value = "submit" src = "/images/log_in.png" rel = "/images/log_in_hover.png" alt = "Log in">
+                        <input class = "join-us" type = "submit" name = "submit" value = "submit" src = "/images/join_us.png" rel = "/images/join_us_hover.png" alt = "Log in">
+                    </fieldset>
+                </form>
+                <div id = "log-in-icons">
+                    <img src = "/images/icons/facebook.png" alt = "Log in with Facebook." />
+                    <img src = "/images/icons/twitter.png" alt = "Log in with Twitter." />
+                    <img src = "/images/icons/google.png" alt = "Log in with Google." />
+                    <img class = "forgot" src = "/images/icons/forgot_password.png" alt = "Forgot your password?" />
+                </div>
+            </div>
+            <div id = "catch-phrase">
+		        <p>Easily create and share your flowcharts in like <a href ="#">60 seconds</a>.</p>
+		        <form id = "create-chart" class = "jqtransform" action = "" method = "">
+		            <fieldset>
+		                <input class = "flowchart-title" type = "text" name = "title" tabindex = "1" placeholder = "Enter a flowchart title." />
+		                <img class = "flowchart-create" src = "/images/create_chart.png" rel = "/images/create_chart_hover.png" alt = "Create chart" />
+		            </fieldset>
+		        </form>
+            </div>
+            <div id = "demo-video">
+                <iframe src="http://player.vimeo.com/video/26734344?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23" width="512" height="288" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+            </div>
+        </div>
+        <hr class = "left" /><span class = "or">OR</span><hr class = "right" />
+		<div id = "feed" class = "group">
+		    <p>Flowchart feed goes here...</p>
+		</div> <!-- /feed -->
 
-					    <input class = "action" type = "hidden" name = "action" value = "register" /> 
-				    </fieldset>
-                </form> 
-            
-            <?php } ?>
-			</div>
-		</div> <!-- /main -->
-		
-		<div id = "secondary" class = "group">
-			<div id = "create" class = "four-column">
-				<h3>Create with ease</h3>
-				<p>Flowcharts are ideal tools for step-by-step visualizations. Start building your own flowcharts with our streamlined and intuitive application and finish them in a ridiculously short amount of time. Don't believe us? <a href = "#">View our demo.</a></p>
-			</div>
-				<div id = "more" class = "four-column">
-				<h3>More than just flowcharts...</h3>
-				<p>Make use of innovative ways to customize and interact with your flowcharts. Give them a unique feel and look with just the right amount of settings. When you're done, view your flowcharts as they animate and respond to your inputs.
-			</div>
-			<div id = "share" class = "four-column">
-				<h3>Share / Export / Explore</h3>
-				<p>Share any flowchart with others with its unique url. For more flexibility, export the flowchart to another location as an image or embedded HTML. Plus, don't forget to <a href = "#">browse the full collection</a> from our community.</p>
-			</div>
-			<div id = "join" class = "four-column">
-				<h3>Join the community</h3>
-				<p><a href = "#">Sign up for a free account</a> so you can store your creations in a single, convenient location and associate them with a username. Also, get access to other features like favoriting, commenting and tagging.</p>
-			</div>
-		</div> <!-- /secondary -->
-	</div> <!-- /wrap -->
-    <?php 
+        <?php 
 
-    include($_SERVER['DOCUMENT_ROOT'] . '/bottom.php');
+        include($_SERVER['DOCUMENT_ROOT'] . '/bottom.php');
 
-    ?>
-	<script type = "text/javascript" src = "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
-	
-	<script type = "text/javascript" src = "/js/mootools/hashgrid.js"></script>
-	<script type = "text/javascript" src = "/js/script.js"></script>
+        ?>
+    </div> <!-- /wrap -->
 </body>
 
 </html>
-
