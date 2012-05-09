@@ -1,21 +1,14 @@
 <?php
 
-//$registerquery = mysql_query("INSERT INTO users (Username, Password, EmailAddress) VALUES('".$username."', '".$password."', '".$email."')");
+//session_start();
 
 include($_SERVER['DOCUMENT_ROOT'] . '/php/membership.php');
 include($_SERVER['DOCUMENT_ROOT'] . '/databases/accounts.php');
-// create login class?
-
-// USER AUTHENTICATION
-// check if any values are empty
-// on login display confirmation
 
 register();
 
 function register()
-{
-	session_start();
-	
+{	
 	$username = $_POST['username'];
 	$password = md5($_POST['password']);
 	$emailAddress = $_POST['emailAddress'];
@@ -52,7 +45,7 @@ function register()
 			
 			if($statement->execute())
 			{
-				echo "<p>Success</p>";
+				echo "Registration successful \n";
 			}
 		}
 		catch(PDOException $e)

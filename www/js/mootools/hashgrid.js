@@ -7,7 +7,7 @@
  * By Jon Gibbins, accessibility.co.uk
  */
 var GRID_OPTIONS = {
-	width: 1008,  //width of your layout.
+	width: 1024,  //width of your layout.
 	gutters: 12, //space between each column
 	columns: 42 // Number of columns you want on your grid.
 };
@@ -55,7 +55,7 @@ var GridOverlay = new Class({
 		}
 		this.horizontalLines();
 		this.verticalLines();
-		this.checkCookie();
+		//this.checkCookie();													//change
 		this.bindEvents();
 	},
 
@@ -126,7 +126,7 @@ var GridOverlay = new Class({
 		this.Cookie = new Cookie(this.options.cookiePrefix + this.overlay.get('id'));
 		if (this.Cookie.read()) {
 			//this.visible = true;												// change
-			this.visible = true;												// change
+			this.visible = false;												// change
 			this.sticky = true;
 			this.overlay.setStyle('display', 'block');
 		}
@@ -138,7 +138,7 @@ var GridOverlay = new Class({
 			if (self.visible) {
 				// alt+b toggles front/back for overlay
 				//if (event.alt && event.key == 'b') {							// change
-				if (event.key == 'b') {
+				if (event.shift && event.key == 'b') {
 					//if (self.overlay.getStyle('zIndex') == 9999) {			// change
 					if (self.overlay.getStyle('zIndex') == -1) {
 						self.overlay.setStyle('zIndex', self.originalZIndex);
@@ -149,7 +149,7 @@ var GridOverlay = new Class({
 				}
 				// alt+g+enter makes the grid stick.
 				//if (event.alt && event.key == 'enter') {						// change
-				if (event.key == 'f') {
+				if (event.shift && event.key == 'f') {
 					self.sticky = true;
 					self.Cookie.write(1);
 				} else if (self.sticky && event.alt && event.key == 'g') {
@@ -160,7 +160,7 @@ var GridOverlay = new Class({
 			} else {
 				//alt+g shows the grid
 				//if (event.alt && event.key == 'g') {							// change
-				if (event.key == 'g') {
+				if (event.shift && event.key == 'g') {							
 					self.overlay.setStyle('display', 'block');
 					self.visible = true;
 				}
