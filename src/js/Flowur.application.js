@@ -1,4 +1,5 @@
 // JavaScript Document
+// main application file
 // Application Holder Class
 //0xFFAD00, 0xFF0033, 0x0074FA, 0xFF6431, 0x00A300, 0xFFEC00, 0xFF98C6, 0x001598, 0x00F787, 0xFF10BB
 var paper;
