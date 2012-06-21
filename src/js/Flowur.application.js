@@ -87,7 +87,7 @@ var creationMode = new Class({
 	},
 	getCurrentArray: function(){ return this.currentArray;},
 	displayMessage: function(str){
-		var messageBox = new Display_Message(str);
+		var messageBox = new displayMessage(str);
 	},
 	new_node: function(){
 		if(this.currentArray.length < this.maxNodes+1)
@@ -316,19 +316,19 @@ var creationMode = new Class({
 			this.displayMessage("Action not permitted: Linking these would create an infinite loop.");
 		else //Otherwise, just create a new link between nodes
 		{
-			var linked_arrow = new Linked_Arrow(0,0);
+			var linked_arrow = new linkedArrow(0,0);
 			if(this.linkingNode.getOutLinkArrow() != null) //Remove links, links to new node
 			{
 				if( this.linkingNode.getLinkedNode().getInLinkArrow()[this.linkingNode.getLinkedNode().getInLinkArrow().indexOf(this.linkingNode.getOutLinkArrow().getLinkedArrow())].onStage)
 					this.linkingNode.getLinkedNode().getInLinkArrow()[this.linkingNode.getLinkedNode().getInLinkArrow().indexOf(this.linkingNode.getOutLinkArrow().getLinkedArrow())].draw();
 				this.linkingNode.getLinkedNode().removeInLinkArrow(this.linkingNode.getOutLinkArrow().getLinkedArrow());
 				this.linkingNode.setLinkedNode(node);
-				node.addInLinkArrow(linked_Arrow);
-				this.linkingNode.getOutLinkArrow().setLinkedArrow(linked_Arrow);
+				node.addInLinkArrow(linked_arrow);
+				this.linkingNode.getOutLinkArrow().setLinkedArrow(linked_arrow);
 			}
 			else
 			{
-				var linking_Arrow = new Linking_Arrow(0,0);
+				var linking_Arrow = new linkingArrow(0,0);
 				this.linkingNode.setLinkedNode(node);
 				this.linkingNode.setOutLinkArrow(linking_Arrow);
 				node.addInLinkArrow(linked_arrow);
@@ -506,7 +506,7 @@ var creationMode = new Class({
 		}
 	},
 	done_shifting: function(){
-		for(var i=0; i<this.currentArray.lenght; i++){
+		for(var i=0; i<this.currentArray.length; i++){
 			var tempNode;
 			var arw;
 			if( typeOf(this.currentArray[i]) === 'array')
