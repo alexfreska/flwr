@@ -326,6 +326,7 @@ var creationMode = new Class({
 				node.addInLinkArrow(linked_arrow);
 				this.linkingNode.getOutLinkArrow().setLinkedArrow(linked_arrow);
 			}
+//alexfreska: changed linked_Arrow to linked_arrow above.
 			else
 			{
 				var linking_Arrow = new linkingArrow(0,0);
