@@ -459,6 +459,7 @@ function getTemplatesForAChart($userId,$chartId)
 	}
 	//make list of used templates
 	$list = $statement->fetchAll();
+	disconnect($connection);
 	if(!$list)
 	foreach($list as $item)
 	{
