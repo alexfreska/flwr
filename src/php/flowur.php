@@ -461,6 +461,10 @@ function getTemplatesForAChart($userId,$chartId)
 	$list = $statement->fetchAll();
 	disconnect($connection);
 	if(!$list)
+	{
+		echo "error";
+		return;
+	}
 	foreach($list as $item)
 	{
 	$status = "Publish";
