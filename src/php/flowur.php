@@ -14,7 +14,7 @@ function connect()
 	try 
 	{
 		// PHP data object
-		$connection = new PDO('mysql:host=localhost;dbname=flowur', 'root', 'freska1');	
+		$connection = new PDO('mysql:host=localhost;dbname=', '', '');	
 		$connection->setAttribute(PDO::ATTR_PERSISTENT, true);					
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
