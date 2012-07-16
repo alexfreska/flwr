@@ -10,6 +10,11 @@ used from 10 to 62, so the conversion to base 10 is skipped but
 included incase it is necessary in future naming schemes.
 ####################################################################
 */
+function makeUrlExtension($value)
+{
+	return baseConverter($value,10,62);
+}
+
 
 function baseConverter($convValue, $originalBase, $newBase)
 {

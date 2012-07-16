@@ -1,17 +1,20 @@
 <?php
 ////////////////////////////////////////////////////////////////////////////////////////
 //Title:flowur.php								      //
-//Database related functions.							      //
+//Database and testing related functions.							      //
 //I will be revising all of these one at a time to make sure they are done properly.  //
 //										      //
 //										      //
 ////////////////////////////////////////////////////////////////////////////////////////
+
+include_once($_SERVER['DOCUMENT_ROOT'] . '/uniqueId.php');
+
 function connect()
 {
 	try 
 	{
 		// PHP data object
-		$connection = new PDO('mysql:host=localhost;dbname=**FILLIN**', '**USERNAME**', '**PASSWORD**');	
+		$connection = new PDO('mysql:host=localhost;dbname=flowur', 'root', 'freska1');	
 		$connection->setAttribute(PDO::ATTR_PERSISTENT, true);					
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
@@ -31,60 +34,35 @@ function disconnect($connection)
 }
 
 
+
+
+
+///////////////////
+///Add functions///
+///////////////////
+
+
+
+
+
 function addUser($username,$password,$firstName,$lastName,$email)
 {
 
-
+		
 	//check for conflicting username
-
-		$sql = "SELECT username FROM users WHERE username= :username";
-		$connection = connect();
-		$statement = $connection->prepare($sql);
-		try
+		if(conflictingUsername($username))
 		{
-			$statement->bindValue(':username', $username, PDO::PARAM_STR);
-			$statement->execute();
+		print $username . " is already in use.<BR>";
+		return;
 		}
-		catch(PDOException $e)
-		{
-			disconnect($connection);
-			echo 'Query failed: ' . $e->getMessage();
-		}
-	
-		$row = $statement->fetch();
-
-		if($row['username'])
-		{
-			print $row['username'] . " is already in use.<BR>";
-			return;
-		}
-		disconnect($connection);
 
 	//check for conflicting email
-
-		$sql = "SELECT email FROM users WHERE email = :email";
-		$connection = connect();
-		$statement = $connection->prepare($sql);
-		try
+		if(conflictingEmail($email))
 		{
-			$statement->bindValue(':email', $email, PDO::PARAM_STR);
+		print $email . " is already in use.<BR>";
+		return;
+		}
 
-			$statement->execute();
-		}
-		catch(PDOException $e)
-		{
-			disconnect($connection);
-			echo 'Query failed: ' . $e->getMessage();
-		}
-		$row = $statement->fetch();
-
-		if ($row['email'])
-		{
-			print $row['email'] . " is already in use.<BR>";
-			return;
-		}
-		disconnect($connection);
-	
 
 		$sql = "INSERT INTO users(username, password, firstName, lastName, email) VALUE (:username,:password,:firstName,:lastName,:email)";
 		$connection = connect();
@@ -117,8 +95,9 @@ function addChart($title,$data,$userId)
 {
 
 	//check for conflicting chart title amongst users charts
-		if(conflictingChartTitle($title,$userId)==1)
+		if(conflictingChartTitle($title,$userId))
 		{
+		print $title . " is already in use.<BR>";
 		return;
 		}
 
@@ -183,106 +162,6 @@ function addChart($title,$data,$userId)
 
 }
 
-function getUserCharts($userId)
-{
-	//scan userChartAssoc table for user id 
-	$sql = "SELECT chartId FROM userChartAssoc WHERE userId = :userId";
-	$connection = connect();
-	$statement = $connection->prepare($sql);
-	try
-	{
-		$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
-		$statement->execute();
-	}
-	catch(PDOException $e)
-	{
-		disconnect($connection);
-		echo 'Query failed: ' . $e->getMessage();
-	}
-
-	//create array
-	$arr = $statement->fetchAll();
-
-	disconnect($connection);
-
-	//for each chartId display title in list, connect each time
-	foreach($arr as $val)
-	{
-		$sql = "SELECT title FROM charts WHERE id = :val";
-		$connection = connect();
-		$statement = $connection->prepare($sql);
-		try
-		{
-			$statement->bindValue(':val',$val['chartId'],PDO::PARAM_INT);
-			$statement->execute();
-		}
-		catch(PDOException $e)
-		{
-			disconnect($connection);
-			echo 'Query failed: ' . $e->getMessage();
-		}
-		$row = $statement->fetch();
-		disconnect($connection);
-		echo "<br>Title:	".$row['title']."<br>";
-
-
-	}
-	return;
-}
-
-function getUserPubs($userId)
-{
-	//scan published for userId 
-		$sql = "SELECT chartId,templateId FROM published WHERE userId = :userId";
-		$connection = connect();
-		$statement = $connection->prepare($sql);
-		try
-		{
-			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
-			$statement->execute();
-		}
-		catch(PDOException $e)
-		{
-			disconnect($connection);
-			echo 'Query failed: ' . $e->getMessage();
-		}
-		
-	//create array of ids
-		$arr = $statement->fetchAll();
-		disconnect($connection);
-
-	//get associated chartId and templateId
-		foreach($arr as $value)
-		{
-			$chartId = $value['chartId'];
-			$templateId = $value['templateId'];
-			
-			$sql = "SELECT * FROM published WHERE id = :value";
-			$connection = connect();
-			$statement = $connection->prepare($sql);
-			try
-			{
-				$statement->bindValue(':value',$chartId,PDO::PARAM_INT);
-				$statement->execute();
-			}
-			catch(PDOException $e)
-			{
-				disconnect($connection);
-				echo 'Query failed: ' . $e->getMessage();
-			}
-			$row = $statement->fetch();
-			disconnect($connection);
-			//get chartId's associated name
-			//get template Id's associated name
-			$template = getTemplateInfo($row['templateId']);
-
-			$chartTitle = getChartTitle($chartId);
-			$templateInfo = getTemplateInfo($templateId);
-
-			echo "Title:	".$chartTitle."<br>Published With:	".$templateInfo['title']."<br><br>";
-		}	
-	//get associated template
-}
 function publishChart($userId,$templateId,$chartId)
 {
 //***
@@ -331,7 +210,292 @@ function publishChart($userId,$templateId,$chartId)
 		}
 		disconnect($connection);
 }
+
+
+
+
+
+////////////////////////
+///Get List functions///
+////////////////////////
+
+
+
+
+
+function getTemplates()
+//list of all templates
+{
+	//scan published for userId AND chartId retrieving used templates
+	$sql = "SELECT * FROM templates";
+	$connection = connect();
+	$statement = $connection->prepare($sql);
+	try
+	{
+		$statement->execute();
+	}
+	catch(PDOException $e)
+	{
+		disconnect($connection);
+		echo 'Query failed: ' . $e->getMessage();
+	}
+	//make list of templates
+	$list = $statement->fetchAll();
+	disconnect($connection);
+	foreach($list as $row)
+	{
+		echo "Title: ".$row['title']."	<br>Info: ".$row['info']."<br><br>";
+	}
+}
+function getTemplatesForAChart($userId,$chartId)
+//function retrieves all templates whether or not the chart has been published with the template
+{
+	//scan published for userId AND chartId retrieving used templates
+	$sql = 
+	"
+	SELECT templates.id, templates.title, templates.info, pubs.id
+	FROM templates
+	LEFT JOIN (SELECT * FROM published WHERE published.chartId = :chartId) pubs
+	ON templates.id = pubs.templateId
+	";
+	$connection = connect();
+	$statement = $connection->prepare($sql);
+	try
+	{
+		$statement->bindValue(':chartId',$chartId,PDO::PARAM_INT);
+		$statement->execute();
+	}
+	catch(PDOException $e)
+	{
+		disconnect($connection);
+		echo 'Query failed: ' . $e->getMessage();
+	}
+	//make list of used templates
+	$list = $statement->fetchAll();
+	disconnect($connection);
+	
+	//temporary!!
+	$chartTitle = getChartTitle($chartId);
+	echo "Working With your chart:	".$chartTitle."<br><br>";
+	echo "Pick a template:<br><br>";
+
+	if(!$list)
+	{
+		echo "none";
+		return;
+	}
+	foreach($list as $item)
+	{
+	$status = "Publish";
+	if($item[3]){$status = "Already Published]<br>[Click for link";}
+	$title = $item[1];
+	$info = $item[2];
+
+	echo "Template Name: ".$title."<br>Info: ".$info."<br>[".$status."]<br><br>";
+
+	}
+}
+function getUserCharts($userId)
+{
+	//scan userChartAssoc table for user id 
+	$sql = "SELECT chartId FROM userChartAssoc WHERE userId = :userId";
+	$connection = connect();
+	$statement = $connection->prepare($sql);
+	try
+	{
+		$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+		$statement->execute();
+	}
+	catch(PDOException $e)
+	{
+		disconnect($connection);
+		echo 'Query failed: ' . $e->getMessage();
+	}
+
+	//create array
+	$arr = $statement->fetchAll();
+
+	disconnect($connection);
+
+	//for each chartId display title in list, connect each time
+	foreach($arr as $val)
+	{
+		$sql = "SELECT title FROM charts WHERE id = :val";
+		$connection = connect();
+		$statement = $connection->prepare($sql);
+		try
+		{
+			$statement->bindValue(':val',$val['chartId'],PDO::PARAM_INT);
+			$statement->execute();
+		}
+		catch(PDOException $e)
+		{
+			disconnect($connection);
+			echo 'Query failed: ' . $e->getMessage();
+		}
+		$row = $statement->fetch();
+		disconnect($connection);
+		echo "<br>Title:	".$row['title']."<br>";
+
+
+	}
+	return;
+}
+
+function getUserChartsWithPubs($userId,$username)
+{
+	//scan userChartAssoc table for user id 
+	$sql = 
+	"
+	SELECT userChartAssoc.chartId,charts.title
+	FROM userChartAssoc 
+	LEFT JOIN charts
+	ON userChartAssoc.chartId = charts.id
+	WHERE userChartAssoc.userId = :userId
+	"
+	;
+	$connection = connect();
+	$statement = $connection->prepare($sql);
+	try
+	{
+		$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+		$statement->execute();
+	}
+	catch(PDOException $e)
+	{
+		disconnect($connection);
+		echo 'Query failed: ' . $e->getMessage();
+	}
+
+	//create array of chartId,title
+	$list = $statement->fetchAll();
+
+	disconnect($connection);
+
+
+	//print title block
+	echo "User: ".$username."<BR><BR>";
+	echo "My Charts<br><br>";
+
+
+	foreach($list as $chart)
+	{
+		echo "____________________________<br>";
+		echo $chart['title']."<br>";
+		getPubsForChart($chart['chartId']);	
+
+	}
+
+	return;
+}
+
+function getUserPubs($userId)
+{
+
+	echo "USER:	".$userId."<br>";
+	//scan published for userId 
+		$sql = "SELECT chartId,templateId FROM published WHERE userId = :userId";
+		$connection = connect();
+		$statement = $connection->prepare($sql);
+		try
+		{
+			$statement->bindValue(':userId',$userId,PDO::PARAM_INT);
+			$statement->execute();
+		}
+		catch(PDOException $e)
+		{
+			disconnect($connection);
+			echo 'Query failed: ' . $e->getMessage();
+		}
+		
+	//create array of ids
+		$arr = $statement->fetchAll();
+		disconnect($connection);
+
+	//get associated chartId and templateId
+		foreach($arr as $value)
+		{
+			$chartId = $value['chartId'];
+			$templateId = $value['templateId'];
+
+			$chartTitle = getChartTitle($chartId);
+			$templateInfo = getTemplateInfo($templateId);
+
+			echo "Title:	".$chartTitle."<br>Published With:	".$templateInfo['title']."<br><br>";
+		}	
+
+}
+
+function getPubsForChart($chartId)
+//userId could be found with chartId
+{
+
+	//scan published for chartId 
+		$sql = "SELECT id,templateId FROM published WHERE chartId = :chartId";
+		$connection = connect();
+		$statement = $connection->prepare($sql);
+		try
+		{
+			$statement->bindValue(':chartId',$chartId,PDO::PARAM_INT);
+			$statement->execute();
+		}
+		catch(PDOException $e)
+		{
+			disconnect($connection);
+			echo 'Query failed: ' . $e->getMessage();
+		}
+		
+	//create array of ids
+		$arr = $statement->fetchAll();
+		disconnect($connection);
+
+
+
+	//check if there are any publications
+		if(!$arr)
+		{
+		echo "Not Yet Published!<BR><BR>";
+		return;
+		}
+
+	//get templateId info
+
+		foreach($arr as $value)
+		{
+		//user the template's id to gather info
+			$templateId = $value['templateId'];
+			$templateInfo = getTemplateInfo($templateId);
+
+		//grab the publication id
+			$pubId = $value['id'];
+						//temporarily makes things more interesting
+							$pubId += rand();
+		//make address out of the id
+			$address = makeUrlExtension($pubId);
+
+			
+			echo "Published With:	".$templateInfo['title']."<br>";
+			echo "[Link: flowur.me/".$address."]<br><br>";
+		}	
+
+
+}
+
+
+
+
+///////////////////////
+///Utility functions///
+///////////////////////
+
+
+
+
+
+
+
 function getTemplateInfo($templateId)
+//returns title and info in an array as [0] and [1]
 {
 	$sql = "SELECT title,info FROM templates WHERE id = :id";
 	$connection = connect();
@@ -366,8 +530,9 @@ function getTemplateFile($templateId)
 		echo 'Query failed: ' . $e->getMessage();
 	}
 	$row = $statement->fetch();
-	$file = $row['file'];
 	disconnect($connection);
+	$file = $row['file'];
+
 	return $file;
 }
 function getChartTitle($chartId)
@@ -386,8 +551,9 @@ function getChartTitle($chartId)
 		echo 'Query failed: ' . $e->getMessage();
 	}
 	$row = $statement->fetch();
-	$data = $row['title'];
 	disconnect($connection);
+	$data = $row['title'];
+
 	return $data;
 }
 function getChartData($chartId)
@@ -406,76 +572,25 @@ function getChartData($chartId)
 		echo 'Query failed: ' . $e->getMessage();
 	}
 	$row = $statement->fetch();
-	$data = $row['data'];
 	disconnect($connection);
+	$data = $row['data'];
+
 	return $data;
 }
-function getTemplates()
-//list of all templates
-{
-	//scan published for userId AND chartId retrieving used templates
-	$sql = "SELECT * FROM templates";
-	$connection = connect();
-	$statement = $connection->prepare($sql);
-	try
-	{
-		$statement->execute();
-	}
-	catch(PDOException $e)
-	{
-		disconnect($connection);
-		echo 'Query failed: ' . $e->getMessage();
-	}
-	//make list of templates
-	$list = $statement->fetchAll();
-	disconnect($connection);
-	foreach($list as $row)
-	{
-		echo "Title: ".$row['title']."	<br>Info: ".$row['info']."<br><br>";
-	}
-}
-function getTemplatesForAChart($userId,$chartId)
-//function retrieves whether or not chart has been published with each template
-{
-	//scan published for userId AND chartId retrieving used templates
-	$sql = 
-	"
-	SELECT templates.id, templates.title, templates.info, pubs.id
-	FROM templates
-	LEFT JOIN (SELECT * FROM published WHERE published.chartId = :chartId) pubs
-	ON templates.id = pubs.templateId
-	";
-	$connection = connect();
-	$statement = $connection->prepare($sql);
-	try
-	{
-		$statement->bindValue(':chartId',$chartId,PDO::PARAM_INT);
-		$statement->execute();
-	}
-	catch(PDOException $e)
-	{
-		disconnect($connection);
-		echo 'Query failed: ' . $e->getMessage();
-	}
-	//make list of used templates
-	$list = $statement->fetchAll();
-	disconnect($connection);
-	if(!$list)
-	{
-		echo "error";
-		return;
-	}
-	foreach($list as $item)
-	{
-	$status = "Publish";
-	if($item[3]){$status = "Already Published";}
-	$title = $item[1];
-	$info = $item[2];
 
-	echo "Template Name: ".$title."<br>Info: ".$info."<br>[".$status."]<br><br>";
 
-	}
-}
+
+
+
+
+///////////////////
+//Check functions//
+///////////////////
+
+
+
+
+
 function alreadyPublished($list,$templateId)
 {
 	foreach($list as $row)
@@ -487,15 +602,23 @@ function alreadyPublished($list,$templateId)
 }
 
 function conflictingChartTitle($title,$userId)
-//checks if the user already has a chart with the requested title
 {
-	//check for conflicting chart title
-	$sql = "SELECT chartId FROM userChartAssoc WHERE userId = :userId";
+
+	$sql =
+	"
+	SELECT charts.title
+	FROM charts
+	RIGHT JOIN userChartAssoc
+	ON charts.id = userChartAssoc.chartId
+	WHERE userChartAssoc.userId = :userId AND charts.title = :title
+	";
 	$connection = connect();
 	$statement = $connection->prepare($sql);
 	try
 	{
 		$statement->bindValue(':userId', $userId, PDO::PARAM_INT);
+		$statement->bindValue(':title', $title, PDO::PARAM_STR);
+
 		$statement->execute();
 	}
 	catch(PDOException $e)
@@ -503,18 +626,31 @@ function conflictingChartTitle($title,$userId)
 		disconnect($connection);
 		echo 'Query failed: ' . $e->getMessage();
 	}
-	$chartIdList = $statement->fetchAll();
+	$all = $statement->fetch();
 	disconnect($connection);
-	foreach($chartIdList as $row1)
-	{
-		//echo $row1['chartId']."\n";
 
-		$sql = "SELECT title FROM charts WHERE id = :chartId";
+	//echo sizeof($all)."<BR>";
+	//works, but why is sizeof($all) == 2 and not 1?
+
+
+	if($all)
+	{
+		return 1;
+	}
+	return 0;
+	
+}
+
+function conflictingUsername($username)
+{
+	//check for conflicting username
+
+		$sql = "SELECT username FROM users WHERE username= :username";
 		$connection = connect();
 		$statement = $connection->prepare($sql);
 		try
 		{
-			$statement->bindValue(':chartId', $row1['chartId'], PDO::PARAM_INT);
+			$statement->bindValue(':username', $username, PDO::PARAM_STR);
 			$statement->execute();
 		}
 		catch(PDOException $e)
@@ -522,18 +658,42 @@ function conflictingChartTitle($title,$userId)
 			disconnect($connection);
 			echo 'Query failed: ' . $e->getMessage();
 		}
-			$row = $statement->fetch();
-			//echo "<br>>>>".$row['title']."<br>";
-			//echo $title."<br>";
-		if ($row['title'] == $title)
+	
+		$row = $statement->fetch();
+		disconnect($connection);
+		if($row)
 		{
-			print $row['title'] . " is already in use.<BR>";
 			return 1;
 		}
+		return 0;
+}
+function conflictingEmail($email)
+{
+
+
+	//check for conflicting email
+
+		$sql = "SELECT email FROM users WHERE email = :email";
+		$connection = connect();
+		$statement = $connection->prepare($sql);
+		try
+		{
+			$statement->bindValue(':email', $email, PDO::PARAM_STR);
+
+			$statement->execute();
+		}
+		catch(PDOException $e)
+		{
+			disconnect($connection);
+			echo 'Query failed: ' . $e->getMessage();
+		}
+		$row = $statement->fetch();
 		disconnect($connection);
-	}
-	disconnect($connection);
-	return 0;
+		if ($row)
+		{
+			return 1;
+		}
+		return 0;
 }
 
 
@@ -556,8 +716,11 @@ function userExists($userId)
 	$row = $statement->fetch();
 	disconnect($connection);
 	if($row)
-	return 1;
+	{
+		return 1;
+	}
 	return 0;
 }
+
 
 ?>
