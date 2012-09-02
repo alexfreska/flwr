@@ -273,6 +273,8 @@ var Viewing_Mode = new Class({
 		var arrows_info = current_chart[2];
 		
 		//Put nodes into layers
+		var all_nodes;
+		var recursive_sort_
 	},
 	/*
 	recreate_structure: function(){
