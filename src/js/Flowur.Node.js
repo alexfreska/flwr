@@ -207,6 +207,7 @@ var Node = new Class({
 			this.outLinkArrow.undraw();
 		if(this.getInLinkArrow() != null){
 			for(var i=0; i<this.inLinkArrow.length; i++){
+				if(this.inLinkArrow[i] != null)
 				this.inLinkArrow[i].undraw();	
 			}
 		}
@@ -267,9 +268,14 @@ var Node = new Class({
 		}
 	},
 	setColor: function(newColor){
-		this.myColor = newColor;
-		this.back_box.attr({fill: this.myColor});
-		this.top_box.attr({fill: this.myColor});
+		if(this.myColor != '#333333'){
+			this.myColor = newColor;
+			this.prev_color = this.myColor;
+			this.back_box.attr({fill: this.myColor});
+			this.top_box.attr({fill: this.myColor});
+		}
+		else
+			this.prev_color = newColor;
 	},
 	getColor: function(){return this.myColor;},
 	getArrowPoint: function(arw, arw_theta){ // arw_theta in radians

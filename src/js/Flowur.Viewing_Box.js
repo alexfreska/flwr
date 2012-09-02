@@ -5,7 +5,8 @@ var Viewing_Box = new Class({
 	initialize: function(){
 		this.myText;
 		this.myColor;
-		this.myAddress;
+		this.myArrow;
+		this.link_arrow;
 		this.onStage = false;
 		this.x;
 		this.y;
@@ -61,6 +62,7 @@ var Viewing_Box = new Class({
 		return bounds;
 	},
 	get_text: function(){return this.myText;},
-	set_address: function(addr){this.myAddress = addr;},
-	get_address: function(){return this.myAddress;},
+	set_link_arrow: function(arw){this.link_arrow = arw;},
+	set_arrow: function(arw){this.myArrow = arw;},
+	get_arrow: function(){return this.myArrow;},
 });

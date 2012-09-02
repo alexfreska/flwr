@@ -39,35 +39,18 @@ var Click_Command = new Class({
 		var text_x = cx + ((this.circle_inner_radius+this.circle_outer_radius)/2)*Math.cos(this_theta);
 		var text_y = cy + ((this.circle_inner_radius+this.circle_outer_radius)/2)*Math.sin(this_theta);
 		var text_rot = (this_theta*180/Math.PI) + 90;
-		var large_arc_flag = 0;
-		var sweep_flag = 0;
-		var inver_sweep_flag = 1;
-		var inver_large_arc_flag = 1;
+		
 		if(Math.abs(start_theta - end_theta) > Math.PI){
-			console.log("large arc sweep flag changed");
-			//large_arc_flag = 1;
-			//sweep_flag = 1;
-			//inver_sweep_flag = 0;
-			//inver_large_arc_flag = 0;
-			console.log("Inner: Start: "+start_x_in, start_y_in+" End: "+end_x_in, end_y_in);
-			console.log("Outer: Start: "+start_x_out, start_y_out+" End: "+end_x_out, end_y_out);
-			this.test_arc = paper.path(["M", start_x_in, start_y_in,
-			"L", start_x_out, start_y_out,
-			"A", this.circle_outer_radius, this.circle_outer_radius, 0, +(end_theta - start_theta > Math.PI), 1, end_x_out, end_y_out, 
-			"L", end_x_in, end_y_in,
-			"A", this.circle_inner_radius, this.circle_inner_radius, 0,+(end_theta - start_theta > Math.PI), 0, start_x_in, start_y_in,
-			"Z"
-			]);
-			//this.test_arc = paper.path('M'+end_x_in+','+end_y_in+'A'+this.circle_inner_radius+','+this.circle_inner_radius+',0,'+large_arc_flag+','+sweep_flag+','+start_x_in+','+start_y_in+'L'+start_x_out+','+start_y_out+'A'+this.circle_outer_radius+','+this.circle_outer_radius+',0,'+large_arc_flag+','+inver_sweep_flag+','+end_x_out+','+end_y_out+'Z');
-		this.test_arc.attr({fill: '#000000', stroke: '#000000', 'fill-opacity': .7, cursor: 'pointer'});
+			this.bottom_arc = paper.path(["M", start_x_out+this.circle_outer_radius, start_y_out-this.circle_outer_radius,"A", this.circle_outer_radius, this.circle_outer_radius, 0, 1, 1, start_x_out+this.circle_outer_radius, start_y_out-this.circle_outer_radius-.1, "Z","M", start_x_in-this.circle_inner_radius, start_y_in-this.circle_inner_radius,"A", this.circle_inner_radius, this.circle_inner_radius, 0, 1, 0, start_x_in-this.circle_inner_radius, start_y_in-this.circle_inner_radius-.1, "Z"]);
 		}
-		this.bottom_arc = paper.path('M'+start_x_in+','+start_y_in+'A'+this.circle_inner_radius+','+this.circle_inner_radius+',0,'+large_arc_flag+','+sweep_flag+','+end_x_in+','+end_y_in+'L'+end_x_out+','+end_y_out+'A'+this.circle_outer_radius+','+this.circle_outer_radius+',0,'+large_arc_flag+','+inver_sweep_flag+','+start_x_out+','+start_y_out+'Z');
+		else{
+			this.bottom_arc = paper.path('M'+start_x_in+','+start_y_in+'A'+this.circle_inner_radius+','+this.circle_inner_radius+',0,0,0,'+end_x_in+','+end_y_in+'L'+end_x_out+','+end_y_out+'A'+this.circle_outer_radius+','+this.circle_outer_radius+',0,0,1,'+start_x_out+','+start_y_out+'Z');
+		}
 		this.bottom_arc.attr({fill: '#000000', stroke: 'none', 'fill-opacity': .7, cursor: 'pointer'});
 		this.top_text = paper.text(text_x,text_y,"TXT");
 		this.top_text.attr({fill: '#FFFFFF', font: 'Myriad Pro', 'font-size': 15});
 		this.top_text.transform('r'+text_rot);
-		this.top_arc = paper.path('M'+start_x_in+','+start_y_in+'A'+this.circle_inner_radius+','+this.circle_inner_radius+',0,0,0,'+end_x_in+','+end_y_in+'L'+end_x_out+','+end_y_out+'A'+this.circle_outer_radius+','+this.circle_outer_radius+',0,0,1,'+start_x_out+','+start_y_out+'Z');
-		this.top_arc.attr({fill: '#000000', stroke: 'none', 'fill-opacity': 0, cursor: 'pointer'});
+		this.top_arc = this.bottom_arc.clone().attr({fill: '#000000', stroke: 'none', 'fill-opacity': 0, cursor: 'pointer'});
 		this.addListeners();
 	},
 	undraw: function(){

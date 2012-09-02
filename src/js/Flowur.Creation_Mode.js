@@ -30,7 +30,7 @@ var Creation_Mode = new Class({
 		/*Sample JSON array input */
 		var test_title_info = "This is the title.";
 		var test_nodes_info = [ {'id': 0, 'data': "This is the first base."}, {'id': 1, 'data': "Yes"}, {'id': 2, 'data': "No"}, {'id': 3, 'data': "Off of yes"}, {'id': 4, 'data': "Off of no"}];
-		var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': true}];
+		var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}];
 		this.data_in = [test_title_info, test_nodes_info, test_arrows_info];
 		//this.data_in = /*get user chart data from server*/ null;
 		//If loading data in to be editted
@@ -46,6 +46,7 @@ var Creation_Mode = new Class({
 			var arrows_info_temp = this.data_in[2];
 			var unsorted_nodes = new Array();
 			unsorted_nodes.push(this.baseNode);
+			
 			for(var z=0; z<nodes_info_temp.length; z++){
 				for(var w=0; w<arrows_info_temp.length; w++){
 					if(arrows_info_temp[w].from === z && !arrows_info_temp[w].isLink){
@@ -71,27 +72,50 @@ var Creation_Mode = new Class({
 					}
 				}
 			}
-			//Now sort the nodes into their respective layers
-			for(var z=0; z<unsorted_nodes.length; z++){
-				for(var w = 0; w<unsorted_nodes.length; w++){
-					if(unsorted_nodes[w].getArrow() != null && unsorted_nodes[z].myId === unsorted_nodes[w].getArrow().from_id){
-						if(unsorted_nodes[z].getChildArray() == null){
+			//Create all child arrays
+			for(var z=0; z<arrows_info_temp.length; z++){
+				if(!arrows_info_temp[z].isLink){
+					for(var w=0; w<unsorted_nodes.length; w++){
+						if(arrows_info_temp[z].from == unsorted_nodes[w].myId){
 							var child_array = new Array();
-							child_array.push(unsorted_nodes[z]);
-							unsorted_nodes[z].setChildArray(child_array);
+							child_array.push(unsorted_nodes[w]);
+							unsorted_nodes[w].setChildArray(child_array);
 						}
-						unsorted_nodes[z].getChildArray().push(unsorted_nodes[w]);
+					}
+				}
+			}
+			for(var z=0; z<arrows_info_temp.length; z++){
+				if(!arrows_info_temp[z].isLink){
+					for(var w=0; w<unsorted_nodes.length; w++){
+						if(arrows_info_temp[z].to == unsorted_nodes[w].myId){
+							for(var u=0; u<unsorted_nodes.length; u++){
+								if(arrows_info_temp[z].from === unsorted_nodes[u].myId){
+									if(unsorted_nodes[w].getChildArray() != null)
+										unsorted_nodes[u].getChildArray().push(unsorted_nodes[w].getChildArray());	
+									else
+										unsorted_nodes[u].getChildArray().push(unsorted_nodes[w]);	
+								}
+							}
+						}
 					}
 				}
 			}
 			//Add in the parent array connections
-			for(var z=0; z<unsorted_nodes.length; z++){
-				for(var w = 0; w<unsorted_nodes.length; w++){
-					if(unsorted_nodes[w].getArrow() != null && unsorted_nodes[z].myId === unsorted_nodes[w].getArrow().from_id){
-						unsorted_nodes[w].setParentArray(unsorted_nodes[z].getChildArray());
+			var recurse_add_parent = function(base){
+				if(base.getChildArray() != null){
+					for(var j=1; j<base.getChildArray().length; j++){
+						var tempNode;
+						if(typeOf(base.getChildArray()[j]) === 'array'){
+							tempNode = base.getChildArray()[j][0];
+							recurse_add_parent(tempNode);	
+						}
+						else
+							tempNode = base.getChildArray()[j];
+						tempNode.setParentArray(base.getChildArray());
 					}
 				}
-			}
+			};
+			recurse_add_parent(this.baseNode);
 			//Now add in the linking arrows
 			for(var z=0; z<unsorted_nodes.length; z++){
 				for(var w=0; w<arrows_info_temp.length; w++){
@@ -117,13 +141,6 @@ var Creation_Mode = new Class({
 					}
 				}
 			}	
-			
-			for(var z=0; z<unsorted_nodes.length; z++){
-				if(unsorted_nodes[z].myId === 0){
-					this.baseNode = unsorted_nodes[z];	
-					break;
-				}
-			}
 			//Now position the baseNode
 			this.baseNode.set_x(stage.innerWidth/2 - this.baseNode.width/2);
 			this.baseNode.set_y(stage.innerHeight/2 - this.baseNode.height/2);
@@ -132,10 +149,16 @@ var Creation_Mode = new Class({
 			this.counter++;
 			this.currentArray = this.baseNode.getChildArray();
 			for(var z=1; z<this.currentArray.length; z++){
-				this.currentArray[z].setColor(this.node_colors[this.counter]);	
-				this.currentArray[z].draw();
-				this.currentArray[z].setsize(this.currentArray[z].textField.getBBox().width + 20, this.currentArray[z].textField.getBBox().height + 20);
-				this.currentArray[z].position_text();
+				var tempNode;
+				if(typeOf( this.currentArray[z] ) === 'array'){
+					tempNode = this.currentArray[z][0];
+				}
+				else
+					tempNode = this.currentArray[z];
+				tempNode.setColor(this.node_colors[this.counter]);	
+				tempNode.draw();
+				tempNode.setsize(tempNode.textField.getBBox().width + 20, tempNode.textField.getBBox().height + 20);
+				tempNode.position_text();
 			}
 			this.reposition_nodes();
 		}
@@ -403,9 +426,8 @@ var Creation_Mode = new Class({
 			base.linkingMode(glow);
 		if(tmp_array != null){
 			for(var i = 1; i<tmp_array.length; i++){
-				if( typeOf(tmp_array[i]) === 'array'){
+				if( typeOf(tmp_array[i]) === 'array')
 					this.glow_nodes(linking_node, glow, tmp_array[i][0]);
-				}
 				else
 					if(tmp_array[i] != linking_node)
 						tmp_array[i].linkingMode(glow);
@@ -590,7 +612,12 @@ var Creation_Mode = new Class({
 			this.setUpNewArray(newBase);
 		this.arrow_in = newBase.getArrow();
 		for(var z=1; z<this.currentArray.length; z++){
-			this.currentArray[z].setColor(this.node_colors[this.current_color]);	
+			var tempNode;
+			if(typeOf( this.currentArray[z] ) === 'array')
+				tempNode = this.currentArray[z][0];
+			else
+				tempNode = this.currentArray[z];
+			tempNode.setColor(this.node_colors[this.current_color]);	
 		}
 		var k;
 		for(var i=0; i<this.baseChain.length; i++){

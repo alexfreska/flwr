@@ -119,7 +119,7 @@ var Command_Navigator = new Class({
 				else{
 					e.stop();
 					cmd_nav.command_set.push('add');
-					cmd_nav.command_set.push('save');
+					//cmd_nav.command_set.push('save');
 				}
 			}	
 			cmd_nav.create_wheel(e.page.x, e.page.y);

@@ -18,6 +18,9 @@ var Viewing_Mode = new Class({
 		this.layers = new Array();
 		this.current_bounds;
 		this.router = new Arrow_Router('#AAAAAA');
+		//Get the current_chart here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		
 		//this.demo_draw();
 		//current_chart = ["B1B&Yes", "B1B1B&Could it interfere with your employment?", "B1B1B1B&Yes", "B1B1B1B1&Delete that tweet!", "B1B1B2B&No", "B1B1B2B1&You're in the clear!", "B2B&No", "B2B1B&Is it about an ex?", "B2B1B1B&Yes", "B2B1B1B1&Delete it!", "B2B1B2B&No", "B2B1B2B1&You should be good!", "B&Does it involve your boss?"];
 		
@@ -75,9 +78,6 @@ var Viewing_Mode = new Class({
 			//Now move everything so that the boundary box is in the middle of the page.
 		};
 		recursive_draw();
-		
-	},
-	move_view: function(to_x, to_y){
 		
 	},
 	log_layers: function(){
@@ -259,11 +259,20 @@ var Viewing_Mode = new Class({
 		}
 		return -1;
 	},
+	/*
 	parse_chart: function(){
 		for(var i=0; i<current_chart.length; i++){
 			this.address_array[i] = current_chart[i].substring(0, current_chart[i].indexOf('&'));
 			this.text_array[i] = current_chart[i].substring(current_chart[i].indexOf('&')+1, current_chart[i].length+1);
 		}
+	},
+	*/
+	parse_chart: function(){
+		var title_info = current_chart[0];
+		var nodes_info = current_chart[1];
+		var arrows_info = current_chart[2];
+		
+		//Put nodes into layers
 	},
 	/*
 	recreate_structure: function(){
