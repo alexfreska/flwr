@@ -810,15 +810,6 @@ var Creation_Mode = new Class({
 			}
 			arwInArray = tempNode.getInLinkArrow();
 			arwOut = tempNode.getOutLinkArrow();
-			/*
-			if(arwInArray != null){
-				for(var l=0; l<arwInArray.length; l++){
-					arwInArray[l].draw();	
-				}
-			}
-			if(arwOut != null)
-				arwOut.draw();
-				*/
 			this.reposition_linking_arrows(tempNode);
 		}
 	},
@@ -884,8 +875,6 @@ var Creation_Mode = new Class({
 			node.setArrow(null);
 			node = null;
 		}
-		//arw = null;
-		//node = null;
 		this.reposition_nodes();	
 	},
 	//This function converts the current structure to test held in this.nodes_info.
@@ -896,10 +885,11 @@ var Creation_Mode = new Class({
 		while(this.nodes_info.length > 0) //Remove all elements from the last save
 			this.nodes_info.pop();
 		this.create_node_info_array(this.find_base(this.baseNode)); //Find the first base and send it to initiate sorting
-		current_chart = this.nodes_info;
+		//current_chart = this.nodes_info;
 		this.flowchart[0] = this.title.getText();
 		this.flowchart[1] = this.nodes_info;
 		this.flowchart[2] = this.arrows_info;
+		current_chart = this.flowchart;
 		this.update_save();
 		//Uncomment once PHP is up and running
 		//Send everything to our PHP
@@ -944,39 +934,6 @@ var Creation_Mode = new Class({
 			currentBase = this.find_base( (currentBase.getParentArray())[0] );
 		return currentBase;
 	},
-	//The following is a recursive function that sorts through the current node structure
-	//and creates an address (this.address_string), which contains 1)the location of the node,
-	//and 2)A stop character "&", and 3)the text that goes in that location.
-	//To use this function properly, set this.saving_counter = 0, and pass this.baseNode to it.
-	/*
-	create_node_info_array: function(currentNode){
-		if(currentNode.getChildArray() != null){
-			this.address_string += 'B';
-			for(var i = 1; i<currentNode.getChildArray().length; i++){
-				this.address_string += String(i);
-				if( typeOf(currentNode.getChildArray()[i]) === 'array'){
-					this.create_node_info_array(currentNode.getChildArray()[i][0]);
-					this.address_string = this.address_string.slice(0, this.address_string.length-1);	
-				}
-				else
-					this.create_node_info_array(currentNode.getChildArray()[i]);
-			}
-		}
-		if(currentNode.getOutLinkArrow() != null){
-			this.address_string += 'L'+String(this.get_address_of(currentNode.getLinkedNode()));
-			if(this.address_string.indexOf("null",0) != -1)
-				this.address_string.replace("null", "");	
-		}
-		this.address_string += "&";
-		this.nodes_info[this.saving_counter] = this.address_string.concat(currentNode.getText());
-		if(currentNode.getOutLinkArrow() != null)
-			this.address_string = this.address_string.slice(0, this.address_string.indexOf("L"));
-		else
-			this.address_string = this.address_string.slice(0, this.address_string.indexOf("&"));
-		this.address_string = this.address_string.slice(0, this.address_string.length-1);
-		this.saving_counter++;
-	},
-	*/
 	create_node_info_array: function(currentNode){
 		this.nodes_info.push(currentNode.get_info_struct());
 		if(currentNode.getArrow() != null)

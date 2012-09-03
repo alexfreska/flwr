@@ -35,9 +35,10 @@ var Viewing_Mode = new Class({
 		//End debugging code
 	},
 	draw: function(){
-		this.create_layers();
+		this.parse_chart();
+		//this.create_layers();
 		//this.log_layers();
-		var first_box = this.layers[0];
+		var first_box = this.layers[0][0];
 		first_box.set_x(stage.innerWidth/2 - first_box.width/2);
 		first_box.set_y(stage.innerHeight/2 - first_box.height/2);
 		first_box.draw();
@@ -165,6 +166,7 @@ var Viewing_Mode = new Class({
 		}
 		return true;
 	},
+	/*
 	create_layers: function(){
 		this.parse_chart();
 		
@@ -238,6 +240,7 @@ var Viewing_Mode = new Class({
 		this.layers[curr_layer] = new Array();
 		recursive_sort(this.layers[curr_layer]);
 	},
+	*/
 	get_box_by_address: function(addr){
 		if(this.layers[0].get_address() == addr)
 			return this.layers[0];
@@ -272,96 +275,66 @@ var Viewing_Mode = new Class({
 		var nodes_info = current_chart[1];
 		var arrows_info = current_chart[2];
 		
-		//Put nodes into layers
-		var all_nodes;
-		var recursive_sort_
-	},
-	/*
-	recreate_structure: function(){
-		this.parse_chart();
+		//Create the nodes, with the proper data in them
+		var all_nodes = new Array();
+		for(var i=0; i<nodes_info.length; i++){
+			var new_node = new Viewing_Box();
+			new_node.set_text(nodes_info[i].data);
+			new_node.myId = nodes_info[i].id;
+			for(var j=0; j<arrows_info.length; j++){
+				if(arrows_info[j].from === new_node.myId){
+					if(!arrows_info[j].isLink)
+						new_node.toNodeId = arrows_info[j].to;
+					else
+						new_node.linkToNodeId = arrows_info[j].to;
+				}
+				else if(arrows_info[j].to === new_node.myId){
+					if(!arrows_info[j].isLink)
+						new_node.fromNodeId = arrows_info[j].from;
+				}
+			}
+			all_nodes.push(new_node);
+		}
 		
-		var master_box = new Question_Box();
-		master_box.set_text(this.text_array[this.text_array.length-1]);
-		master_box.set_color(this.color_schemes[this.current_scheme][0]);
-		master_box.set_address('B');
-		this.current_array[0] = master_box;
-		
-		var addr = 'B'
-		var t = this;
-		var recursive_sort = function(curr_array){
-			for(var i=1; i<4; i++){
-				addr.concat(i);
-				var temp_addr = addr;
-				temp_addr.concat('B');
-				var addr_result = t.search_chart(addr);
-				console.log(addr_result);
-				if(addr_result != -1){
-					//If this is the case, then we stop here and go onto the next until we go a level up
-					var s_box = new Statement_Box();
-					s_box.set_color(t.color_schemes[t.current_scheme][2]);
-					s_box.set_text(t.text_array[addr_result]);
-					curr_array[i] = s_box;
-					console.log("addr before: "+addr);
-					addr = addr.substring(0, addr.length-1);
-					console.log("addr after: "+addr);
-				}
-				else if(t.search_chart(temp_addr) != -1){
-					//If this is the case, then we need to go a level deeper	
-					curr_array[i] = new Array();
-					var temp_box;
-					//If the one before was a question box, then this one is an answer
-					if(curr_array[0].getType() === 'Q'){
-						temp_box = new Answer_Box();
-						temp_box.set_color(this.color_schemes[this.current_scheme][0]);
+		//Now create the layers
+		var current_layer = 1;
+		var tis = this;
+		var recursive_sort_layers = function(layer){
+			for(var i=0; i<all_nodes.length; i++){
+				var prev_layer = tis.layers[current_layer-1];
+				for(var j=0; j<prev_layer.length; j++){
+					if(prev_layer[j].myId === all_nodes[i].from){ /*If node on previous layer points to tis node*/
+						if(current_layer%2 == 1)
+							all_nodes[i].myType = 'A';
+						else if(all_nodes[i].toNodeId != null)
+							all_nodes[i].myType = 'Q';
+						else
+							all_nodes[i].myType = 'S';
+						layer.push(all_nodes[i]);
 					}
-					//Otherwise this one is a question box
-					else{
-						temp_box = new Question_Box();
-						s_box.set_color(this.color_schemes[this.current_scheme][1]);
+					if(all_nodes[i].toNodeId != null){
+						current_layer++;
+						if(tis.layers.length < current_layer+1){
+							var next_layer = new Array();
+							tis.layers[current_layer] = next_layer;
+						}
+						recursive_sort_layers(tis.layers[current_layer]);
+						current_layer--;
 					}
-					temp_box.set_text(t.text_array[t.search_chart(temp_addr)]);
-					curr_array[i][0] = temp_box;
-					addr.concat('B');
-					this.recursive_sort(addr, curr_array[i]);
-					addr = addr.substring(0, addr.length);
 				}
-				else{
-					//Otherwise, we just exit the current layer.
-					addr = addr.substring(0, addr.length);
-					break;
-				}
+				
 			}
 		};
-		recursive_sort(this.current_array);
+		
+		var first_layer = new Array();
+		first_layer.push(all_nodes[0]); //This is the first node...
+		this.layers[0] = first_layer;
+		var second_layer = new Array();
+		this.layers.push(second_layer);
+		recursive_sort_layers(this.layers[1]);
 	},
-	*/
+	
 	/*
-	recursive_sort: function(addr, curr_array){
-		for(var i=1; i<4; i++){
-			addr.concat(i);
-			var temp_addr = addr;
-			temp_addr.concat('B');
-			var addr_result = this.search_chart(addr);
-			if(addr_result != -1){
-				//If this is the case, then we stop here and go onto the next until we go a level up
-				curr_array[i] = this.text_array[addr_result];
-				addr = addr.substring(0, addr.length);
-			}
-			else if(this.search_chart(temp_addr) != -1){
-				//If this is the case, then we need to go a level deeper	
-				curr_array[i] = new Array();
-				curr_array[i][0] = this.text_array[this.search_chart(temp_addr)];
-				addr.concat('B');
-				this.recursive_sort(addr, curr_array[i]);
-				addr = addr.substring(0, addr.length);
-			}
-			else{
-				//Otherwise, we just exit the current layer.
-				addr = addr.substring(0, addr.length);
-				break;
-			}
-		}
-	},
 	demo_draw: function(){
 		var title = new Question_Box();
 		title.set_color('#FF4000');
