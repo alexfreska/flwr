@@ -74,7 +74,7 @@ var Linked_Arrow = new Class({
 			b.obs_node_text.hide();
 		};
 		setup_obs();
-		this.top_graphic = paper.image("Linked_Arrow.png", this.x, this.y, this.width, this.height);
+		this.top_graphic = paper.image("images/Linked_Arrow.png", this.x, this.y, this.width, this.height);
 		this.draw();
 	},
 	draw: function(){

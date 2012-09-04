@@ -1,5 +1,7 @@
 // JavaScript Document
 //Creation Mode Code
+// Written by Patrick Teague
+// Last update on: 9/4/12
 
 var Creation_Mode = new Class({
 	initialize: function(){

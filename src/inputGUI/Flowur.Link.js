@@ -31,20 +31,5 @@ var Link = new Class({
 		this.linking_line_back = paper.path('M'+(this.x-1)+','+(this.y+1)+'L'+(this.x+horiz_seg_length-1)+','+(this.y+1)+'A'+rx+','+ry+',0,0,1,'+(this.x+horiz_seg_length+rx-1)+','+(this.y+ry+1)+'L'+(this.x+horiz_seg_length+rx-1)+','+(this.y+ry+vert_seg_length+1)).attr({stroke: '#000000', 'stroke-width': this.thickness}).toBack();
 		
 		background.toBack();
-		
-		//this.linking_line = paper.path('M'+this.x+','+this.y+'L'+(this.x+horiz_seg_length)+','+this.y+'A'+rx+','+ry+','+x_axis_rot+','+large_arc_flag+','+sweep_flag, (this.x+horiz_seg_length)+rx, this.y+ry).attr({stroke: this.myColor, 'stroke-width': this.thickness });
-		//this.linking_line = paper.path('M100,100L500,500').attr({stroke: this.myColor, 'stroke_width': this.thickness });
-		
-		//Rectangles version
-/*
-		this.horiz_line_top = paper.rect(this.x, this.y, (to_x - from_x), this.thickness).attr({ fill: this.myColor, stroke: 'none' }).toBack();
-		
-		this.vert_line_top = paper.rect(this.x + (to_x - from_x), this.y, this.thickness, (to_y - from_y) ).attr({ fill: this.myColor, stroke: 'none' }).toBack();
-		
-		this.horiz_line_back = paper.rect(this.x-1, this.y+1, (to_x - from_x), this.thickness).attr({ fill: '#000000', stroke: 'none' }).toBack();
-		
-		this.vert_line_back = paper.rect(this.x + (to_x - from_x)-1, this.y+1, this.thickness, (to_y - from_y) ).attr({ fill: '#000000', stroke: 'none' }).toBack();
-		background.toBack();
-*/
 	},
 });

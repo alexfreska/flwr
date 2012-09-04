@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update on: 9/4/12
 //Node class
 var Node = new Class({	
 	initialize: function(x,y,width,height){
@@ -137,7 +139,6 @@ var Node = new Class({
 		var content = this.myText;
 		var words = content.split(" ");
 		var tempText = "";
-		
 		this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});
 		for(var i=0; i<words.length; i++){
 				this.textField.attr("text", tempText + " " + words[i]);
@@ -149,8 +150,6 @@ var Node = new Class({
 		}
 		this.textField.attr("text", tempText.substring(1));
 		
-		//this.textField = paper.text(this.x, this.y, this.myText).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});
-
 		this.position_text();
 		this.onStage = true;
 	},
@@ -222,13 +221,13 @@ var Node = new Class({
 			this.onStage = true;
 	},
 	position_text: function(){ //Assumes this.textField != null
-		if(this.textField != null){
+		if( document.getElement('.'+this.text_area_id) != null){
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+		}
+		else if(this.textField != null){
 			var txt_x = this.x + (this.width/2 - this.textField.getBBox().width/2);
 			var txt_y = this.y + ((this.height - this.textField.getBBox().height + this.textField.getBBox().height)/2);
 			this.textField.attr({x: txt_x, y: txt_y});
-		}
-		else if( document.getElement('.'+this.myId) != null){
-			document.getElement('.'+this.myId).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
 		}
 	},
 	set_x: function(new_x){
