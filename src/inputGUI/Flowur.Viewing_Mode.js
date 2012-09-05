@@ -12,9 +12,9 @@ var Viewing_Mode = new Class({
 		this.color_scheme_4 = ['#FF8C00', '#1D9ACF', '#777777'];//Orange/Blue scheme
 		this.color_schemes = [this.color_scheme_1, this.color_scheme_2, this.color_scheme_3, this.color_scheme_4];
 		
-		this.use_textures = true;
+		this.use_textures = false;
 		this.texture_scheme = 0;
-		this.texture_scheme_1 = ['images/crissXcross.png', 'images/triangles.png', 'images/argyle.png']; //Dark scheme
+		this.texture_scheme_1 = ['images/blue_donuts.png', 'images/red_stripes.png', 'images/orange_stripes.png']; //Dark scheme
 		this.texture_schemes = [this.texture_scheme_1];
 		
 		this.text_array = new Array();
@@ -274,6 +274,8 @@ var Viewing_Mode = new Class({
 			all_nodes[0].myTexture = this.texture_schemes[this.texture_scheme][0];
 		else
 			all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
+			
+		all_nodes[0].myTexture = 'images/red_stripes.png';
 		this.layers[0] = first_layer;
 		var second_layer = new Array();
 		this.layers.push(second_layer);
