@@ -469,8 +469,10 @@ var Creation_Mode = new Class({
 			}
 			
 		}
+		/*
 		else if((this.linkingNode.getLinkedNode() != node) && (node.getLinkedNode() === this.linkingNode)) //If trying to form an immediate loop
 			this.displayMessage("Action not permitted: Linking these would create an infinite loop.");
+			*/
 		else //Otherwise, just create a new link between nodes
 		{
 			var linked_arrow = new Linked_Arrow(0,0, this.linkingNode);

@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update: 9/4/12
 var Linked_Arrow = new Class({
 	initialize: function(x,y, lnode){
 		this.x = x;

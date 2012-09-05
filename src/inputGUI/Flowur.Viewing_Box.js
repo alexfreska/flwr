@@ -5,6 +5,7 @@ var Viewing_Box = new Class({
 	initialize: function(){
 		this.myText;
 		this.myColor;
+		this.myTexture;
 		this.myType;
 		this.myId;
 		this.fromNodeId;
@@ -20,9 +21,17 @@ var Viewing_Box = new Class({
 		this.radius = 5;
 	},
 	draw: function(){
+		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});		
+		this.top_box = paper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
+		if(this.myTexture != null){
+			this.top_box.attr({'fill': 'url('+this.myTexture+')'});
+		}
+		this.top_text.toFront();
+		/*
 		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});
 		this.top_box = paper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
 		this.top_text.toFront();
+		*/
 	},
 	set_x: function(new_x){this.x = new_x;},
 	set_y: function(new_y){this.y = new_y;},

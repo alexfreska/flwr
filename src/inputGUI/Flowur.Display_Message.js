@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update: 9/4/12
 var Display_Message = new Class({
 	initialize: function(str){
 		this.myText = str;

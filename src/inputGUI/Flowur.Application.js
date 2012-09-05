@@ -1,6 +1,7 @@
 // JavaScript Document
 // Application Holder Class
-//0xFFAD00, 0xFF0033, 0x0074FA, 0xFF6431, 0x00A300, 0xFFEC00, 0xFF98C6, 0x001598, 0x00F787, 0xFF10BB
+// Written by Patrick Teague
+// Last updated: 9/4/12
 var paper;
 var creator;
 var creator_up = true;
@@ -23,19 +24,9 @@ window.onresize = function()//Resize and reposition everything here.
 window.addEvent('domready', function(){
     paper = new Raphael(document.getElementById('application'), stage.innerWidth, stage.innerHeight);
 	background = paper.rect(0,0,stage.innerWidth, stage.innerHeight);
-	//background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none', 'fill-opacity': .1});
 	background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none', 'fill-opacity': .1});
-	//background = paper.image('images/whitey.png', 0, 0, 654, 654);
-	//background.attr({'fill': 'images/whitey.png', stroke: 'none'});
-	/* 
-	var container = document.id('application');
-	//console.log(container.get('id'));
-
-	container.addEvent('mousedown', function(event){
-		event.preventDefault();	
-		//console.log('click');
-	});
-	*/
+	//var test_box = paper.rect(100, 100, 200, 300);
+	//test_box.attr({'fill': "url(images/whitey.png)", stroke: 'none'});
 	navigate = new Command_Navigator();
 	creator = new Creation_Mode();
 });

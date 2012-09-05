@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update: 9/4/12
 var Link = new Class({
 	initialize: function(from_x, from_y, to_x, to_y){
 		//Fix any issues with direction of line

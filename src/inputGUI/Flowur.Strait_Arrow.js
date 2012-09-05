@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update: 9/4/12
 var Strait_Arrow = new Class({
 	initialize: function(x,y,t,f){
 		this.id = 'arrow';

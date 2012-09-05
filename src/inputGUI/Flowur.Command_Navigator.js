@@ -2,7 +2,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //Title: Command_Navigator													  //
 //By: Patrick Teague														  //
-//Date: 5/15/2012															  //
+//Date: 9/4/2012															  //
 //This class generates the circle surrounding a mouse click and hold sequence,//
 //which contains all of the possible operations that may be run on an object. //
 //This code is designed to speed up the flowchart creation process.			  //

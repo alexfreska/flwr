@@ -1,4 +1,6 @@
 // JavaScript Document
+// Written by Patrick Teague
+// Last update: 9/4/12
 //Title box
 //Text can be entered into this box, and will create a title for the chart.
 var Title = new Class({

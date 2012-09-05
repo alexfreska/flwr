@@ -1,6 +1,6 @@
 // JavaScript Document
 // Written by Patrick Teague
-// Last update: 8/10/12
+// Last update: 9/4/12
 // Viewing mode code
 
 var Viewing_Mode = new Class({
@@ -11,6 +11,11 @@ var Viewing_Mode = new Class({
 		this.color_scheme_3 = ['#5670CF', '#68D019', '#555555'];//Green/Blue scheme
 		this.color_scheme_4 = ['#FF8C00', '#1D9ACF', '#777777'];//Orange/Blue scheme
 		this.color_schemes = [this.color_scheme_1, this.color_scheme_2, this.color_scheme_3, this.color_scheme_4];
+		
+		this.use_textures = true;
+		this.texture_scheme = 0;
+		this.texture_scheme_1 = ['images/crissXcross.png', 'images/triangles.png', 'images/argyle.png']; //Dark scheme
+		this.texture_schemes = [this.texture_scheme_1];
 		
 		this.text_array = new Array();
 		this.address_array = new Array();
@@ -190,6 +195,7 @@ var Viewing_Mode = new Class({
 		var all_nodes = new Array();
 		for(var i=0; i<nodes_info.length; i++){
 			var new_node = new Viewing_Box();
+			//new_node.myTexture = this.viewing_box_texture;
 			new_node.set_text(nodes_info[i].data);
 			new_node.myId = nodes_info[i].id;
 			for(var j=0; j<arrows_info.length; j++){
@@ -221,22 +227,30 @@ var Viewing_Mode = new Class({
 				if(!skip_step){
 					var prev_layer = tis.layers[current_layer-1];
 					for(var j=0; j<prev_layer.length; j++){
-						//console.log("In here");
 						if(prev_layer[j].myId === all_nodes[i].fromNodeId){ /*If node on previous layer points to tis node*/
 							if(current_layer%2 == 1){
 								all_nodes[i].myType = 'A';
-								all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][1]);
+								if(tis.use_textures)
+									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][1];
+								else
+									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][1]);
 							}
 							else if(all_nodes[i].toNodeId != null){
 								all_nodes[i].myType = 'Q';
-								all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][0]);
+								if(tis.use_textures)
+									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][0];
+								else
+									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][0]);
 							}
 							else{
 								all_nodes[i].myType = 'S';
-								all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][2]);
+								if(tis.use_textures)
+									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][2];
+								else
+									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][2]);
 							}
 							layer.push(all_nodes[i]);
-							console.log(all_nodes[i].get_text());
+							//console.log(all_nodes[i].get_text());
 						}
 						if(all_nodes[i].toNodeId != null){
 							current_layer++;
@@ -256,76 +270,15 @@ var Viewing_Mode = new Class({
 		var first_layer = new Array();
 		first_layer.push(all_nodes[0]); //This is the first node...
 		all_nodes[0].set_type('Q');
-		all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
+		if(this.use_textures)
+			all_nodes[0].myTexture = this.texture_schemes[this.texture_scheme][0];
+		else
+			all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
 		this.layers[0] = first_layer;
 		var second_layer = new Array();
 		this.layers.push(second_layer);
 		recursive_sort_layers(this.layers[1]);
 	},
 	
-	/*
-	demo_draw: function(){
-		var title = new Question_Box();
-		title.set_color('#FF4000');
-		title.set_text("Is Flowur Right For You");
-		title.set_x(stage.innerWidth/2 - title.width/2);
-		title.set_y(20);
-		title.draw();
-		
-		var base1 = new Question_Box();
-		base1.set_color('#0078FF');
-		base1.set_text("Are you a student?");
-		base1.set_x(stage.innerWidth/2 - base1.width/2);
-		base1.set_y(stage.innerHeight/2 - base1.height/2);
-		
-		var base2 = new Answer_Box();
-		base2.set_color('#646464');
-		base2.set_text("Yes");
-		base2.set_x(base1.x + base1.width + base1.buffer + base2.buffer);
-		base2.set_y(stage.innerHeight/2 - base2.height/2);
-		
-		var base3 = new Answer_Box();
-		base3.set_color('#646464');
-		base3.set_text("No");
-		base3.set_x(base1.x - base1.buffer - base2.buffer - base2.width);
-		base3.set_y(stage.innerHeight/2 - base3.height/2);
-		
-		var base4 = new Answer_Box();
-		base4.set_color('#646464');
-		base4.set_text("Dunno");
-		base4.set_x(base1.x + base1.width/2 - base4.width/2);
-		base4.set_y(base1.y + base1.height + base1.buffer + base4.buffer);
-		
-		var base5 = new Question_Box();
-		base5.set_color('#E21E22');
-		base5.set_text("You'll need it for your classes.");
-		base5.set_x(base2.x + base2.width + base2.buffer + base5.buffer);
-		base5.set_y(stage.innerHeight/2 - base5.height/2);
-		
-		var base6 = new Question_Box();
-		base6.set_color('#E21E22');
-		base6.set_text("You'll need it for your buisness.");
-		base6.set_x(base3.x - base3.buffer - base6.buffer - base6.width);
-		base6.set_y(stage.innerHeight/2 - base6.height/2);
-		
-		var base7 = new Question_Box();
-		base7.set_color('#E21E22');
-		base7.set_text("You'll need it for life.");
-		base7.set_x(base4.x + base4.width/2 - base7.width/2);
-		base7.set_y(base4.y + base4.height + base4.buffer + base7.buffer);
-		
-		var line1 = paper.rect(base6.x, (base6.y+base6.height/2 - 1), (base5.x - base6.x), 2).attr({"fill": '#444444', 'stroke': 'none' });
-		var line2 = paper.rect( (base1.x+base1.width/2 - 1), base1.y, 2, (base7.y - base1.y)).attr({"fill": '#444444', 'stroke': 'none' });
-		
-		base1.draw();
-		base2.draw();
-		base3.draw();
-		base4.draw();
-		base5.draw();
-		base6.draw();
-		base7.draw();
-		
-	},
-	*/
-	
+
 });
