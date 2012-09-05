@@ -74,7 +74,7 @@ var Node = new Class({
 		this.done_edit = true;
 		if(this.textField == null){
 			this.myText = document.getElement('.'+this.text_area_id).value;
-			if( this.myText === "")
+			if( this.myText === "" || this.myText === "\n")
 			{
 				this.myText = "Enter your text here.";
 				this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start','font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});

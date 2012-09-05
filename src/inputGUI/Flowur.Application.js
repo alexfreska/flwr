@@ -23,7 +23,10 @@ window.onresize = function()//Resize and reposition everything here.
 window.addEvent('domready', function(){
     paper = new Raphael(document.getElementById('application'), stage.innerWidth, stage.innerHeight);
 	background = paper.rect(0,0,stage.innerWidth, stage.innerHeight);
-	background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none'});
+	//background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none', 'fill-opacity': .1});
+	background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none', 'fill-opacity': .1});
+	//background = paper.image('images/whitey.png', 0, 0, 654, 654);
+	//background.attr({'fill': 'images/whitey.png', stroke: 'none'});
 	/* 
 	var container = document.id('application');
 	//console.log(container.get('id'));

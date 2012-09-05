@@ -20,6 +20,10 @@ var Command_Navigator = new Class({
 	},
 	addListeners: function(){
 		var cmd_nav = this;
+		this.double_click_function = function(e){
+			e.stop();
+			creator.new_node(creator.baseNode);
+		};
 		this.mousedown_function = function(e){
 			
 			if(creator.getObjectAt(e.page.x, e.page.y) instanceof Title)
@@ -57,10 +61,6 @@ var Command_Navigator = new Class({
 						creator.done_title(cmd_nav.currentNode);
 					else
 						creator.done_node(cmd_nav.currentNode);
-					/*
-					cmd_nav.command_set.push('done');
-					cmd_nav.command_set.push('save');
-					*/
 				}
 				else if(creator.getObjectAt(e.page.x, e.page.y).done_edit == true){
 					e.stop();
@@ -68,10 +68,6 @@ var Command_Navigator = new Class({
 						creator.done_title(cmd_nav.currentNode);
 					else
 						creator.done_node(cmd_nav.currentNode);
-						/*
-					cmd_nav.command_set.push('done');
-					cmd_nav.command_set.push('save');
-					*/
 				}
 			}
 			else{
@@ -106,7 +102,7 @@ var Command_Navigator = new Class({
 									if(temp_node.getParentArray() != null){
 										cmd_nav.command_set.push('delete');
 									}
-									cmd_nav.command_set.push('add');
+									//cmd_nav.command_set.push('add');
 								}
 								else{
 									cmd_nav.command_set.push('delete');
@@ -115,11 +111,8 @@ var Command_Navigator = new Class({
 						}
 					}		
 				}
-				
 				else{
-					e.stop();
-					cmd_nav.command_set.push('add');
-					//cmd_nav.command_set.push('save');
+					e.stop();	
 				}
 			}	
 			cmd_nav.create_wheel(e.page.x, e.page.y);
@@ -139,9 +132,103 @@ var Command_Navigator = new Class({
 				cmd_nav.command_wheel.pop();	
 			}
 		};
+		this.keyup_function = function(e){
+			if(!cmd_nav.editting){
+				//console.log(e.keyCode);
+				if(e.keyCode == 65) //if "a" pushed
+					creator.new_node(creator.baseNode);
+				else if(e.keyCode == 69){ //If "e" pushed
+					cmd_nav.currentNode = creator.baseNode;
+					creator.edit_node(creator.baseNode);
+				}
+				else if(e.keyCode == 76){ //If "l" pushed
+					creator.link_node(creator.baseNode);
+				}
+				else if(e.keyCode == 68){ //If "d" pushed
+					if(creator.currentArray.length > 1){
+						if(typeOf(creator.currentArray[creator.currentArray.length-1]) === 'array')
+							creator.delete_node(creator.currentArray[creator.currentArray.length-1][0]);
+						else
+							creator.delete_node(creator.currentArray[creator.currentArray.length-1]);
+					}					
+				}
+				else if(e.keyCode == 39){ //If "right arrow" pushed
+					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].x > creator.baseNode.x && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) <= (creator.baseNode.y + creator.baseNode.height/2)+3 && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) >= (creator.baseNode.y + creator.baseNode.height/2)-3){
+						creator.back_node(creator.baseNode);
+					}
+					else{
+						var tempNode;	
+						for(var i=1; i<creator.currentArray.length; i++){
+							if(typeOf(creator.currentArray[i]) === 'array')
+								tempNode = creator.currentArray[i][0];
+							else
+								tempNode = creator.currentArray[i];
+							if((tempNode.x > creator.baseNode.x) && (tempNode.y + tempNode.height/2) == (creator.baseNode.y + creator.baseNode.height/2))
+								creator.select_node(tempNode);
+						}
+					}
+				}
+				else if(e.keyCode == 37){ //If "left arrow" pushed
+					var tempNode;
+					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].x < creator.baseNode.x && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) == (creator.baseNode.y + creator.baseNode.height/2)){
+						creator.back_node(creator.baseNode);
+					}
+					else{
+						var tempNode;	
+						for(var i=1; i<creator.currentArray.length; i++){
+							if(typeOf(creator.currentArray[i]) === 'array')
+								tempNode = creator.currentArray[i][0];
+							else
+								tempNode = creator.currentArray[i];
+							if((tempNode.x < creator.baseNode.x) && (tempNode.y + tempNode.height/2) <= (creator.baseNode.y + creator.baseNode.height/2)+3 && (tempNode.y + tempNode.height/2) >= (creator.baseNode.y + creator.baseNode.height/2)-3)
+								creator.select_node(tempNode);
+						}
+					}
+				}
+				else if(e.keyCode == 38){ //If "up arrow" pushed
+					var tempNode;
+					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].y < creator.baseNode.y){
+						creator.back_node(creator.baseNode);
+					}
+					else{
+						var tempNode;	
+						for(var i=1; i<creator.currentArray.length; i++){
+							if(typeOf(creator.currentArray[i]) === 'array')
+								tempNode = creator.currentArray[i][0];
+							else
+								tempNode = creator.currentArray[i];
+							if(tempNode.y < creator.baseNode.y-3)
+								creator.select_node(tempNode);
+						}
+					}
+				}
+				else if(e.keyCode == 40){ //If "down arrow" pushed
+					var tempNode;
+					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].y > creator.baseNode.y){
+						creator.back_node(creator.baseNode);
+					}
+					else{
+						var tempNode;	
+						for(var i=1; i<creator.currentArray.length; i++){
+							if(typeOf(creator.currentArray[i]) === 'array')
+								tempNode = creator.currentArray[i][0];
+							else
+								tempNode = creator.currentArray[i];
+							if(tempNode.y > creator.baseNode.y+3)
+								creator.select_node(tempNode);
+						}
+					}
+				}
+			}
+			else if(e.keyCode == 13){ //If "enter" pressed
+				creator.done_node(cmd_nav.currentNode);
+				cmd_nav.currentNode.myText = cmd_nav.currentNode.myText.substring(0, cmd_nav.currentNode.myText.lastIndexOf("\n"));
+			}
+		};
 		document.id('application').addEvent('mousedown', this.mousedown_function);
-		//Make descision on what command to execute, get rid of navigator from stage
+		document.id('application').addEvent('dblclick', this.double_click_function);
 		document.id('application').addEvent('mouseup', this.mouseup_function);
+		document.onkeyup=this.keyup_function;
 	},
 	add_command: function(str){
 		this.command_set.push(str);
@@ -182,6 +269,8 @@ var Command_Navigator = new Class({
 	close_it: function(){
 		document.id('application').removeEvent('mousedown', this.mousedown_function);
 		document.id('application').removeEvent('mouseup', this.mouseup_function);
+		document.id('application').removeEvent('dblclick', this.double_click_function);
+		document.id('application').removeEvent('keyup', this.keyup_function);
 	},
 	
 });

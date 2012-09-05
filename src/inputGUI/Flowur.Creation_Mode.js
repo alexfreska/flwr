@@ -564,6 +564,7 @@ var Creation_Mode = new Class({
 	done_node: function(node){
 		//this.reposition_nodes();
 		node.doneEdit();
+		navigate.editting = false;
 		this.save_structure();
 		//navigate.editting = false;
 	},
@@ -844,7 +845,8 @@ var Creation_Mode = new Class({
 		this.baseNode.setChildArray(this.currentArray);
 	},
 	delete_node: function(node){
-		this.back_node(node);
+		if(node === this.baseNode)
+			this.back_node(node);
 		this.deleteNode(node, node.getArrow(), node.getOutLinkArrow(), node.getInLinkArrow());
 		this.save_structure();
 	},
