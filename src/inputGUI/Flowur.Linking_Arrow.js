@@ -96,6 +96,7 @@ var Linking_Arrow = new Class({
 		this.top_graphic.unmouseout(this.arrow_out);
 	},
 	undraw: function(){
+		this.arrow_out();
 		this.top_graphic.hide();
 		this.removeListeners();
 		this.onStage = false;

@@ -219,16 +219,25 @@ var Command_Navigator = new Class({
 						}
 					}
 				}
+				else if(e.keyCode == 84){
+					cmd_nav.currentNode = creator.title;
+					creator.edit_title(cmd_nav.currentNode);
+				}
 			}
 			else if(e.keyCode == 13){ //If "enter" pressed
 				creator.done_node(cmd_nav.currentNode);
 				cmd_nav.currentNode.myText = cmd_nav.currentNode.myText.substring(0, cmd_nav.currentNode.myText.lastIndexOf("\n"));
 			}
 		};
+		//Support for desktop
 		document.id('application').addEvent('mousedown', this.mousedown_function);
 		document.id('application').addEvent('dblclick', this.double_click_function);
 		document.id('application').addEvent('mouseup', this.mouseup_function);
 		document.onkeyup=this.keyup_function;
+		
+		//Now for touch screen support
+		document.id('application').addEvent('touchstart', this.mousedown_function);
+		document.id('application').addEvent('touchend', this.mouseup_function);
 	},
 	add_command: function(str){
 		this.command_set.push(str);
@@ -271,6 +280,10 @@ var Command_Navigator = new Class({
 		document.id('application').removeEvent('mouseup', this.mouseup_function);
 		document.id('application').removeEvent('dblclick', this.double_click_function);
 		document.id('application').removeEvent('keyup', this.keyup_function);
+		
+		//Get rid of touch listeners
+		document.id('application').removeEvent('touchstart', this.mousedown_function);
+		document.id('application').removeEvent('touchend', this.mouseup_function);
 	},
 	
 });

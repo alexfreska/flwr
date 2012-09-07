@@ -119,8 +119,8 @@ var Title = new Class({
 		this.height = h;
 		
 		this.back_box.animate({width: w, x:stage.innerWidth/2 - (w/2)}, 300);
-		this.bottom_box.animate({width: w, x:stage.innerWidth/2 - (w/2)}, 300);
-		this.top_box.animate({width: w, x:stage.innerWidth/2 - (w/2)}, 300);
+		this.bottom_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-3}, 300);
+		this.top_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-3}, 300);
 	},
 	reposition: function(){	
 		this.width = this.textField.getBBox().width + 20;
@@ -130,7 +130,8 @@ var Title = new Class({
 		this.back_box.animate({x: (stage.innerWidth - this.width)/2, y: this.y},300);
 		this.bottom_box.animate({x: (stage.innerWidth - this.width)/2 -3, y: this.y+3},300);
 		this.top_box.animate({x: (stage.innerWidth - this.width)/2 -3, y: this.y+3},300);
-		this.textField.animate({x: this.x + this.width/2, y: this.y + this.height/2},300);
+		this.textField.animate({x: (stage.innerWidth - this.width)/2 +10}, 300);
+		//this.textField.animate({x: this.x + this.width/2, y: this.y + this.height/2},300);
 	}
 	
 });

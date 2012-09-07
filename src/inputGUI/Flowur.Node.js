@@ -238,7 +238,7 @@ var Node = new Class({
 		if(this.textField != null)
 			this.position_text();
 		else {
-			document.getElement('.'+this.myId).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
 		}
 	},
 	set_y: function(new_y){
@@ -249,7 +249,7 @@ var Node = new Class({
 		if(this.textField != null)
 			this.position_text();
 		else {
-			document.getElement('.'+this.myId).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
 		}
 	},
 	linkingMode: function(mode){

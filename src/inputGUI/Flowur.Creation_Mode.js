@@ -8,6 +8,7 @@ var Creation_Mode = new Class({
 		this.node_colors = ['#FFAD00', '#FF0033', '#0074FA', '#FF6431', '#00A300', '#FFEC00', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
 		this.counter;
 		this.linking;
+		this.useAnimations = false;
 		this.maxNodes = 3;
 		this.currentArray = new Array();
 		this.itemsOnStage = new Array();
@@ -137,6 +138,7 @@ var Creation_Mode = new Class({
 						link_out.undraw();
 						unsorted_nodes[z].myLinkedNode = to_node;
 						link_out.myLinkedArrow = link_in;
+						link_in.myLinkingArrow = link_out;
 						to_node.addInLinkArrow(link_in);
 						unsorted_nodes[z].setOutLinkArrow(link_out);
 						
@@ -243,6 +245,7 @@ var Creation_Mode = new Class({
 		else
 			this.displayMessage("Max number of buds reached.");
 	},
+	/*
 	reposition_nodes: function(){
 		var z_angle = 0;
 		if(this.arrow_in != null){
@@ -250,9 +253,9 @@ var Creation_Mode = new Class({
 		}
 		this.update_Arrays();
 		if(this.arrow_in == null){
-			//this.baseNode.set_x( stage.innerWidth/2 - this.baseNode.width/2);
-			//this.baseNode.set_y( stage.innerHeight/2 - this.baseNode.height/2);
-			this.baseNode.move_to(stage.innerWidth/2 - this.baseNode.width/2, stage.innerHeight/2 - this.baseNode.height/2);
+			this.baseNode.set_x( stage.innerWidth/2 - this.baseNode.width/2);
+			this.baseNode.set_y( stage.innerHeight/2 - this.baseNode.height/2);
+			//this.baseNode.move_to(stage.innerWidth/2 - this.baseNode.width/2, stage.innerHeight/2 - this.baseNode.height/2);
 		}
 		else{
 			var offset = 10;
@@ -284,7 +287,92 @@ var Creation_Mode = new Class({
 				node_y = base.y + base.height/2 - (node.width/2 + base.width/2 + arw.width + offset*2)*Math.tan(z_angle) - node.height/2;
 			}
 			z_angle += Math.PI;
-			this.baseNode.move_to(node_x, node_y, 200);
+			//this.baseNode.move_to(node_x, node_y, 200);
+			this.baseNode.set_x(node_x);
+			this.baseNode.set_y(node_y);
+		}
+		if(this.baseNode.getOutLinkArrow() != null || this.baseNode.getInLinkArrow() != null)
+			this.reposition_linking_arrows(this.baseNode);
+		
+		var num = this.currentArray.length;
+		for(var i =1; i<this.currentArray.length; i++){
+			num--;
+			var tempNode;
+			if(typeOf(this.currentArray[i]) === 'array')
+				tempNode = this.currentArray[i][0];
+			else
+				tempNode = this.currentArray[i];	
+	
+			tempNode.setColor(this.node_colors[this.current_color]);
+			//this.distribute_arrows(z_angle, tempNode.getArrow(), tempNode, j);
+			
+			var offset = 10;
+			tempNode.getArrow().setPrevAngle(-tempNode.getArrow().getAngle()*Math.PI/180);
+			tempNode.getArrow().setAngle(0);
+			var arw_theta;
+			if( this.arrow_in != null) //If there is an arrow in
+				arw_theta = (2*Math.PI/(this.currentArray.length))*num + z_angle;
+			else
+				arw_theta = (2*Math.PI/(this.currentArray.length-1))*num;
+			while(arw_theta >= 2*Math.PI)
+				arw_theta -= 2*Math.PI;
+				
+			this.arrow_to(tempNode.getArrow(), tempNode, arw_theta, arw_theta);	//arw, node, current_angle, final_angle, z_angle
+		}
+	},
+	*/
+	// Complex animations version.
+	reposition_nodes: function(){
+		var z_angle = 0;
+		if(this.arrow_in != null){
+			z_angle = -this.arrow_in.getAngle()*Math.PI/180 + Math.PI;
+		}
+		this.update_Arrays();
+		if(this.arrow_in == null){
+			if(!this.useAnimations){
+				this.baseNode.set_x(stage.innerWidth/2 - this.baseNode.width/2);
+				this.baseNode.set_y(stage.innerHeight/2 - this.baseNode.height/2);
+			}
+			else
+				this.baseNode.move_to(stage.innerWidth/2 - this.baseNode.width/2, stage.innerHeight/2 - this.baseNode.height/2);
+		}
+		else{
+			var offset = 10;
+			var base = this.currentArray[0].getParentArray()[0];
+			var rad = Math.atan( (base.height/2)/(base.width/2) ); //Get angle of corner
+			var node_x, node_y;
+			var node = this.baseNode;
+			var arw = this.arrow_in;
+			z_angle -= Math.PI;
+			
+			//Top
+			if( z_angle >= rad && z_angle < (Math.PI - rad) ){
+				node_y = arw.y - arw.height - node.height - offset;
+				node_x = base.x + base.width/2 + (base.height/2 + node.height/2 + arw.height)/Math.tan(z_angle) - node.width/2;
+			}
+			//Left
+			else if( z_angle >= (Math.PI - rad) && z_angle < (Math.PI + rad)){
+				node_x = arw.x - arw.width - node.width - offset;
+				node_y = base.y + base.height/2 + (node.width/2 + base.width/2 + arw.width + offset*2)*Math.tan(z_angle) - node.height/2;
+			}
+			//Bottom
+			else if( z_angle >= (Math.PI + rad) && z_angle < (2*Math.PI - rad)){
+				node_y = arw.y + arw.height + offset;
+				node_x = base.x + base.width/2 - (base.height/2 + node.height/2 + arw.height)/Math.tan(z_angle) - node.width/2;
+			}
+			//Right
+			else{
+				node_x = arw.x + arw.width + offset;
+				node_y = base.y + base.height/2 - (node.width/2 + base.width/2 + arw.width + offset*2)*Math.tan(z_angle) - node.height/2;
+			}
+			z_angle += Math.PI;
+			if(this.useAnimations){
+				this.baseNode.move_to(node_x, node_y, 200);
+			}
+			else{
+				this.baseNode.set_x(node_x);
+				this.baseNode.set_y(node_y);
+			}
 		}
 		if(this.baseNode.getOutLinkArrow() != null || this.baseNode.getInLinkArrow() != null)
 			this.reposition_linking_arrows(this.baseNode);
@@ -299,11 +387,7 @@ var Creation_Mode = new Class({
 				tempNode = this.currentArray[i];	
 	
 			tempNode.setColor(this.node_colors[this.current_color]);
-			this.distribute_arrows(z_angle, tempNode.getArrow(), tempNode, j);
-			/*
-			if(tempNode.getOutLinkArrow() != null || tempNode.getInLinkArrow() != null)
-					this.reposition_linking_arrows(tempNode);
-			*/		
+			this.distribute_arrows(z_angle, tempNode.getArrow(), tempNode, j);	
 		}
 	},
 	isLinking: function(){return this.linking},
@@ -318,7 +402,12 @@ var Creation_Mode = new Class({
 			arw_theta = (2*Math.PI/(this.currentArray.length-1))*num;
 		while(arw_theta >= 2*Math.PI)
 			arw_theta -= 2*Math.PI;
-		this.arrow_to(arw, node, arw.getPrevAngle(), arw_theta);		
+		if(this.useAnimations){
+			this.arrow_to(arw, node, arw.getPrevAngle(), arw_theta);
+		}
+		else{
+			this.arrow_to(arw, node, arw_theta, arw_theta);		
+		}
 	},
 	arrow_to: function(arw, node, current_angle, final_angle, z_angle){
 		var klass = this;
@@ -496,6 +585,8 @@ var Creation_Mode = new Class({
 				if(this.linkingNode.onStage)
 					linking_arrow.draw();
 			}
+			linking_arrow.myLinkedArrow = linked_arrow;
+			linked_arrow.myLinkingArrow = linking_arrow;
 			if(this.linkingNode.onStage)
 				this.reposition_linking_arrows(this.linkingNode);
 			this.reposition_linking_arrows(node);
@@ -607,7 +698,7 @@ var Creation_Mode = new Class({
 		var test_base = this.baseNode;
 		if(this.baseNode.getOutLinkArrow() != null || this.baseNode.getInLinkArrow() != null){
 				this.reposition_linking_arrows(this.baseNode);
-			}
+		}
 		this.baseNode = newBase;
 		this.baseChain.push(this.baseNode);
 		this.current_color++;
@@ -637,8 +728,13 @@ var Creation_Mode = new Class({
 				arw.set_y(arw.y+(final_y-newBase_y));
 				arw.setAngle(pre_angle);
 			}
-			if(temp.onStage && k<4){
-				temp.move_to(temp.x+(final_x-newBase_x), temp.y+(final_y-newBase_y),anim_time);
+			if(temp.onStage && k<5){
+				if(this.useAnimations)
+					temp.move_to(temp.x+(final_x-newBase_x), temp.y+(final_y-newBase_y),anim_time);
+				else{
+					temp.set_x(temp.x+(final_x-newBase_x));
+					temp.set_y(temp.y+(final_y-newBase_y));
+				}
 			}
 			else{
 				if(temp.onStage)
@@ -648,6 +744,9 @@ var Creation_Mode = new Class({
 				if(arw != null)
 					arw.undraw();
 			}
+			if(temp.getOutLinkArrow() != null || temp.getInLinkArrow() != null){
+				this.reposition_linking_arrows(temp);
+		}
 		}
 		//this.node_in = newBase.getParentArray()[0];
 		this.arrow_in = newBase.getArrow();
@@ -777,7 +876,7 @@ var Creation_Mode = new Class({
 				arw.set_y(arw.y+(final_y-newBase_y));
 				arw.setAngle(pre_angle);
 			}
-			if(temp.onStage && k<4){
+			if(temp.onStage && k<5){
 				temp.move_to(temp.x+(final_x-newBase_x), temp.y+(final_y-newBase_y),anim_time); 		
 			}
 			else{
@@ -868,7 +967,10 @@ var Creation_Mode = new Class({
 		}
 		if(ldArw != null){
 			for(var i = 0; i<ldArw.length; i++){
+				ldArw[i].linked_node.setOutLinkArrow(null);
 				ldArw[i].undraw();
+				ldArw[i].myLinkingArrow.undraw();		
+				ldArw[i].myLinkingArrow = null;
 				node.removeInLinkArrow(ldArw[i]);	
 			}
 		}

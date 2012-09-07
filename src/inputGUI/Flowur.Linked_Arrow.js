@@ -8,6 +8,7 @@ var Linked_Arrow = new Class({
 		this.width = 17;
 		this.height = 46;
 		this.onStage = false;
+		this.myLinkingArrow;
 		this.linked_node = lnode;
 		var b = this;
 		var setup_obs = function(){
@@ -93,6 +94,7 @@ var Linked_Arrow = new Class({
 		this.top_graphic.unmouseout(this.arrow_out);
 	},
 	undraw: function(){
+		this.arrow_out();
 		this.top_graphic.hide();
 		this.removeListeners();
 		this.onStage = false;
