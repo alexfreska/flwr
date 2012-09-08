@@ -236,8 +236,8 @@ var Command_Navigator = new Class({
 		document.onkeyup=this.keyup_function;
 		
 		//Now for touch screen support
-		document.id('application').addEvent('touchstart', this.mousedown_function);
-		document.id('application').addEvent('touchend', this.mouseup_function);
+		document.addEventListener('touchstart', this.mousedown_function);
+		document.addEventListener('touchend', this.mouseup_function);
 	},
 	add_command: function(str){
 		this.command_set.push(str);
@@ -282,8 +282,8 @@ var Command_Navigator = new Class({
 		document.id('application').removeEvent('keyup', this.keyup_function);
 		
 		//Get rid of touch listeners
-		document.id('application').removeEvent('touchstart', this.mousedown_function);
-		document.id('application').removeEvent('touchend', this.mouseup_function);
+		document.addEventListener('touchstart', this.mousedown_function);
+		document.addEventListener('touchend', this.mouseup_function);
 	},
 	
 });

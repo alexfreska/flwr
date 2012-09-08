@@ -4,9 +4,6 @@
 
 var Viewer_Navigator = new Class({
 	initialize: function(){
-		//this.onMove;
-		//this.onStart;
-		//this.onEnd;
 		this.drag_space = paper.rect(0,0,stage.innerWidth, stage.innerHeight).attr({'fill': '#000000', 'fill-opacity': 0, 'stroke': 'none'});
 		this.h_slider = new Horizontal_Slider(); //Horizontal Slider
 		this.v_slider = new Vertical_Slider(); //Vertical Slider
