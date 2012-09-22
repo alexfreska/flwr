@@ -2,14 +2,26 @@ Flowur
 
 The Flowur API interfaces Controllers and Templates using a standardized JSON markup.
 
+________________________________________________________________________________
+
 Flowur API
+
 The API provides developers with methods for creating JSON data, using node relational info, setting node-placement, and styling graphics. The default graphic system is built on the Raphaël JavaScript library.
 
+________________________________________________________________________________
+
 Controllers
+
 Controllers are user interfaces that streamline node based data entry and build a JSON file using the Flowur API.
 
+________________________________________________________________________________
+
 Templates
+
 Templates consist of routing algorithms, functionality code, and graphical styling. The Flowur API makes the process of building a template much easier.
+
+________________________________________________________________________________
+
 
 Copyright (c) 2012, Flowur
 All rights reserved.
