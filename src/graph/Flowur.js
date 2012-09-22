@@ -70,20 +70,21 @@ Flowur.Node = new Class(
 {
 	id: 0,
 	data: 'empty',
-	type: 'text',
+	//question, answer, statement
+	type: 'question',
 	visual: {}, // Raphael reference
 	
 	// visual
 	x: 0,
 	y: 0,
 
-	initialize: function(id, data)
+	initialize: function(id, data, type)
 	{
 		//this.paper = paper;		// reference to Raphael
 		
 		this.id = id;
 		this.data = data;
-		//this.type = type;
+		this.type = type;
 	
 		// VISUAL --------------------------------------------------------------
 		// flags
@@ -113,13 +114,11 @@ Flowur.Arrow = new Class(
 {
 	from: new Flowur.Node(),
 	to: new Flowur.Node(),
-	data: "",
 
-	initialize: function(from, to, data)
+	initialize: function(from, to)
 	{
 		this.from = from;
 		this.to = to;
-		this.data = data;
 	},
 
 	Mutators: ['from', 'to', 'data']
@@ -213,13 +212,13 @@ Flowur.Flowchart = new Class(
 	 * @return			(Node)		the node that was added to the flowchart
 	 */
 	 
-	addNode: function(data)
+	addNode: function(data, type)
 	{
 		data = data || Flowur.Flowchart.getAlphaId();
 		
 		id = Flowur.Flowchart.assignId();
 
-		var node = new Flowur.Node(id, data);
+		var node = new Flowur.Node(id, data, type);
 		
 		// initialize start node
 		if(this.nodes.length == 0)
@@ -303,10 +302,8 @@ Flowur.Flowchart = new Class(
 	 *
 	 */
 	 
-	addArrow: function(from, to, data)
+	addArrow: function(from, to)
 	{
-		data = data || '';
-		
 		if(from == null)
 		{
 			console.log("_from_ does not exist.");
@@ -327,7 +324,7 @@ Flowur.Flowchart = new Class(
 			}
 		});
 	
-		this.arrows.push(new Flowur.Arrow(from, to, data));
+		this.arrows.push(new Flowur.Arrow(from, to));
 	},
 	
 	/**
@@ -491,20 +488,21 @@ Flowur.Flowchart = new Class(
 		nodes = [];
 		this.nodes.each(function(node)
 		{
-			nodes.push(Object.subset(node, ['id', 'data']));
+			nodes.push(Object.subset(node, ['id', 'data', 'type']));
 		});
 		
 		arrows = [];
 		this.arrows.each(function(arrow)
 		{
-			from = Object.subset(arrow.from, ['id', 'data']);
-			to = Object.subset(arrow.to, ['id', 'data']);
+		
+		//May be wrong
+			from = Object.subset(arrow.from, ['id']);
+			to = Object.subset(arrow.to, ['id']);
 			
 			cleansedArrow =
 			{
 				from: from,
 				to: to,
-				data: arrow.data
 			}
 			
 			arrows.push(cleansedArrow);
@@ -573,7 +571,7 @@ Flowur.Flowchart = new Class(
 		klass.nodes.each(function(node)
 		{
 			neighborsCount = klass.getNeighborsCount(node);
-			message = '[(' + node.id + ') ' + node.data + '](' + neighborsCount + '): ';		
+			message = '[(' + node.id + ') ' + node.data + '(' + node.type + ')](' + neighborsCount + '): ';		
 			currentNeighborsCount = 0;
 		
 			if(neighborsCount > 0)
@@ -582,7 +580,7 @@ Flowur.Flowchart = new Class(
 				{
 					if(arrow.from == node)
 					{
-						message += '[' + arrow.data + '] -> ' + '(' + arrow.to.id + ') '/*+ '[' + arrow.to.data + ']' */;
+						message += '(' + arrow.to.id + ') '/*+ '[' + arrow.to.data + ']' */;
 		
 						if(neighborsCount < neighborsCount - 1) message += ', ';
 
@@ -636,9 +634,13 @@ Flowur.Flowchart.extend(
 /*	
 var flow = new Flowur.Flowchart({title: 'Should I delete my tweet?', paper: 'paper'});
 
-var a = flow.addNode('Is it cringe-worthy about your boss?');
-var b = flow.addNode('Is there a twitpic of a private part?');
-var c = flow.addNode("Is it your boss's private part?");
+
+//all the following need types and data in arrows must be converted to nodes.
+//Twice as many arrows will be neccessary.
+
+var a = flow.addNode('Is it cringe-worthy about your boss?','question');
+var b = flow.addNode('Is there a twitpic of a private part?','question');
+var c = flow.addNode("Is it your boss's private part?','question');
 var d = flow.addNode('Ask for a raise.');
 var e = flow.addNode('Is it your private part?');
 var f = flow.addNode('Delete that tweet!');
