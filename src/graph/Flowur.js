@@ -209,6 +209,7 @@ Flowur.Flowchart = new Class(
 	 * 				data can be implemented as an object.
 	 *
 	 * @param	data 	(string)	(optional) the text on the node
+	 * @param type	(string)	(optional) the type of node; question, answer, or statement. Defaults to question.
 	 * @return			(Node)		the node that was added to the flowchart
 	 */
 	 
@@ -247,10 +248,6 @@ Flowur.Flowchart = new Class(
 	 * @return 		(Node | Null)	the node that was removed from the flowchart
 	 *								or Null if the removal was unsuccessful	
 	 *
-	 * @trivial	<paroX> girl in the red 12 oclock pretty hot. 
-	 			<unblevable> red sweatpants? 
-	 			<unblevable> is that econ girl?
-	 *          <unblevable> she looks so indie.
 	 */
 	 
 	removeNode: function(id)
@@ -286,7 +283,7 @@ Flowur.Flowchart = new Class(
 
 
 	/**
- 	 * addArrow(from, to [,data])
+ 	 * addArrow(from, to)
  	 *
 	 * add an arrow to the flowchart
 	 *
@@ -295,7 +292,6 @@ Flowur.Flowchart = new Class(
 	 *
 	 * @param	from	(Node)			the arrow's source node
 	 * @param	to		(Node)			the arrow's target node
-	 * @param	data	(String)		(optional) the text on the arrow
 	 * @return 			(Node)			the node that was removed from the flowchart
 	 *									if successful
 	 * @return			(Null)			if unsuccessful
