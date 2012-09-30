@@ -15,8 +15,9 @@ Templates
 Templates consist of routing algorithms, functionality code, and graphical styling. The Flowur API makes the process of building a template much easier.
 
 
+License
+=======
 Copyright (c) 2012, Flowur
-==========================
 All rights reserved.
 
 
