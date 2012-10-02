@@ -491,9 +491,7 @@ var Arrow_Router = new Class({
 				 distX = p1['x'] - p2['x'];
 				 distY = p1['y'] - p2['y'];
 				 for( var i=0; i < boxes.length; i++){
-					 if(  ){
-						 
-					 }
+					 
 				 }
 			 };
 			 //Sends back a list of boxes ordered from closest to farthest from point, and takes out any boxes not to be considered
