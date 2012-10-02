@@ -22,28 +22,31 @@ var Viewing_Mode = new Class({
 		this.current_array = new Array();
 		this.layers = new Array();
 		this.current_bounds;
-		this.router = new Arrow_Router('#AAAAAA');
-		//Get the current_chart here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		
-		//this.demo_draw();
-		//current_chart = ["B1B&Yes", "B1B1B&Could it interfere with your employment?", "B1B1B1B&Yes", "B1B1B1B1&Delete that tweet!", "B1B1B2B&No", "B1B1B2B1&You're in the clear!", "B2B&No", "B2B1B&Is it about an ex?", "B2B1B1B&Yes", "B2B1B1B1&Delete it!", "B2B1B2B&No", "B2B1B2B1&You should be good!", "B&Does it involve your boss?"];
-		
+		this.router;
+		//Get the current_chart here----------------------------------------------------------
 		this.draw();	
-		
 		this.view_nav = new Viewer_Navigator();
 		//This is for debugging purposes, comment out when done
-		this.current_bounds.width = stage.innerWidth + 600;
-		this.current_bounds.height = stage.innerHeight + 500;
+		
+		this.current_bounds.width = stage.innerWidth + 1000;
+		this.current_bounds.height = stage.innerHeight + 1000;
 		this.current_bounds.x = stage.innerWidth/2 - this.current_bounds.width/2;
 		this.current_bounds.y = stage.innerHeight/2 - this.current_bounds.height/2;
+		
 		//End debugging code
 	},
 	draw: function(){
 		//this.log_input();
-		this.parse_chart();
-		//this.create_layers();
+		this.fast_parse();
+		var allNodes = new Array();
+		for(var i=0; i< this.layers.length; i++){
+			for(var j=0; j<this.layers[i].length; j++){
+				allNodes.push(this.layers[i][j]);
+			}
+		}
+		this.router = new Arrow_Router('#AAAAAA', allNodes);
 		//this.log_layers();
+		
 		var first_box = this.layers[0][0];
 		first_box.set_x(stage.innerWidth/2 - first_box.width/2);
 		first_box.set_y(stage.innerHeight/2 - first_box.height/2);
@@ -64,26 +67,34 @@ var Viewing_Mode = new Class({
 				var parent_box = this.get_box_by_id(box.fromNodeId);
 				this.place_box( box, parent_box, this.current_bounds);
 				box.draw();
-				this.router.route(parent_box, box);
+				//this.router.route(parent_box, box);
 			}	
-		}		
-	},
-	log_layers: function(){
-		console.log("Start Log");
-		for(var i=0; i<this.layers.length; i++){
+		}	
+		for(var i=1; i<this.layers.length; i++){
 			for(var j=0; j<this.layers[i].length; j++){
-				console.log(this.layers[i][j].get_text()+" at: "+i+", "+j);	
+				var box = this.layers[i][j];
+				var parent_box = this.get_box_by_id(box.fromNodeId);
+				this.router.route(parent_box, box);
+			}		
+		}
+		for(var i=0; i< this.layers.length; i++){
+			for(var j=0; j<this.layers[i].length; j++){
+				var box = this.layers[i][j];
+				if(box.linkToNodeId != null){
+					var linked_box = this.get_box_by_id(box.linkToNodeId);
+					this.router.route(box, linked_box);
+				}
 			}
 		}
-		console.log("End log");
-	},
-	log_input: function(){
-		console.log("Start input log");
-		var nodes_info = current_chart[1];
-		for(var i=0; i<nodes_info.length; i++){
-			console.log(nodes_info[i].data+ " with id: "+nodes_info[i].id);	
+		/*
+		for(var i=0; i< this.layers.length; i++){
+			for(var j=0; j<this.layers[i].length; j++){
+				var box = this.layers[i][j];
+				box.toFront();
+			}
 		}
-		console.log("End input log");
+		*/
+			
 	},
 	place_box: function(box, parent, boundary_box){
 		/*
@@ -98,6 +109,24 @@ var Viewing_Mode = new Class({
 		*/
 		var direction =  boundary_box.get_direction(box, parent, this);
 		var expansion;
+		if(direction === null){
+			console.log("SPECIAL CASE");
+			console.log(direction);
+			//Find closest open location and dump the node there
+			//Find an open spot for box to fit in. The closer to the parent, the better.
+			var fartherUpParent = this.get_box_by_id(parent.fromNodeId);
+			while(boundary_box.get_direction(box, fartherUpParent, this) === null){
+				if(fartherUpParent.myId != 0)
+					fartherUpParent = this.get_box_by_id(fartherUpParent);
+				else{
+					console.log("larger direction error");
+					break;
+				}
+			}
+			parent = fartherUpParent;
+			//console.log("DIRECTION ERROR");
+		}
+		
 		if(direction == 'right'){
 			box.set_x(parent.x + parent.width + parent.buffer + box.buffer);
 			box.set_y(parent.y + parent.height/2 - box.height/2);
@@ -139,11 +168,10 @@ var Viewing_Mode = new Class({
 			boundary_box.height += expansion;
 			boundary_box.y -= expansion;
 		}
-		else
-			console.log("DIRECTION ERROR");
 		box.draw();
 		box.onStage = true;
 	},
+	
 	check_for_interference: function(box_x, box_y, box){
 		if(Raphael.isBBoxIntersect(box.get_bounds(box_x, box_y), this.layers[0][0].get_bounds(this.layers[0][0].x, this.layers[0][0].y))){
 			return false;	
@@ -161,6 +189,7 @@ var Viewing_Mode = new Class({
 		}
 		return true;
 	},
+	
 	get_box_by_id: function(fromId){
 		for(var i=0; i< this.layers.length; i++){
 			for(var j=0; j< this.layers[i].length; j++){
@@ -170,23 +199,9 @@ var Viewing_Mode = new Class({
 		}
 		return null;
 	},
-	//Search chart and return index of address, or -1 if not found
-	search_chart: function(addr){
-		for(var i=0; i<this.address_array.length; i++){
-			if(this.address_array[i] == addr)
-				return i;
-		}
-		return -1;
-	},
-	/*
-	parse_chart: function(){
-		for(var i=0; i<current_chart.length; i++){
-			this.address_array[i] = current_chart[i].substring(0, current_chart[i].indexOf('&'));
-			this.text_array[i] = current_chart[i].substring(current_chart[i].indexOf('&')+1, current_chart[i].length+1);
-		}
-	},
-	*/
-	parse_chart: function(){
+	
+	fast_parse: function(){
+		//Sort all the relations and create all viewing boxes
 		var title_info = current_chart[0];
 		var nodes_info = current_chart[1];
 		var arrows_info = current_chart[2];
@@ -212,75 +227,81 @@ var Viewing_Mode = new Class({
 			}
 			all_nodes.push(new_node);
 		}
-		
-		//Now create the layers
-		var current_layer = 1;
-		var tis = this;
-		var skip_step;
-		var recursive_sort_layers = function(layer){
-			for(var i=1; i<all_nodes.length; i++){
-				skip_step = false;
-				for(var u=0; u<layer.length; u++){
-					if(all_nodes[i].myId === layer[u].myId)
-						skip_step = true;
-				}
-				if(!skip_step){
-					var prev_layer = tis.layers[current_layer-1];
-					for(var j=0; j<prev_layer.length; j++){
-						if(prev_layer[j].myId === all_nodes[i].fromNodeId){ /*If node on previous layer points to tis node*/
-							if(current_layer%2 == 1){
-								all_nodes[i].myType = 'A';
-								if(tis.use_textures)
-									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][1];
-								else
-									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][1]);
-							}
-							else if(all_nodes[i].toNodeId != null){
-								all_nodes[i].myType = 'Q';
-								if(tis.use_textures)
-									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][0];
-								else
-									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][0]);
-							}
-							else{
-								all_nodes[i].myType = 'S';
-								if(tis.use_textures)
-									all_nodes[i].myTexture = tis.texture_schemes[tis.texture_scheme][2];
-								else
-									all_nodes[i].set_color(tis.color_schemes[tis.current_scheme][2]);
-							}
-							layer.push(all_nodes[i]);
-							//console.log(all_nodes[i].get_text());
-						}
-						if(all_nodes[i].toNodeId != null){
-							current_layer++;
-							if(tis.layers.length < current_layer+1){
-								var next_layer = new Array();
-								tis.layers[current_layer] = next_layer;
-							}
-							recursive_sort_layers(tis.layers[current_layer]);
-							current_layer--;
-						}
+		//Now sort nodes to layers
+		var currLayer = 0;		
+		var maxLayer = 0;
+		for(var i= 0; i<all_nodes.length; i++){
+			var nodeToSort = all_nodes[i]; //node we are trying to find a layer for
+			var parentNode = nodeToSort;
+			while(parentNode.myId != 0){
+				for(var j = 0; j<all_nodes.length; j++){
+					if(parentNode.fromNodeId == all_nodes[j].myId){
+						parentNode = all_nodes[j];
+						break;	
 					}
 				}
-				
+				currLayer++;
 			}
-		};
+			nodeToSort.myLayer = currLayer;
+			if(currLayer > maxLayer)
+				maxLayer = currLayer;
+			currLayer = 0;
+		}
+		//Create all the layers for things to go on
+		for(var i=0; i<=maxLayer; i++){
+			var layer = new Array();
+			this.layers.push(layer);	
+		}
 		
-		var first_layer = new Array();
-		first_layer.push(all_nodes[0]); //This is the first node...
-		all_nodes[0].set_type('Q');
+		//Now actually create layers structure: into this.layers
+		for(var i=0; i<all_nodes.length; i++){
+			//console.log(all_nodes[i].myLayer);
+			this.layers[all_nodes[i].myLayer].push(all_nodes[i]);
+			if(all_nodes[i].myLayer%2 == 1){
+				all_nodes[i].myType = 'A';
+				if(this.use_textures)
+					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][1];
+				else
+					all_nodes[i].set_color(this.color_schemes[this.current_scheme][1]);
+			}
+			else if(all_nodes[i].toNodeId != null){
+				all_nodes[i].myType = 'Q';
+				if(this.use_textures)
+					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][0];
+				else
+					all_nodes[i].set_color(this.color_schemes[this.current_scheme][0]);
+			}
+			else{
+				all_nodes[i].myType = 'S';
+				if(this.use_textures)
+					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][2];
+				else
+					all_nodes[i].set_color(this.color_schemes[this.current_scheme][2]);
+			}
+		}
 		if(this.use_textures)
 			all_nodes[0].myTexture = this.texture_schemes[this.texture_scheme][0];
 		else
 			all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
 			
 		all_nodes[0].myTexture = 'images/red_stripes.png';
-		this.layers[0] = first_layer;
-		var second_layer = new Array();
-		this.layers.push(second_layer);
-		recursive_sort_layers(this.layers[1]);
 	},
-	
-
+	//Debugging Functions
+	log_layers: function(){
+		console.log("Start Log");
+		for(var i=0; i<this.layers.length; i++){
+			for(var j=0; j<this.layers[i].length; j++){
+				console.log(this.layers[i][j].get_text()+" at: "+i+", "+j);	
+			}
+		}
+		console.log("End log");
+	},
+	log_input: function(){
+		console.log("Start input log");
+		var nodes_info = current_chart[1];
+		for(var i=0; i<nodes_info.length; i++){
+			console.log(nodes_info[i].data+ " with id: "+nodes_info[i].id);	
+		}
+		console.log("End input log");
+	}
 });

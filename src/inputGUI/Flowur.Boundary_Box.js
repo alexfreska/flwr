@@ -11,7 +11,6 @@ var Boundary_Box = new Class({
 	get_direction: function(box, parent, viewer){
 		var box_x, box_y;
 		//check right
-		//console.log(parent);
 		box_x = parent.x + parent.width + parent.buffer + box.buffer;
 		box_y = parent.y + parent.height/2 - box.height/2;
 		var right_expansion;

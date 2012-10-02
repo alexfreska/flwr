@@ -11,6 +11,9 @@ var Viewing_Box = new Class({
 		this.fromNodeId;
 		this.toNodeId;
 		this.linkToNodeId;
+		this.myLayer;
+		this.sides = {'top': true, 'right': true, 'bottom': true, 'left': true};
+		this.dist;
 		
 		this.onStage = false;
 		this.x;
@@ -18,7 +21,7 @@ var Viewing_Box = new Class({
 		this.width;
 		this.height;
 		this.buffer = 25;
-		this.radius = 5;
+		this.radius = 2;
 	},
 	draw: function(){
 		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});		
@@ -27,11 +30,6 @@ var Viewing_Box = new Class({
 			this.top_box.attr({'fill': 'url('+this.myTexture+')'});
 		}
 		this.top_text.toFront();
-		/*
-		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});
-		this.top_box = paper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
-		this.top_text.toFront();
-		*/
 	},
 	set_x: function(new_x){this.x = new_x;},
 	set_y: function(new_y){this.y = new_y;},
@@ -66,6 +64,10 @@ var Viewing_Box = new Class({
 			this.height = this.top_text.getBBox().height + 20;	
 		}
 		
+	},
+	toFront: function(){
+		this.top_box.toFront();
+		this.top_text.toFront();
 	},
 	get_bounds: function(new_x, new_y){
 		this.temp_box = paper.rect(new_x, new_y, this.width, this.height, this.radius);

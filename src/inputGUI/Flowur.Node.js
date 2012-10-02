@@ -5,6 +5,8 @@
 var Node = new Class({	
 	initialize: function(x,y,width,height){
 		this.id = 'node';
+		this.radius = 4;
+		this.backOffset = 1.2;
 		this.x = x;
 		this.y = y;
 		this.myId = Node.getUniqueId();
@@ -58,11 +60,11 @@ var Node = new Class({
 			'color' : '#FFFFFF',
 			'font-size' : '20px',
 			'position' : 'absolute',
-			'left' : this.x+16,
-			'top' : this.y+13,
+			'left' : this.x+(2+this.backOffset),
+			'top' : this.y+(10+this.backOffset),
 			'background-color' : 'transparent',
-			'width' : this.width-16,
-			'height' : this.height-13,
+			'width' : this.width-(2+this.backOffset),
+			'height' : this.height-(10+this.backOffset),
 		});
 		if(this.myText == "Enter your text here.")
 			this.myText = "";
@@ -125,15 +127,16 @@ var Node = new Class({
 		wait_done.delay(2, this);
 	},
 	draw: function(){
-		this.back_box = paper.rect(this.x, this.y+3, this.width, this.height, 6);
-		this.back_box.attr({fill: this.myColor, stroke: 'none'});	
-		this.shader_box = paper.rect(this.x, this.y+3, this.width, this.height, 6);
+		this.back_box = paper.rect(this.x, this.y+this.backOffset, this.width, this.height, this.radius);
+		this.back_box.attr({fill: this.myColor, stroke: 'none', 'fill-opacity': 1});	
+		this.shader_box = paper.rect(this.x, this.y+this.backOffset, this.width, this.height, this.radius);
 		this.shader_box.attr({
 			fill: '#000000',
 			opacity: .45,
 			stroke: 'none'
 		});
-		this.top_box = paper.rect(this.x+3, this.y, this.width, this.height, 6);
+		//this.shader_box.attr({'fill-opacity': 0});
+		this.top_box = paper.rect(this.x+this.backOffset, this.y, this.width, this.height, this.radius);
 		this.top_box.attr({fill: this.myColor, stroke: 'none'});
 		
 		var content = this.myText;
@@ -157,9 +160,9 @@ var Node = new Class({
 		this.x = new_x;
 		this.y = new_y;
 	
-		this.back_box.animate({x: new_x, y: new_y+3}, us);
-		this.shader_box.animate({x: new_x, y: new_y+3}, us);
-		this.top_box.animate({x: new_x+3, y: new_y}, us);
+		this.back_box.animate({x: new_x, y: new_y+this.backOffset}, us);
+		this.shader_box.animate({x: new_x, y: new_y+this.backOffset}, us);
+		this.top_box.animate({x: new_x+this.backOffset, y: new_y}, us);
 		this.position_text();
 		this.reposition_linking_arrows();
 	},
@@ -222,7 +225,7 @@ var Node = new Class({
 	},
 	position_text: function(){ //Assumes this.textField != null
 		if( document.getElement('.'+this.text_area_id) != null){
-			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+(2+this.backOffset), 'top' : this.y+(10+this.backOffset),});	
 		}
 		else if(this.textField != null){
 			var txt_x = this.x + (this.width/2 - this.textField.getBBox().width/2);
@@ -234,22 +237,22 @@ var Node = new Class({
 		this.x = new_x;
 		this.back_box.attr({x: this.x});
 		this.shader_box.attr({x: this.x});
-		this.top_box.attr({x: this.x+3});
+		this.top_box.attr({x: this.x+this.backOffset});
 		if(this.textField != null)
 			this.position_text();
 		else {
-			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+(2+this.backOffset), 'top' : this.y+(10+this.backOffset),});	
 		}
 	},
 	set_y: function(new_y){
 		this.y = new_y;
-		this.back_box.attr({y: this.y+3});
-		this.shader_box.attr({y: this.y+3});
+		this.back_box.attr({y: this.y+this.backOffset});
+		this.shader_box.attr({y: this.y+this.backOffset});
 		this.top_box.attr({y: this.y});
 		if(this.textField != null)
 			this.position_text();
 		else {
-			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+16, 'top' : this.y+13,});	
+			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+(2+this.backOffset), 'top' : this.y+(10+this.backOffset),});	
 		}
 	},
 	linkingMode: function(mode){

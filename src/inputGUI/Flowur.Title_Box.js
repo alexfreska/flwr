@@ -8,23 +8,27 @@ var Title = new Class({
 		this.id = 'title';
 		this.myId = 'unique';
 		this.repo = true;
+		this.backOffset = 1.2;
 		this.x = 0;
-		this.y = 0;
+		this.y = 10;
 		this.width = stage.innerWidth;
 		this.height = 40;
+		this.radius = 2;
 		this.done_edit = true;
 		this.myText = "Enter your title here.";
 		this.draw();
+		this.setText("Enter your title here.");
 	},
 	draw: function(){
 		this.textField = paper.text(stage.innerWidth/2, this.y + this.height/2, this.myText);
+		//this.textField.attr({'x': (stage.innerWidth - this.textField.getBBox().width)/2});
 		this.textField.attr({'font': 'Myriad Pro', fill: '#FFFFFF', 'font-size': 30, 'text-anchor': "middle"});
 		this.width = this.textField.getBBox().width + 20;
 		this.height = this.textField.getBBox().height+5;
 		this.x = (stage.innerWidth - this.width)/2;
-		this.back_box = paper.rect(this.x,this.y,this.width,this.height,6);
+		this.back_box = paper.rect(this.x,this.y,this.width,this.height,this.radius);
 		this.back_box.attr({fill: '#3AA6D0', stroke: 'none'});
-		this.bottom_box = this.back_box.clone().attr({x: this.x-3, y: this.y +3});
+		this.bottom_box = this.back_box.clone().attr({x: this.x-this.backOffset, y: this.y +this.backOffset});
 		this.top_box = this.bottom_box.clone();
 		this.top_box.attr({fill:'#000000', 'fill-opacity': .45, stroke: 'none'});
 		this.back_box.toFront();
@@ -45,8 +49,8 @@ var Title = new Class({
 		this.textField.remove();
 		this.done_edit = false;
 		this.back_box.animate({width: stage.innerWidth-100, x:50}, 300);
-		this.bottom_box.animate({width: stage.innerWidth-100, x:47}, 300);
-		this.top_box.animate({width: stage.innerWidth-100, x:47}, 300);
+		this.bottom_box.animate({width: stage.innerWidth-100, x:50-this.backOffset}, 300);
+		this.top_box.animate({width: stage.innerWidth-100, x:50-this.backOffset}, 300);
 		var textArea = new Element('textarea',
 		{
 			rows: 1,
@@ -82,14 +86,14 @@ var Title = new Class({
 		if( this.myText === "")
 		{
 			this.myText = "Enter your text here.";
-			this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start','font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 30});
+			this.textField = paper.text( this.x, this.y+this.height/2).attr({'text-anchor': 'start','font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 30});
 			this.textField.attr({'text': this.myText});
 		}
 		else{
 			var content = this.myText;
 			var words = content.split(" ");
 			var tempText = "";
-			this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 30});
+			this.textField = paper.text( this.x, this.y+this.height/2).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 30});
 			for(var i=0; i<words.length; i++){
 					this.textField.attr("text", tempText + " " + words[i]);
 					if(this.textField.getBBox().width > stage.innerWidth-100){
@@ -101,15 +105,31 @@ var Title = new Class({
 			this.textField.attr("text", tempText.substring(1));	
 		}
 		this.resize(this.textField.getBBox().width + 20, this.textField.getBBox().height+5);
-		this.textField.attr({x: stage.innerWidth/2 - this.textField.getBBox().width/2, y: this.height/2});
-		//this.textBack = this.textField.clone().attr({fill: '#000000', 'fill-opacity': .4, x: (stage.innerWidth/2 - this.textField.getBBox().width/2) - .5, y: (this.height/2) +.5});
+		this.textField.attr({x: stage.innerWidth/2 - this.textField.getBBox().width/2, y: this.y + this.height/2});
 		this.textField.toFront();
 		document.getElement('.'+this.myId).destroy();
 	},
 	setText: function(new_text){
 		this.myText = new_text;
-		this.undraw();
-		this.draw();
+		//this.undraw();
+		//this.draw();
+		this.textField.remove();
+		var content = this.myText;
+		var words = content.split(" ");
+		var tempText = "";
+		this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 30});
+		for(var i=0; i<words.length; i++){
+				this.textField.attr("text", tempText + " " + words[i]);
+				if(this.textField.getBBox().width > stage.innerWidth-100){
+					tempText += "\n" + words[i];	
+				} else {
+					tempText += " " + words[i];	
+				}
+		}
+		this.textField.attr("text", tempText.substring(1));
+		this.resize(this.textField.getBBox().width + 20, this.textField.getBBox().height+5);
+		this.textField.attr({x: stage.innerWidth/2 - this.textField.getBBox().width/2, y: this.y+this.height/2});
+		this.textField.toFront();
 	},
 	getText: function(){
 		return this.myText;
@@ -119,18 +139,20 @@ var Title = new Class({
 		this.height = h;
 		
 		this.back_box.animate({width: w, x:stage.innerWidth/2 - (w/2)}, 300);
-		this.bottom_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-3}, 300);
-		this.top_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-3}, 300);
+		this.bottom_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-this.backOffset}, 300);
+		this.top_box.animate({width: w, x:stage.innerWidth/2 - (w/2)-this.backOffset}, 300);
 	},
 	reposition: function(){	
 		this.width = this.textField.getBBox().width + 20;
 		this.height = this.textField.getBBox().height + 5;
 		this.x = stage.innerWidth/2 - this.width/2;
 
-		this.back_box.animate({x: (stage.innerWidth - this.width)/2, y: this.y},300);
-		this.bottom_box.animate({x: (stage.innerWidth - this.width)/2 -3, y: this.y+3},300);
-		this.top_box.animate({x: (stage.innerWidth - this.width)/2 -3, y: this.y+3},300);
-		this.textField.animate({x: (stage.innerWidth - this.width)/2 +10}, 300);
+		this.back_box.animate({x: (stage.innerWidth - this.width)/2, y: this.y},100);
+		this.bottom_box.animate({x: (stage.innerWidth - this.width)/2 -this.backOffset, y: this.y+this.backOffset},100);
+		this.top_box.animate({x: (stage.innerWidth - this.width)/2 -this.backOffset, y: this.y+this.backOffset},100);
+		this.textField.animate({x: (stage.innerWidth - this.width)/2 +10, y: this.y+this.height/2}, 100);
+		
+		//this.textField.attr({'x': (stage.innerWidth - this.textField.getBBox().width)/2});
 		//this.textField.animate({x: this.x + this.width/2, y: this.y + this.height/2},300);
 	}
 	

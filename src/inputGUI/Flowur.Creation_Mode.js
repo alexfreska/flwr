@@ -31,9 +31,9 @@ var Creation_Mode = new Class({
 		this.baseNode=new Node(stage.innerWidth/2 - 115, stage.innerHeight/2 - 42.5, 230, 85);
 		//this.data_in = JSON.parse(string_in);
 		/*Sample JSON array input */
-		var test_title_info = "This is the title.";
-		var test_nodes_info = [ {'id': 0, 'data': "This is the first base."}, {'id': 1, 'data': "Yes"}, {'id': 2, 'data': "No"}, {'id': 3, 'data': "Off of yes"}, {'id': 4, 'data': "Off of no"}];
-		var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}];
+		var test_title_info = "Should I join RCOS?";
+		var test_nodes_info = [ {'id': 0, 'data': "Are you computer oriented?"}, {'id': 1, 'data': "No"}, {'id': 2, 'data': "Yes"}, {'id': 3, 'data': "Do you want to learn from the best?"}, {'id': 4, 'data': "Do you want to be computer oriented?"}, {'id': 5, 'data': "Yes"}, {'id': 6, 'data': "No"}, {'id': 7, 'data': "Join RCOS!"}, {'id': 8, 'data': "Maybe you should just invest in our projects then..."}];
+		var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}, {'to': 5, 'from': 3, 'isLink': false}, {'to': 6, 'from': 3, 'isLink': false}, {'to': 7, 'from': 5, 'isLink': false}, {'to': 8, 'from': 6, 'isLink': false}];
 		this.data_in = [test_title_info, test_nodes_info, test_arrows_info];
 		//this.data_in = /*get user chart data from server*/ null;
 		//If loading data in to be editted
@@ -164,7 +164,7 @@ var Creation_Mode = new Class({
 				tempNode.setsize(tempNode.textField.getBBox().width + 20, tempNode.textField.getBBox().height + 20);
 				tempNode.position_text();
 			}
-			this.reposition_nodes();
+			this.reposition_nodes();			
 		}
 		//Otherwise make a new chart
 		else{
@@ -554,6 +554,7 @@ var Creation_Mode = new Class({
 				var linked_node = node.myLinkedNode;
 				node.getOutLinkArrow().undraw();
 				linked_node.removeInLinkArrow(node.getOutLinkArrow().getLinkedArrow());
+				
 				node.setOutLinkArrow(null);
 			}
 			
@@ -734,6 +735,10 @@ var Creation_Mode = new Class({
 				else{
 					temp.set_x(temp.x+(final_x-newBase_x));
 					temp.set_y(temp.y+(final_y-newBase_y));
+				}
+				if(temp.x+temp.width<0 || temp.x>stage.innerWidth || temp.y+temp.height<0 || temp.y>stage.innerHeight){
+					temp.undraw();
+					temp.onStage = false;	
 				}
 			}
 			else{
@@ -992,6 +997,8 @@ var Creation_Mode = new Class({
 		this.address_string = ""; //Clear so address starts out new.
 		while(this.nodes_info.length > 0) //Remove all elements from the last save
 			this.nodes_info.pop();
+		while(this.arrows_info.length >0)
+			this.arrows_info.pop();
 		this.create_node_info_array(this.find_base(this.baseNode)); //Find the first base and send it to initiate sorting
 		//current_chart = this.nodes_info;
 		this.flowchart[0] = this.title.getText();

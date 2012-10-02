@@ -43,7 +43,7 @@ var Viewer_Navigator = new Class({
 				var slider_width = stage.innerWidth - (viewer.current_bounds.width - stage.innerWidth);
 				if(slider_width < 50){
 					//Then set slider_width = 50 and just move proportionally to difference in width
-					console.log("Proportional width");
+					//console.log("Proportional width");
 				}
 				else{
 					t.h_slider.width = slider_width;
@@ -55,7 +55,7 @@ var Viewer_Navigator = new Class({
 				var slider_height = stage.innerHeight - (viewer.current_bounds.height - stage.innerHeight);
 				if(slider_height < 50){
 					//Then set slider_height = 50 and just move proportionally to difference in height
-					console.log("Proportional Height");
+					//console.log("Proportional Height");
 				}
 				else{
 					t.v_slider.height = slider_height;

@@ -8,12 +8,14 @@ var Strait_Arrow = new Class({
 		this.from_id = f;
 		this.x = x;
 		this.y = y;
-		this.perm_width = 135;
-		this.perm_height = 8;
+		this.perm_width = 80; //135
+		this.perm_height = 8; //8
 		this.light_angle = Math.PI/4;
-		this.offset = 1.3;
-		this.width = 135;
-		this.height = 16;
+		this.offset = .8;
+		this.width = this.perm_width; //135
+		this.height = this.perm_height*2; //16
+		this.head_width = 10;
+		this.thickness = 1;
 		this.myAngle = 0;
 		this.prevAngle = 0;
 		this.onStage = false;
@@ -25,21 +27,23 @@ var Strait_Arrow = new Class({
 		var shade_y = this.y + this.offset*Math.sin(this.light_angle - this.myAngle*Math.PI/180) ;
 		var y_dim = this.y + this.height/2;
 		this.height = Math.abs(Math.sin(this.myAngle*Math.PI/180)*this.perm_width);
-		this.width = Math.abs(Math.cos(this.myAngle*Math.PI/180)*this.perm_width);
+		//this.width = Math.abs(Math.cos(this.myAngle*Math.PI/180)*this.perm_width);		
 		this.bottom_graphic.remove();
-		this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#000000', stroke: 'none'});
+		this.bottom_graphic = paper.path('M'+shade_x+','+shade_y+'h'+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#000000', stroke: 'none'});
 		this.top_graphic.transform('r'+this.myAngle+','+this.x+','+y_dim);
-		this.top_graphic.toFront();
 		this.bottom_graphic.transform('r'+this.myAngle+','+this.x+','+y_dim);
+		//this.bottom_graphic.translate(this.x - shade_x, this.y +shade_y);
+		this.top_graphic.toFront();
 	},
 	getAngle: function(){return this.myAngle;},
 	setPrevAngle: function(newAngle){this.prevAngle = newAngle;},
 	getPrevAngle: function(){return this.prevAngle;},
 	draw: function(){
-		var shade_x = this.x-1;
-		var shade_y = this.y+1;
-		this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#000000', stroke: 'none'});
-		this.top_graphic = paper.path("M100,100h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#999999', stroke: 'none'});
+		var shade_x = this.x-this.offset;
+		var shade_y = this.y+this.offset;
+		this.bottom_graphic = paper.path('M'+shade_x+','+shade_y+'h'+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#000000', stroke: 'none'});
+		
+		this.top_graphic = paper.path("M100,100h"+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#999999', stroke: 'none'});
 		this.onStage = true;
 	},
 	undraw: function(){
@@ -53,8 +57,9 @@ var Strait_Arrow = new Class({
 		var shade_y = this.y + Math.abs( Math.sin(this.myAngle) );
 		this.top_graphic.remove();
 		this.bottom_graphic.remove();
-		this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#000000', stroke: 'none'});
-		this.top_graphic = paper.path("M"+this.x+","+this.y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#999999', stroke: 'none'});
+		this.bottom_graphic = paper.path('M'+shade_x+','+shade_y+'h'+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#000000', stroke: 'none'});
+		//this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v"+(-(this.perm_height-3))+"l12,"+(this.perm_height-1.1)+"l-12,"+(this.perm_height-1.1)+"v"+(-(this.perm_height-3))+"h-120v-"+(this.perm_height-4.2)+"").attr({fill: '#000000', stroke: 'none'});
+		this.top_graphic = paper.path("M"+this.x+","+this.y+"h"+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#999999', stroke: 'none'});
 	},
 	determineOnStage: function(){
 		if(this.x > stage.innerWidth || this.x+this.width<0)
@@ -70,8 +75,9 @@ var Strait_Arrow = new Class({
 		var shade_y = this.y + Math.abs( Math.sin(this.myAngle) );
 		this.top_graphic.remove();
 		this.bottom_graphic.remove();
-		this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#000000', stroke: 'none'});
-		this.top_graphic = paper.path("M"+this.x+","+this.y+"h120v-5l12,6.9l-12,6.9v-5h-120v-3.8").attr({fill: '#999999', stroke: 'none'});
+		this.bottom_graphic = paper.path('M'+shade_x+','+shade_y+'h'+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#000000', stroke: 'none'});
+		//this.bottom_graphic = paper.path("M"+shade_x+","+shade_y+"h120v"+(-(this.perm_height-3))+"l12,"+(this.perm_height-1.1)+"l-12,"+(this.perm_height-1.1)+"v"+(-(this.perm_height-3))+"h-120v-"+(this.perm_height-4.2)+"").attr({fill: '#000000', stroke: 'none'});
+		this.top_graphic = paper.path("M"+this.x+","+this.y+"h"+(this.width-this.head_width)+'v'+(-((this.perm_height/2)-this.thickness))+'l'+this.head_width+','+(this.perm_height/2)+'l'+(-this.head_width)+','+(this.perm_height/2)+'v'+(-((this.perm_height/2)-this.thickness))+'h'+(-(this.width-this.head_width))+'v'+(-this.thickness)).attr({fill: '#999999', stroke: 'none'});
 	},
 	get_info_struct: function(){
 		var info_struct = {
