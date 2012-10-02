@@ -1,23 +1,12 @@
 /*diagnostic.js
 *
 *
-*	nodes and arrows appended to #data
-*	back and reset appended to #footer
 *
-*	STYLING:
-*
-*	CSS can be added to:
-*		body
-*		#container
-*		.node
-*		.arrow
-*		.reset
-*		.back
-*		.hover
-*	jQuery animations can be added at:
-*		FORWARD_ANIMATIONS,
-*		BACKWARD_ANIMATIONS,
-*		INITIAL_ANIMATIONS				
+*	Todo: 
+*		add jQuery animations at:
+*			FORWARD_ANIMATIONS,
+*			BACKWARD_ANIMATIONS,
+*			INITIAL_ANIMATIONS				
 *
 */
 $(function() {
