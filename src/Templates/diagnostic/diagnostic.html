@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv = "Content-type" content = "text/html; charset = utf-8" />
+<title>Template</title>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src = "diagnostic.js"></script>
+ 
+<style type="text/css">
+@import url("reset.css");
+
+@font-face 
+{
+    font-family: 'BebasRegular';
+    src: url('BEBAS___-webfont.eot');
+    src: url('BEBAS___-webfont.eot?#iefix') format('embedded-opentype'),
+         url('BEBAS___-webfont.woff') format('woff'),
+         url('BEBAS___-webfont.ttf') format('truetype'),
+         url('BEBAS___-webfont.svg#BebasRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body 
+{
+	background: #333333;
+}
+
+#cover
+{
+
+}
+
+#template-wrap
+{
+	position: absolute;
+	margin-top: 16px;
+	margin-left: -240px;
+	left: 50%;
+	width: 480px;
+	height: 720px;
+	overflow: hidden;
+	background: #cccccc;
+	font-family: BebasRegular;
+	font-size: 12px;
+	word-spacing: 1px;
+	text-align: center;
+	background: #eeeeee url(noise_lines.png);
+}
+
+#container
+{
+	margin-top: 30px;
+	position: relative;
+	border-bottom: 1px solid #cccccc;
+	height: 480px;
+	padding: 0 24px;
+	background: rgba(255, 255, 255, .3);
+}
+#data
+{
+	margin-top: 30px;
+	position: relative;
+	border-bottom: 1px solid #cccccc;
+	height: 480px;
+	padding: 0 24px;
+	background: rgba(255, 255, 255, .3);
+}
+#top
+{
+	position: absolute;
+	z-index: 2;
+	left: 50%;
+	margin-left: -240px;
+	margin-top: 15px;
+	top: 0px;
+	width: 480px;
+	height: 110px;
+	background-color: rgba(200, 200, 200, .1);
+	border-bottom: 1px solid #cccccc;
+	font-size: 14px;
+}
+.title
+{
+	position: relative;
+	height: 60px;
+	font-size: 15px;
+	line-height: 60px;
+	text-shadow: 2px 1px 0px #ffffff;
+	color: #888888;
+	font-style: italic;
+	word-spacing: 2px;
+}
+#title
+{
+	position: absolute;
+	margin-top: -4px;
+	margin-left: 110px;
+	top: 50%;
+	left: 0;
+	height: 50px;
+	width: 260px;
+	color: #666666;
+	text-shadow: 2px 1px 0px #ffffff;
+}
+img.back-button
+{
+	position: absolute;
+	margin-top: -10px;
+	margin-left: 50px;
+	top: 50%;
+	left: 0;
+	width: 32px;
+	height: 32px;
+}
+
+img.reset-button
+{
+	position: absolute;
+	margin-top: -10px;
+	margin-right: 50px;
+	top: 50%;
+	right: 0;
+	width: 32px;
+	height: 32px;
+}
+
+
+.node p
+{
+	position: relative;
+	height: 420px;
+	background: url(border.png) no-repeat 0 0;
+}
+
+.node
+{
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -216px;
+	margin-top: 0px;
+	height: 420px;
+	width: 432px;
+	font-size: 32px;
+	color: #666666;
+	text-shadow: 2px 1px 0px #ffffff;
+}
+
+
+#arrows
+{
+	padding: 24px;
+	height: 360px;
+	background-color: rgba(200, 200, 200, .1);
+}
+
+.arrow
+{
+	position: relative;
+	z-index: 3;
+	margin-top: 42px;
+	margin-left: 6px;
+	display: inline-block;
+	padding: 24px 40px;
+	background-color: rgba(153, 238, 0, .7);
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	border-radius: 4px;
+	border: 1px dashed #ffffff;
+	font-size: 14px;
+	color: #ffffff;
+	text-shadow: 2px 1px 0px #99ee00;
+	word-spacing: 2px;
+}
+.arrow:first-child
+{
+	margin-left: 0;
+}
+</style>
+</head>
+<body>
+	<div id= 'template-wrap'>
+		<div id= 'cover'>
+		</div>
+		<div id= 'top'>
+		</div>
+		<div id= 'data'>
+		</div>
+		<div id= 'arrows'>
+		</div>
+	</div>
+</body>
+</html>
