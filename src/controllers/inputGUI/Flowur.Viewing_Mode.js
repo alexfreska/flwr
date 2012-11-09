@@ -5,17 +5,17 @@
 
 var Viewing_Mode = new Class({
 	initialize: function(){
-		this.current_scheme = 1;
+		this.current_scheme = 3;
 		this.color_scheme_1 = ['#287BDB', '#F0E400', '#646464'];//Blue/Yellow scheme
 		this.color_scheme_2 = ['#E51B2A', '#F79000', '#444444'];//Red/orange scheme
 		this.color_scheme_3 = ['#5670CF', '#68D019', '#555555'];//Green/Blue scheme
 		this.color_scheme_4 = ['#FF8C00', '#1D9ACF', '#777777'];//Orange/Blue scheme
 		this.color_schemes = [this.color_scheme_1, this.color_scheme_2, this.color_scheme_3, this.color_scheme_4];
 		
-		this.use_textures = false;
+		this.use_textures = true;
 		this.texture_scheme = 0;
-		this.texture_scheme_1 = ['images/blue_donuts.png', 'images/red_stripes.png', 'images/orange_stripes.png']; //Dark scheme
-		this.texture_schemes = [this.texture_scheme_1];
+		this.texture_scheme_1 = ['images/tinyStripes.png', 'images/tinyStripes.png', 'images/tinyStripes.png', 'images/stripes.png']; //Dark scheme
+		this.texture_schemes = [this.texture_scheme_1]; 
 		
 		this.text_array = new Array();
 		this.address_array = new Array();
@@ -108,14 +108,15 @@ var Viewing_Mode = new Class({
 		best. 
 		*/
 		var direction =  boundary_box.get_direction(box, parent, this);
+		//console.log(direction);
 		var expansion;
-		if(direction === null){
-			console.log("SPECIAL CASE");
-			console.log(direction);
+		
+		if(direction === undefined){
+			//console.log("SPECIAL CASE");
 			//Find closest open location and dump the node there
 			//Find an open spot for box to fit in. The closer to the parent, the better.
 			var fartherUpParent = this.get_box_by_id(parent.fromNodeId);
-			while(boundary_box.get_direction(box, fartherUpParent, this) === null){
+			while(boundary_box.get_direction(box, fartherUpParent, this) === undefined){
 				if(fartherUpParent.myId != 0)
 					fartherUpParent = this.get_box_by_id(fartherUpParent);
 				else{
@@ -124,6 +125,7 @@ var Viewing_Mode = new Class({
 				}
 			}
 			parent = fartherUpParent;
+			direction = boundary_box.get_direction(box, parent, this);
 			//console.log("DIRECTION ERROR");
 		}
 		
@@ -168,6 +170,7 @@ var Viewing_Mode = new Class({
 			boundary_box.height += expansion;
 			boundary_box.y -= expansion;
 		}
+
 		box.draw();
 		box.onStage = true;
 	},
@@ -261,30 +264,30 @@ var Viewing_Mode = new Class({
 				all_nodes[i].myType = 'A';
 				if(this.use_textures)
 					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][1];
-				else
-					all_nodes[i].set_color(this.color_schemes[this.current_scheme][1]);
+				
+				all_nodes[i].set_color(this.color_schemes[this.current_scheme][1]);
 			}
 			else if(all_nodes[i].toNodeId != null){
 				all_nodes[i].myType = 'Q';
 				if(this.use_textures)
 					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][0];
-				else
-					all_nodes[i].set_color(this.color_schemes[this.current_scheme][0]);
+				
+				all_nodes[i].set_color(this.color_schemes[this.current_scheme][0]);
 			}
 			else{
 				all_nodes[i].myType = 'S';
 				if(this.use_textures)
 					all_nodes[i].myTexture = this.texture_schemes[this.texture_scheme][2];
-				else
-					all_nodes[i].set_color(this.color_schemes[this.current_scheme][2]);
+				
+				all_nodes[i].set_color(this.color_schemes[this.current_scheme][2]);
 			}
 		}
 		if(this.use_textures)
-			all_nodes[0].myTexture = this.texture_schemes[this.texture_scheme][0];
-		else
-			all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
+			all_nodes[0].myTexture = this.texture_schemes[this.texture_scheme][3];
+		
+		all_nodes[0].myColor = this.color_schemes[this.current_scheme][0];
 			
-		all_nodes[0].myTexture = 'images/red_stripes.png';
+		//all_nodes[0].myTexture = 'images/stripes.png';
 	},
 	//Debugging Functions
 	log_layers: function(){

@@ -5,8 +5,9 @@
 var Node = new Class({	
 	initialize: function(x,y,width,height){
 		this.id = 'node';
-		this.radius = 4;
-		this.backOffset = 1.2;
+		this.fontName = 'Myriad Pro';
+		this.radius = 0; //4
+		this.backOffset = 1;//1.2
 		this.x = x;
 		this.y = y;
 		this.myId = Node.getUniqueId();
@@ -25,6 +26,7 @@ var Node = new Class({
 		this.done_edit = true;
 		this.resized = false;
 		this.myText = "";
+		this.nlText = "";
 		this.draw();
 		this.setText("Enter your text here.");
 	},
@@ -56,7 +58,7 @@ var Node = new Class({
 			'resize' : 'none',
 			'text-align' : 'center',
 			'overflow' : 'hidden',
-			'font-family': '"Myriad Pro", sans-serif',
+			'font-family': this.fontName,
 			'color' : '#FFFFFF',
 			'font-size' : '20px',
 			'position' : 'absolute',
@@ -79,8 +81,7 @@ var Node = new Class({
 			if( this.myText === "" || this.myText === "\n")
 			{
 				this.myText = "Enter your text here.";
-				this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start','font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});
-				this.textField.attr({'text': this.myText});
+				this.textField = paper.print(this.x, this.y, this.myText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
 			}
 			else{
 				var content = this.myText;
@@ -95,12 +96,14 @@ var Node = new Class({
 							tempText += " " + words[i];	
 						}
 				}
-				this.textField.attr("text", tempText.substring(1));	
+				this.textField.remove();
+				this.nlText = tempText.substring(1);
+				this.textField = paper.print(0,0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});	
 			}
 			document.getElement('.'+this.text_area_id).destroy();
 		}
 		this.resize(this.textField.getBBox().width + 20, this.textField.getBBox().height + 20);
-		this.position_text();
+		//this.position_text();
 	},
 	//setsize instantly resizes a box
 	setsize: function(w, h){
@@ -122,7 +125,6 @@ var Node = new Class({
 			this.back_box.animate({width: this.width, height: this.height},200);
 			this.shader_box.animate({width: this.width, height: this.height},200);
 			this.top_box.animate({width: this.width, height: this.height},200);
-			//var temp = this.back_box.clone().attr({'fill-opacity': 0});
 		};
 		wait_done.delay(2, this);
 	},
@@ -135,14 +137,13 @@ var Node = new Class({
 			opacity: .45,
 			stroke: 'none'
 		});
-		//this.shader_box.attr({'fill-opacity': 0});
 		this.top_box = paper.rect(this.x+this.backOffset, this.y, this.width, this.height, this.radius);
 		this.top_box.attr({fill: this.myColor, stroke: 'none'});
 		
 		var content = this.myText;
 		var words = content.split(" ");
 		var tempText = "";
-		this.textField = paper.text( this.x, this.y).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});
+		this.textField = paper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 20});
 		for(var i=0; i<words.length; i++){
 				this.textField.attr("text", tempText + " " + words[i]);
 				if(this.textField.getBBox().width > this.width-10){
@@ -151,9 +152,11 @@ var Node = new Class({
 					tempText += " " + words[i];	
 				}
 		}
-		this.textField.attr("text", tempText.substring(1));
+		this.textField.remove();
+		this.textField = paper.print(0, 0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
+		this.nlText = tempText.substring(1);
 		
-		this.position_text();
+		//this.position_text();
 		this.onStage = true;
 	},
 	move_to: function(new_x, new_y, us){
@@ -228,9 +231,14 @@ var Node = new Class({
 			document.getElement('.'+this.text_area_id).setStyles({'left' : this.x+(2+this.backOffset), 'top' : this.y+(10+this.backOffset),});	
 		}
 		else if(this.textField != null){
+			//var txt_x = this.x + (this.width/2 - this.textField.getBBox().width/2);
+			//var txt_y = this.y + ((this.height - this.textField.getBBox().height + this.textField.getBBox().height)/2);
+			
+			this.textField.remove();
+			this.textField = paper.print(-3,7, this.nlText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
 			var txt_x = this.x + (this.width/2 - this.textField.getBBox().width/2);
-			var txt_y = this.y + ((this.height - this.textField.getBBox().height + this.textField.getBBox().height)/2);
-			this.textField.attr({x: txt_x, y: txt_y});
+			var txt_y = this.y + ((this.height - this.textField.getBBox().height)/2);
+			this.textField.translate(txt_x, txt_y);
 		}
 	},
 	set_x: function(new_x){

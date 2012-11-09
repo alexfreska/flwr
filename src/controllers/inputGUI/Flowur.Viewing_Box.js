@@ -20,11 +20,12 @@ var Viewing_Box = new Class({
 		this.y;
 		this.width;
 		this.height;
-		this.buffer = 25;
-		this.radius = 2;
+		this.buffer = 25; //25
+		this.radius = 0;  //2
 	},
 	draw: function(){
 		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});		
+		this.back_box = paper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
 		this.top_box = paper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
 		if(this.myTexture != null){
 			this.top_box.attr({'fill': 'url('+this.myTexture+')'});
@@ -66,6 +67,7 @@ var Viewing_Box = new Class({
 		
 	},
 	toFront: function(){
+		this.back_box.toFront();
 		this.top_box.toFront();
 		this.top_text.toFront();
 	},
