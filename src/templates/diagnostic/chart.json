@@ -2,444 +2,81 @@
 	"title": "Should I check my e-mail?",
 	"nodes": [
 	{
-		"id": "a",
-		"data": "Have you checked in the past 3 minutes?"
+		"id": 0,
+		"data": "Have you checked in the past 3 minutes?",
+		"type": "start"
 	},
 	{
-		"id": "b",
-		"data": "Did someone tell you that they sent you a really important email?"
+		"id": 1,
+		"data": "Yes",
+		"type": "answer"
 	},
 	{
-		"id": "c",
-		"data": "Are you with your family?"
+		"id": 2,
+		"data": "No",
+		"type": "answer"
 	},
 	{
-		"id": "d",
-		"data": "Was it your boss?"
+		"id": 3,
+		"data": "Why are you reading this?",
+		"type": "question"
 	},
 	{
-		"id": "e",
-		"data": "DON'T CHECK"
+		"id": 4,
+		"data": "Why Not?",
+		"type": "question"
 	},
 	{
-		"id": "f",
-		"data": "Check it."
+		"id": 5,
+		"data": "Because",
+		"type": "answer"
 	},
 	{
-		"id": "g",
-		"data": "Was it family?"
+		"id": 6,
+		"data": "Dunno",
+		"type": "answer"
 	},
 	{
-		"id": "h",
-		"data": "Parent you're avoiding?"
+		"id": 7,
+		"data": "Dont feel like it",
+		"type": "answer"
 	},
 	{
-		"id": "i",
-		"data": "Someone from facebook?"
-	},
-	{
-		"id": "j",
-		"data": "What kind of son/daughter are you?? CHECK IT!"
-	},
-	{
-		"id": "k",
-		"data": "Get off Facebook"
-	},
-	{
-		"id": "l",
-		"data": "Yes, you are. Don't check."
-	},
-	{
-		"id": "m",
-		"data": "Are you at work?"
-	},
-	{
-		"id": "n",
-		"data": "Do you want to keep your family?"
-	},
-	{
-		"id": "o",
-		"data": "By all means, Check.."
-	},
-	{
-		"id": "p",
-		"data": "Are you procrastinating?"
-	},
-	{
-		"id": "q",
-		"data": "Are you expecting a job offer, lottery notification, or magic e-beans?"
-	},
-	{
-		"id": "r",
-		"data": "Did you want to continue this cycle and be locked in a corporate purgatory forever?"
-	},
-	{
-		"id": "s",
-		"data": "Are you lying to yourself?"
-	},
-	{
-		"id": "t",
-		"data": "Seriously"
-	},
-	{
-		"id": "u",
-		"data": "Fool. Don't check."
-	},
-	{
-		"id": "v",
-		"data": "Good, don't check."
+		"id": 45,
+		"data": "I lied.",
+		"type": "answer"
 	}],
 	"arrows": [
 	{
-		"from": {
-			"id": "a",
-			"data": "Have you checked in the past 3 minutes?"
-		},
-		"to": {
-			"id": "b",
-			"data": "Did someone tell you that they sent you a really important email?"
-		},
-		"data": "Yes"
+		"from": 0,
+		"to": 1
 	},
 	{
-		"from": {
-			"id": "a",
-			"data": "Have you checked in the past 3 minutes?"
-		},
-		"to": {
-			"id": "c",
-			"data": "Are you with your family?"
-		},
-		"data": "No"
+		"from": 0,
+		"to": 2
 	},
 	{
-		"from": {
-			"id": "a",
-			"data": "Have you checked in the past 3 minutes?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "I forget."
+		"from": 1,
+		"to": 3
 	},
 	{
-		"from": {
-			"id": "b",
-			"data": "Did someone tell you that they sent you a really important email?"
-		},
-		"to": {
-			"id": "d",
-			"data": "Was it your boss?"
-		},
-		"data": "Yes"
+		"from": 3,
+		"to": 5
 	},
 	{
-		"from": {
-			"id": "b",
-			"data": "Did someone tell you that they sent you a really important email?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "No"
+		"from": 3,
+		"to": 6
 	},
 	{
-		"from": {
-			"id": "b",
-			"data": "Did someone tell you that they sent you a really important email?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "No, I just sense it."
+		"from": 2,
+		"to": 4
 	},
 	{
-		"from": {
-			"id": "d",
-			"data": "Was it your boss?"
-		},
-		"to": {
-			"id": "f",
-			"data": "Check it."
-		},
-		"data": "Yes"
+		"from": 4,
+		"to": 7
 	},
 	{
-		"from": {
-			"id": "d",
-			"data": "Was it your boss?"
-		},
-		"to": {
-			"id": "g",
-			"data": "Was it family?"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "g",
-			"data": "Was it family?"
-		},
-		"to": {
-			"id": "h",
-			"data": "Parent you're avoiding?"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "g",
-			"data": "Was it family?"
-		},
-		"to": {
-			"id": "i",
-			"data": "Someone from facebook?"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "h",
-			"data": "Parent you're avoiding?"
-		},
-		"to": {
-			"id": "j",
-			"data": "What kind of son/daughter are you?? CHECK IT!"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "h",
-			"data": "Parent you're avoiding?"
-		},
-		"to": {
-			"id": "f",
-			"data": "Check it."
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "i",
-			"data": "Someone from facebook?"
-		},
-		"to": {
-			"id": "k",
-			"data": "Get off Facebook"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "i",
-			"data": "Someone from facebook?"
-		},
-		"to": {
-			"id": "v",
-			"data": "Good, don't check."
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "c",
-			"data": "Are you with your family?"
-		},
-		"to": {
-			"id": "m",
-			"data": "Are you at work?"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "c",
-			"data": "Are you with your family?"
-		},
-		"to": {
-			"id": "n",
-			"data": "Do you want to keep your family?"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "c",
-			"data": "Are you with your family?"
-		},
-		"to": {
-			"id": "o",
-			"data": "By all means, Check.."
-		},
-		"data": "Well, In-laws..."
-	},
-	{
-		"from": {
-			"id": "m",
-			"data": "Are you at work?"
-		},
-		"to": {
-			"id": "p",
-			"data": "Are you procrastinating?"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "m",
-			"data": "Are you at work?"
-		},
-		"to": {
-			"id": "q",
-			"data": "Are you expecting a job offer, lottery notification, or magic e-beans?"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "n",
-			"data": "Do you want to keep your family?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "n",
-			"data": "Do you want to keep your family?"
-		},
-		"to": {
-			"id": "o",
-			"data": "By all means, Check.."
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "p",
-			"data": "Are you procrastinating?"
-		},
-		"to": {
-			"id": "r",
-			"data": "Did you want to continue this cycle and be locked in a corporate purgatory forever?"
-		},
-		"data": "Obviously"
-	},
-	{
-		"from": {
-			"id": "p",
-			"data": "Are you procrastinating?"
-		},
-		"to": {
-			"id": "s",
-			"data": "Are you lying to yourself?"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "r",
-			"data": "Did you want to continue this cycle and be locked in a corporate purgatory forever?"
-		},
-		"to": {
-			"id": "u",
-			"data": "Fool. Don't check."
-		},
-		"data": "yes"
-	},
-	{
-		"from": {
-			"id": "r",
-			"data": "Did you want to continue this cycle and be locked in a corporate purgatory forever?"
-		},
-		"to": {
-			"id": "v",
-			"data": "Good, don't check."
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "s",
-			"data": "Are you lying to yourself?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "Yes, I am."
-	},
-	{
-		"from": {
-			"id": "s",
-			"data": "Are you lying to yourself?"
-		},
-		"to": {
-			"id": "l",
-			"data": "Yes, you are. Don't check."
-		},
-		"data": "No, I'm not."
-	},
-	{
-		"from": {
-			"id": "s",
-			"data": "Are you lying to yourself?"
-		},
-		"to": {
-			"id": "s",
-			"data": "Are you lying to yourself?"
-		},
-		"data": "Maybe..."
-	},
-	{
-		"from": {
-			"id": "q",
-			"data": "Are you expecting a job offer, lottery notification, or magic e-beans?"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "q",
-			"data": "Are you expecting a job offer, lottery notification, or magic e-beans?"
-		},
-		"to": {
-			"id": "t",
-			"data": "Seriously"
-		},
-		"data": "Yes"
-	},
-	{
-		"from": {
-			"id": "t",
-			"data": "Seriously"
-		},
-		"to": {
-			"id": "e",
-			"data": "DON'T CHECK"
-		},
-		"data": "No"
-	},
-	{
-		"from": {
-			"id": "t",
-			"data": "Seriously"
-		},
-		"to": {
-			"id": "t",
-			"data": "Seriously"
-		},
-		"data": "Yes"
+		"from": 4,
+		"to": 45
 	}]
 }
