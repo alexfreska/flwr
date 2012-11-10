@@ -20,7 +20,6 @@ var Viewer_Navigator = new Class({
 			//dx, dy the amount to shift everything.
 			//test_box.animate({'x': start_x+dx, 'y': start_y+dy});
 			//paper.setViewBox(x, y, w, h, fit);
-			//console.log(paper._viewBox);
 			var x_loc = start_x + dx;
 			var y_loc = start_y + dy;
 			if(x_loc < viewer.current_bounds.x)
@@ -32,7 +31,6 @@ var Viewer_Navigator = new Class({
 			else if(y_loc+stage.innerHeight > viewer.current_bounds.y+viewer.current_bounds.height)
 				y_loc = (viewer.current_bounds.height+viewer.current_bounds.y) - stage.innerHeight;
 			paper.setViewBox(x_loc, y_loc, stage.innerWidth, stage.innerHeight);
-			background.attr({'x': x_loc, 'y': y_loc});
 			t.h_slider.set_y( y_loc+5);
 			t.v_slider.set_x( x_loc + stage.innerWidth - 5 - t.v_slider.width);
 			t.drag_space.attr({'x': x_loc, 'y': y_loc});

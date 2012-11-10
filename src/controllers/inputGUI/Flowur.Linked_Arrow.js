@@ -1,13 +1,20 @@
 // JavaScript Document
 // Written by Patrick Teague
 // Last update: 9/4/12
+/*
+   ||
+   ||
+  _||_
+  \  /
+   \/
+*/
 var Linked_Arrow = new Class({
 	initialize: function(x,y, lnode){
 		this.x = x;
 		this.y = y;
 		//Arrow graphic related variables
 		this.width = 17;
-		this.height = 45;
+		this.height = 35;//45
 		this.thickness = 2;
 		this.head_height = 8;
 		this.head_width = 10;
@@ -18,9 +25,9 @@ var Linked_Arrow = new Class({
 		var b = this;
 		var setup_obs = function(){
 			var scale = .7;
-			var obs_radius = 4;
+			var obs_radius = 0; //4
 			var node_offset = 1.2;
-			var node_radius = 4;
+			var node_radius = 0; //4
 			var n_color =  b.linked_node.getColor();
 			var n_width = b.linked_node.width * scale;
 			var n_height = b.linked_node.height * scale;
@@ -31,7 +38,7 @@ var Linked_Arrow = new Class({
 			var n_y = b.y - (b.height+obs_offset) - (obs_height/2) + (obs_height/2 - n_height/2);
 			
 			b.obs_box_back = paper.rect(b.x + (b.width/2 - obs_width/2), b.y - (b.height+obs_offset) - (obs_height/2), obs_width, obs_height, obs_radius).attr({fill: '#000000', stroke: 'none', 'opacity': .7});
-			b.obs_box_top = paper.rect(b.x + (b.width/2 - (obs_width-10)/2), b.y - (b.height+obs_offset) - (obs_height-obs_offset)/2, (obs_width-obs_offset), (obs_height-obs_offset), obs_radius).attr({fill: '#DADADA', stroke: 'none', 'opacity': 1});
+			b.obs_box_top = paper.rect(b.x + (b.width/2 - (obs_width-10)/2), b.y - (b.height+obs_offset) - (obs_height-obs_offset)/2, (obs_width-obs_offset), (obs_height-obs_offset), obs_radius).attr({fill: '#EEEEEE', stroke: 'none', 'opacity': 1});
 			
 			b.obs_node_back_box = paper.rect(n_x, n_y +(node_offset*scale), n_width, n_height, node_radius*scale).attr({'fill': n_color, 'stroke': 'none'});
 			

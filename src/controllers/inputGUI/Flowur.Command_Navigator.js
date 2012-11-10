@@ -25,17 +25,16 @@ var Command_Navigator = new Class({
 			creator.new_node(creator.baseNode);
 		};
 		this.mousedown_function = function(e){
-			
-			if(creator.getObjectAt(e.page.x, e.page.y) instanceof Title)
+			if(creator.getObjectAt(e.page.x, e.page.y) instanceof View_Button)
+			{
+				go_to_view();	
+			}
+			else if(creator.getObjectAt(e.page.x, e.page.y) instanceof Title)
 			{
 				if(creator.getObjectAt(e.page.x, e.page.y).done_edit == true && !cmd_nav.editting){
 					e.stop();
 					cmd_nav.currentNode = creator.title;
 					creator.edit_title(cmd_nav.currentNode);
-					/*
-					cmd_nav.command_set.push('edit');
-					cmd_nav.command_set.push('save');
-					*/
 				}					
 				else if(cmd_nav.editting && cmd_nav.currentNode != creator.title){
 					e.stop();
@@ -43,15 +42,7 @@ var Command_Navigator = new Class({
 						creator.done_title(cmd_nav.currentNode);
 					else
 						creator.done_node(cmd_nav.currentNode);
-					/*
-					cmd_nav.command_set.push('edit');
-					cmd_nav.command_set.push('save');	
-					*/
 				}
-			}
-			else if(creator.getObjectAt(e.page.x, e.page.y) instanceof View_Button)
-			{
-				go_to_view();	
 			}
 			else if(cmd_nav.editting)
 			{
@@ -153,69 +144,98 @@ var Command_Navigator = new Class({
 					}					
 				}
 				else if(e.keyCode == 39){ //If "right arrow" pushed
-					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].x > creator.baseNode.x && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) <= (creator.baseNode.y + creator.baseNode.height/2)+3 && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) >= (creator.baseNode.y + creator.baseNode.height/2)-3){
-						creator.back_node(creator.baseNode);
+					var nextNode;
+					if(creator.baseNode.getParentArray() != null)
+						nextNode = creator.baseNode.getParentArray()[0];
+					else
+						nextNode = creator.baseNode;
+					var tempNode;
+					for(var i=0; i<creator.currentArray.length; i++){
+						if(typeOf(creator.currentArray[i]) === 'array')
+							tempNode = creator.currentArray[i][0];
+						else
+							tempNode = creator.currentArray[i];
+						if(	tempNode.x > nextNode.x)
+							nextNode = tempNode;	
 					}
-					else{
-						var tempNode;	
-						for(var i=1; i<creator.currentArray.length; i++){
-							if(typeOf(creator.currentArray[i]) === 'array')
-								tempNode = creator.currentArray[i][0];
+					if(nextNode != creator.baseNode){
+						if((nextNode.y+nextNode.height/2) >= (creator.baseNode.y + creator.baseNode.height/2 )-5 && (nextNode.y+nextNode.height/2) <= (creator.baseNode.y+creator.baseNode.height/2)+5){
+							if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0] === nextNode)
+								creator.back_node(creator.baseNode);
 							else
-								tempNode = creator.currentArray[i];
-							if((tempNode.x > creator.baseNode.x) && (tempNode.y + tempNode.height/2) == (creator.baseNode.y + creator.baseNode.height/2))
-								creator.select_node(tempNode);
+								creator.select_node(nextNode);
 						}
 					}
 				}
 				else if(e.keyCode == 37){ //If "left arrow" pushed
+					var nextNode;
+					if(creator.baseNode.getParentArray() != null)
+						nextNode = creator.baseNode.getParentArray()[0];
+					else
+						nextNode = creator.baseNode;
 					var tempNode;
-					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].x < creator.baseNode.x && (creator.baseNode.getParentArray()[0].y + creator.baseNode.getParentArray()[0].height/2) == (creator.baseNode.y + creator.baseNode.height/2)){
-						creator.back_node(creator.baseNode);
+					for(var i=0; i<creator.currentArray.length; i++){
+						if(typeOf(creator.currentArray[i]) === 'array')
+							tempNode = creator.currentArray[i][0];
+						else
+							tempNode = creator.currentArray[i];
+						if(	tempNode.x < nextNode.x)
+							nextNode = tempNode;	
 					}
-					else{
-						var tempNode;	
-						for(var i=1; i<creator.currentArray.length; i++){
-							if(typeOf(creator.currentArray[i]) === 'array')
-								tempNode = creator.currentArray[i][0];
+					if(nextNode != creator.baseNode){
+						if((nextNode.y+nextNode.height/2) >= (creator.baseNode.y + creator.baseNode.height/2 )-5 && (nextNode.y+nextNode.height/2) <= (creator.baseNode.y+creator.baseNode.height/2)+5){
+							if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0] === nextNode)
+								creator.back_node(creator.baseNode);
 							else
-								tempNode = creator.currentArray[i];
-							if((tempNode.x < creator.baseNode.x) && (tempNode.y + tempNode.height/2) <= (creator.baseNode.y + creator.baseNode.height/2)+3 && (tempNode.y + tempNode.height/2) >= (creator.baseNode.y + creator.baseNode.height/2)-3)
-								creator.select_node(tempNode);
+								creator.select_node(nextNode);
 						}
 					}
 				}
 				else if(e.keyCode == 38){ //If "up arrow" pushed
+					var nextNode;
+					if(creator.baseNode.getParentArray() != null)
+						nextNode = creator.baseNode.getParentArray()[0];
+					else
+						nextNode = creator.baseNode;
 					var tempNode;
-					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].y < creator.baseNode.y){
-						creator.back_node(creator.baseNode);
+					for(var i=0; i<creator.currentArray.length; i++){
+						if(typeOf(creator.currentArray[i]) === 'array')
+							tempNode = creator.currentArray[i][0];
+						else
+							tempNode = creator.currentArray[i];
+						if(	tempNode.y < nextNode.y)
+							nextNode = tempNode;	
 					}
-					else{
-						var tempNode;	
-						for(var i=1; i<creator.currentArray.length; i++){
-							if(typeOf(creator.currentArray[i]) === 'array')
-								tempNode = creator.currentArray[i][0];
+					if(nextNode != creator.baseNode){
+						if(nextNode.y < creator.baseNode.y-5){
+							if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0] === nextNode)
+								creator.back_node(creator.baseNode);
 							else
-								tempNode = creator.currentArray[i];
-							if(tempNode.y < creator.baseNode.y-3)
-								creator.select_node(tempNode);
+								creator.select_node(nextNode);
 						}
 					}
 				}
 				else if(e.keyCode == 40){ //If "down arrow" pushed
+					var nextNode;
+					if(creator.baseNode.getParentArray() != null)
+						nextNode = creator.baseNode.getParentArray()[0];
+					else
+						nextNode = creator.baseNode;
 					var tempNode;
-					if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0].y > creator.baseNode.y){
-						creator.back_node(creator.baseNode);
+					for(var i=0; i<creator.currentArray.length; i++){
+						if(typeOf(creator.currentArray[i]) === 'array')
+							tempNode = creator.currentArray[i][0];
+						else
+							tempNode = creator.currentArray[i];
+						if(	tempNode.y > nextNode.y)
+							nextNode = tempNode;	
 					}
-					else{
-						var tempNode;	
-						for(var i=1; i<creator.currentArray.length; i++){
-							if(typeOf(creator.currentArray[i]) === 'array')
-								tempNode = creator.currentArray[i][0];
+					if(nextNode != creator.baseNode){
+						if(nextNode.y > creator.baseNode.y+creator.baseNode.height+5){
+							if(creator.baseNode.getParentArray() != null && creator.baseNode.getParentArray()[0] === nextNode)
+								creator.back_node(creator.baseNode);
 							else
-								tempNode = creator.currentArray[i];
-							if(tempNode.y > creator.baseNode.y+3)
-								creator.select_node(tempNode);
+								creator.select_node(nextNode);
 						}
 					}
 				}

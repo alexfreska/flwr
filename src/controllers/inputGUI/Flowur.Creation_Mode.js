@@ -5,7 +5,10 @@
 
 var Creation_Mode = new Class({
 	initialize: function(){
-		this.node_colors = ['#FFAD00', '#FF0033', '#0074FA', '#FF6431', '#00A300', '#FFEC00', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
+		//this.node_colors = ['#FFAD00', '#FF0033', '#0074FA', '#FF6431', '#00A300', '#FFEC00', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
+		//this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC', '#FD7997', '#F0CB10', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
+		this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC'];
+		this.fontName = "Myriad Pro";
 		this.counter;
 		this.linking;
 		this.useAnimations = false;
@@ -16,8 +19,7 @@ var Creation_Mode = new Class({
 		this.arrows_info = new Array();
 		this.flowchart = new Array();
 		this.baseChain = new Array();
-		this.save_text = paper.text(0,0,"Not Saved").attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#555555', 'font-size': 14});
-		this.save_text.attr({'x': (stage.innerWidth - this.save_text.getBBox().width - 10), 'y': (stage.innerHeight - this.save_text.getBBox().height - 10) });
+		//this.save_text = paper.print(0,0,"Not Saved", paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': '#FFFFFF',});
 		this.saving_counter;
 		this.address_string;
 		this.current_color = 1;
@@ -28,14 +30,21 @@ var Creation_Mode = new Class({
 		this.edittingNode;
 		this.baseNode;
 		this.title = new Title();
+		this.v_button = new View_Button();
 		this.baseNode=new Node(stage.innerWidth/2 - 115, stage.innerHeight/2 - 42.5, 230, 85);
 		//this.data_in = JSON.parse(string_in);
 		/*Sample JSON array input */
 		var test_title_info = "Should I join RCOS?";
-		var test_nodes_info = [ {'id': 0, 'data': "Are you computer oriented?"}, {'id': 1, 'data': "No"}, {'id': 2, 'data': "Yes"}, {'id': 3, 'data': "Do you want to learn from the best?"}, {'id': 4, 'data': "Do you want to be computer oriented?"}, {'id': 5, 'data': "Yes"}, {'id': 6, 'data': "No"}, {'id': 7, 'data': "Join RCOS!"}, {'id': 8, 'data': "Maybe you should just invest in our projects then..."}];
-		var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}, {'to': 5, 'from': 3, 'isLink': false}, {'to': 6, 'from': 3, 'isLink': false}, {'to': 7, 'from': 5, 'isLink': false}, {'to': 8, 'from': 6, 'isLink': false}];
+		
+		var test_nodes_info = [{"id":0,"data":"Is it something cringe-worthy about your boss?"},{"id":9,"data":"Yes"},{"id":11,"data":"Is there a twitpic of a private part?"},{"id":12,"data":"Yes"},{"id":15,"data":"Is it your boss's private part?"},{"id":16,"data":"Yes"},{"id":18,"data":"Ask for a raise."},{"id":17,"data":"No"},{"id":19,"data":"Is it your private part?"},{"id":20,"data":"Yes"},{"id":21,"data":"No"},{"id":23,"data":"Do you want more followers?"},{"id":24,"data":"Yes"},{"id":28,"data":"You're sitting pretty. Leave it up."},{"id":25,"data":"No"},{"id":26,"data":"Come on, what are you doing on Twitter?"},{"id":13,"data":"No"},{"id":14,"data":"Delete that tweet!"},{"id":10,"data":"No"},{"id":29,"data":"Is it about an EX, your ATM pin, or that Twilight hunk?"},{"id":30,"data":"Yes"},{"id":32,"data":"Were you drunk-twittering at 3 AM?"},{"id":33,"data":"Yes"},{"id":34,"data":"No"},{"id":35,"data":"Yes, you were. Try again."},{"id":31,"data":"No"},{"id":37,"data":"The coordinates of a \"package\" from Colombia?"},{"id":38,"data":"Yes"},{"id":40,"data":"Are you using someone else's twitter account?"},{"id":41,"data":"Yes"},{"id":42,"data":"No"},{"id":39,"data":"No"}];
+		
+		var test_arrows_info = [{"to":9,"from":0,"isLink":false},{"to":11,"from":9,"isLink":false},{"to":12,"from":11,"isLink":false},{"to":15,"from":12,"isLink":false},{"to":16,"from":15,"isLink":false},{"to":18,"from":16,"isLink":false},{"to":17,"from":15,"isLink":false},{"to":19,"from":17,"isLink":false},{"to":20,"from":19,"isLink":false},{"to":14,"from":20,"isLink":true},{"to":21,"from":19,"isLink":false},{"to":23,"from":21,"isLink":false},{"to":24,"from":23,"isLink":false},{"to":28,"from":24,"isLink":false},{"to":25,"from":23,"isLink":false},{"to":26,"from":25,"isLink":false},{"to":13,"from":11,"isLink":false},{"to":14,"from":13,"isLink":false},{"to":10,"from":0,"isLink":false},{"to":29,"from":10,"isLink":false},{"to":30,"from":29,"isLink":false},{"to":32,"from":30,"isLink":false},{"to":33,"from":32,"isLink":false},{"to":14,"from":33,"isLink":true},{"to":34,"from":32,"isLink":false},{"to":35,"from":34,"isLink":false},{"to":32,"from":35,"isLink":true},{"to":31,"from":29,"isLink":false},{"to":37,"from":31,"isLink":false},{"to":38,"from":37,"isLink":false},{"to":40,"from":38,"isLink":false},{"to":41,"from":40,"isLink":false},{"to":28,"from":41,"isLink":true},{"to":42,"from":40,"isLink":false},{"to":14,"from":42,"isLink":true},{"to":39,"from":37,"isLink":false},{"to":28,"from":39,"isLink":true}];
+		
+		//var test_nodes_info = [ {'id': 0, 'data': "Are you computer oriented?"}, {'id': 1, 'data': "No"}, {'id': 2, 'data': "Yes"}, {'id': 3, 'data': "Do you want to learn from the best?"}, {'id': 4, 'data': "Do you want to be computer oriented?"}, {'id': 5, 'data': "Yes"}, {'id': 6, 'data': "No"}, {'id': 7, 'data': "Join RCOS!"}, {'id': 8, 'data': "Maybe you should just invest in our projects then..."}];
+		//var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}, {'to': 5, 'from': 3, 'isLink': false}, {'to': 6, 'from': 3, 'isLink': false}, {'to': 7, 'from': 5, 'isLink': false}, {'to': 8, 'from': 6, 'isLink': false}];
 		this.data_in = [test_title_info, test_nodes_info, test_arrows_info];
 		//this.data_in = /*get user chart data from server*/ null;
+		
 		//If loading data in to be editted
 		if( this.data_in != null){
 			//Load the text from the title_info into title box
@@ -52,7 +61,7 @@ var Creation_Mode = new Class({
 			
 			for(var z=0; z<nodes_info_temp.length; z++){
 				for(var w=0; w<arrows_info_temp.length; w++){
-					if(arrows_info_temp[w].from === z && !arrows_info_temp[w].isLink){
+					if(arrows_info_temp[w].from === nodes_info_temp[z].id && !arrows_info_temp[w].isLink){
 						var to_node;
 						//Find connected node
 						for(var u=0; u<nodes_info_temp.length; u++){
@@ -122,7 +131,7 @@ var Creation_Mode = new Class({
 			//Now add in the linking arrows
 			for(var z=0; z<unsorted_nodes.length; z++){
 				for(var w=0; w<arrows_info_temp.length; w++){
-					if(arrows_info_temp[w].from === z && arrows_info_temp[w].isLink){
+						if(arrows_info_temp[w].from === unsorted_nodes[z].myId && arrows_info_temp[w].isLink){
 						var to_node;
 						//Find connected node
 						for(var u=0; u<unsorted_nodes.length; u++){
@@ -141,7 +150,6 @@ var Creation_Mode = new Class({
 						link_in.myLinkingArrow = link_out;
 						to_node.addInLinkArrow(link_in);
 						unsorted_nodes[z].setOutLinkArrow(link_out);
-						
 					}
 				}
 			}	
@@ -164,6 +172,7 @@ var Creation_Mode = new Class({
 				tempNode.setsize(tempNode.textField.getBBox().width + 20, tempNode.textField.getBBox().height + 20);
 				tempNode.position_text();
 			}
+			this.saveDisplay = new SaveDisplay(this.fontName);
 			this.reposition_nodes();			
 		}
 		//Otherwise make a new chart
@@ -174,11 +183,16 @@ var Creation_Mode = new Class({
 			this.baseChain.push(this.baseNode);
 			this.counter++;
 			this.currentArray.push(this.baseNode);
+			this.saveDisplay = new SaveDisplay(this.fontName);
 		}
-		
+		/*
 		this.v_button = new View_Button();
 		this.v_button.set_x(10);
 		this.v_button.set_y(stage.innerHeight - (this.v_button.height+20));
+		*/
+		//this.save_text.translate(stage.innerWidth - this.save_text.getBBox().width - 10, this.title.height - this.save_text.getBBox().height - 10);
+		this.v_button.set_x(10);
+		this.v_button.set_y(this.title.height/2 -this.v_button.height/2);
 		
 	},
 	getObjectAt: function(click_x, click_y){
@@ -197,10 +211,10 @@ var Creation_Mode = new Class({
 			else if( this.clickedOn(this.currentArray[i], click_x, click_y) )
 				return this.currentArray[i];
 		}
-		if( this.clickedOn(this.title, click_x, click_y))
-			return this.title;
 		if( this.clickedOn(this.v_button, click_x, click_y))
 			return this.v_button;
+		if( this.clickedOn(this.title, click_x, click_y))
+			return this.title;
 		return null;
 	},
 	clickedOn: function(node, clk_x, clk_y){
@@ -389,6 +403,9 @@ var Creation_Mode = new Class({
 			tempNode.setColor(this.node_colors[this.current_color]);
 			this.distribute_arrows(z_angle, tempNode.getArrow(), tempNode, j);	
 		}
+		this.title.toFront();
+		this.saveDisplay.saveText.toFront();
+		this.v_button.toFront();
 	},
 	isLinking: function(){return this.linking},
 	distribute_arrows: function(z_angle, arw, node, num){
@@ -703,6 +720,9 @@ var Creation_Mode = new Class({
 		this.baseNode = newBase;
 		this.baseChain.push(this.baseNode);
 		this.current_color++;
+		if(this.current_color >= this.node_colors.length){
+			this.current_color = 0;
+		}
 		if(newBase.getChildArray() != null)
 			this.currentArray = newBase.getChildArray();
 		else
@@ -782,6 +802,7 @@ var Creation_Mode = new Class({
 			navigate.currentNode = this.baseNode;
 			this.edit_node(this.baseNode);	
 		}
+		//this.title.toFront();
 	},
 	done_shifting: function(){
 		for(var i=0; i<this.currentArray.lenght; i++){
@@ -921,6 +942,7 @@ var Creation_Mode = new Class({
 			arwOut = tempNode.getOutLinkArrow();
 			this.reposition_linking_arrows(tempNode);
 		}
+		//this.title.toFront();
 	},
 	setUpNewArray: function(node){
 		//if node doesn't already have an array associated with it, create one for it.
@@ -1005,7 +1027,7 @@ var Creation_Mode = new Class({
 		this.flowchart[1] = this.nodes_info;
 		this.flowchart[2] = this.arrows_info;
 		current_chart = this.flowchart;
-		this.update_save();
+		this.saveDisplay.updateSave();
 		//Uncomment once PHP is up and running
 		//Send everything to our PHP
 		/*
@@ -1020,6 +1042,7 @@ var Creation_Mode = new Class({
 		*/
 		
 	},
+	/*
 	update_save: function(){
 		var time_stamp = new Date();
 		var hour_stamp = time_stamp.getHours();
@@ -1033,15 +1056,18 @@ var Creation_Mode = new Class({
 			AM_PM = "AM";
 		if(hour_stamp > 12)
 			hour_stamp -= 12;
+		if(hour_stamp === 0)
+			hour_stamp = 12;
 		this.save_text.remove();
 		this.save_text = null;
 		
-		this.save_text = paper.text(0,0, "Saved: "+hour_stamp+":"+minute_stamp+" "+AM_PM).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#555555', 'font-size': 14});
+		this.save_text = paper.print(0,0, "Saved: "+hour_stamp+":"+minute_stamp+" "+AM_PM, paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': '#FFFFFF'});
 		var save_x = stage.innerWidth - this.save_text.getBBox().width - 10;
-		var save_y = stage.innerHeight - this.save_text.getBBox().height - 10;
-		this.save_text.attr({'x': save_x, 'y': save_y});
+		var save_y = this.title.height - this.save_text.getBBox().height - 10;
+		this.save_text.translate(save_x, save_y);
 		
 	},
+	*/
 	//The following is a recursive function that sorts through the current node structure
 	//and returns the first base node, which doesn't have a parent array.(ie. It's the first)
 	find_base: function(currentBase){
@@ -1082,7 +1108,10 @@ var Creation_Mode = new Class({
 	},
 	reposition_new: function(){
 		this.title.reposition();
-		this.save_text.attr({'x': (stage.innerWidth - this.save_text.getBBox().width - 10), 'y': (stage.innerHeight - this.save_text.getBBox().height - 10) }); 
+		//var saveTxt = this.save_text;
+		//console.log(saveTxt);
+		//this.save_text.attr({'x': (stage.innerWidth - this.save_text.getBBox().width - 10), 'y': (stage.innerHeight - this.save_text.getBBox().height - 10) }); 
+		this.saveDisplay.reposition();
 		this.reposition_nodes();
 	},
 	delete_choice_node: function(node, arw, lArw, ldArray){
@@ -1115,8 +1144,8 @@ var Creation_Mode = new Class({
 		this.title = null;
 		this.v_button.undraw();
 		this.v_button = null;
-		this.save_text.remove();
-		this.save_text = null;
+		this.saveDisplay.saveText.remove();
+		this.saveDisplay = null;
 		this.close_it(this.find_base(this.baseNode));
 	},
 	close_it: function(currentNode){
