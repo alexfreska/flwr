@@ -27,7 +27,7 @@ var Command_Navigator = new Class({
 		this.mousedown_function = function(e){
 			if(creator.getObjectAt(e.page.x, e.page.y) instanceof View_Button)
 			{
-				go_to_view();	
+				go_to_home();	
 			}
 			else if(creator.getObjectAt(e.page.x, e.page.y) instanceof Title)
 			{

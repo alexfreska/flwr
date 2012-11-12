@@ -5,6 +5,7 @@
 
 var Viewing_Mode = new Class({
 	initialize: function(){
+		document.getElementById('application').style.backgroundColor = '#F0F0F0';
 		this.current_scheme = 3;
 		this.color_scheme_1 = ['#287BDB', '#F0E400', '#646464'];//Blue/Yellow scheme
 		this.color_scheme_2 = ['#E51B2A', '#F79000', '#444444'];//Red/orange scheme

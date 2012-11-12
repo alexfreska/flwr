@@ -5,13 +5,14 @@
 var SaveDisplay = new Class({
 	initialize: function(font){
 		this.fontName = font;
+		this.fontFill = '#999999';
 		this.myText = "Not Saved";
-		this.saveText = paper.print(0,0,this.myText, paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': '#FFFFFF',});
-		this.saveText.translate(stage.innerWidth - this.saveText.getBBox().width - 10, 40 - this.saveText.getBBox().height - 10);
+		this.saveText = paper.print(0,0,this.myText, paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': this.fontFill});
+		this.saveText.translate(stage.innerWidth - this.saveText.getBBox().width - 10, stage.innerHeight - this.saveText.getBBox().height - 10);
 	},
 	reposition: function(){
 		var saveX = stage.innerWidth - this.saveText.getBBox().width -10;
-		var saveY = 40 - this.saveText.getBBox().height - 10;
+		var saveY = stage.innerHeight - this.saveText.getBBox().height - 10;
 		this.saveText.translate( saveX - this.saveText.getBBox().x, saveY - this.saveText.getBBox().y-5);
 	},
 	updateSave: function(){
@@ -32,9 +33,9 @@ var SaveDisplay = new Class({
 		this.saveText.remove();
 		this.saveText = null;
 		this.myText = "Saved: "+hourStamp+":"+minuteStamp+" "+AM_PM;
-		this.saveText = paper.print(0,0, this.myText, paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': '#FFFFFF'});
+		this.saveText = paper.print(0,0, this.myText, paper.getFont(this.fontName), 14).attr({'text-anchor': 'start', 'fill': this.fontFill});
 		var saveX = stage.innerWidth - this.saveText.getBBox().width - 10;
-		var saveY = 40 - this.saveText.getBBox().height - 10;
+		var saveY = stage.innerHeight - this.saveText.getBBox().height - 10;
 		this.saveText.translate(saveX, saveY);
 	}
 });

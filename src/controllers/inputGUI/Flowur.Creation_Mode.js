@@ -5,9 +5,9 @@
 
 var Creation_Mode = new Class({
 	initialize: function(){
-		//this.node_colors = ['#FFAD00', '#FF0033', '#0074FA', '#FF6431', '#00A300', '#FFEC00', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
-		//this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC', '#FD7997', '#F0CB10', '#FF98C6', '#001598', '#00F787', '#FF10BB'];
-		this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC'];
+		document.getElementById('application').style.backgroundColor = '#F0F0F0';
+		this.node_colors = ['#FF2D18', '#FFFFFF', '#FF4F23', '#333333'];
+		//this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC'];
 		this.fontName = "Myriad Pro";
 		this.counter;
 		this.linking;
@@ -30,19 +30,21 @@ var Creation_Mode = new Class({
 		this.edittingNode;
 		this.baseNode;
 		this.title = new Title();
-		this.v_button = new View_Button();
+		//this.v_button = new View_Button();
 		this.baseNode=new Node(stage.innerWidth/2 - 115, stage.innerHeight/2 - 42.5, 230, 85);
+		
+		this.data_in = current_chart;
 		//this.data_in = JSON.parse(string_in);
 		/*Sample JSON array input */
-		var test_title_info = "Should I join RCOS?";
+		//var test_title_info = "Should I join RCOS?";
 		
-		var test_nodes_info = [{"id":0,"data":"Is it something cringe-worthy about your boss?"},{"id":9,"data":"Yes"},{"id":11,"data":"Is there a twitpic of a private part?"},{"id":12,"data":"Yes"},{"id":15,"data":"Is it your boss's private part?"},{"id":16,"data":"Yes"},{"id":18,"data":"Ask for a raise."},{"id":17,"data":"No"},{"id":19,"data":"Is it your private part?"},{"id":20,"data":"Yes"},{"id":21,"data":"No"},{"id":23,"data":"Do you want more followers?"},{"id":24,"data":"Yes"},{"id":28,"data":"You're sitting pretty. Leave it up."},{"id":25,"data":"No"},{"id":26,"data":"Come on, what are you doing on Twitter?"},{"id":13,"data":"No"},{"id":14,"data":"Delete that tweet!"},{"id":10,"data":"No"},{"id":29,"data":"Is it about an EX, your ATM pin, or that Twilight hunk?"},{"id":30,"data":"Yes"},{"id":32,"data":"Were you drunk-twittering at 3 AM?"},{"id":33,"data":"Yes"},{"id":34,"data":"No"},{"id":35,"data":"Yes, you were. Try again."},{"id":31,"data":"No"},{"id":37,"data":"The coordinates of a \"package\" from Colombia?"},{"id":38,"data":"Yes"},{"id":40,"data":"Are you using someone else's twitter account?"},{"id":41,"data":"Yes"},{"id":42,"data":"No"},{"id":39,"data":"No"}];
+		//var test_nodes_info = [{"id":0,"data":"Is it something cringe-worthy about your boss?"},{"id":9,"data":"Yes"},{"id":11,"data":"Is there a twitpic of a private part?"},{"id":12,"data":"Yes"},{"id":15,"data":"Is it your boss's private part?"},{"id":16,"data":"Yes"},{"id":18,"data":"Ask for a raise."},{"id":17,"data":"No"},{"id":19,"data":"Is it your private part?"},{"id":20,"data":"Yes"},{"id":21,"data":"No"},{"id":23,"data":"Do you want more followers?"},{"id":24,"data":"Yes"},{"id":28,"data":"You're sitting pretty. Leave it up."},{"id":25,"data":"No"},{"id":26,"data":"Come on, what are you doing on Twitter?"},{"id":13,"data":"No"},{"id":14,"data":"Delete that tweet!"},{"id":10,"data":"No"},{"id":29,"data":"Is it about an EX, your ATM pin, or that Twilight hunk?"},{"id":30,"data":"Yes"},{"id":32,"data":"Were you drunk-twittering at 3 AM?"},{"id":33,"data":"Yes"},{"id":34,"data":"No"},{"id":35,"data":"Yes, you were. Try again."},{"id":31,"data":"No"},{"id":37,"data":"The coordinates of a \"package\" from Colombia?"},{"id":38,"data":"Yes"},{"id":40,"data":"Are you using someone else's twitter account?"},{"id":41,"data":"Yes"},{"id":42,"data":"No"},{"id":39,"data":"No"}];
 		
-		var test_arrows_info = [{"to":9,"from":0,"isLink":false},{"to":11,"from":9,"isLink":false},{"to":12,"from":11,"isLink":false},{"to":15,"from":12,"isLink":false},{"to":16,"from":15,"isLink":false},{"to":18,"from":16,"isLink":false},{"to":17,"from":15,"isLink":false},{"to":19,"from":17,"isLink":false},{"to":20,"from":19,"isLink":false},{"to":14,"from":20,"isLink":true},{"to":21,"from":19,"isLink":false},{"to":23,"from":21,"isLink":false},{"to":24,"from":23,"isLink":false},{"to":28,"from":24,"isLink":false},{"to":25,"from":23,"isLink":false},{"to":26,"from":25,"isLink":false},{"to":13,"from":11,"isLink":false},{"to":14,"from":13,"isLink":false},{"to":10,"from":0,"isLink":false},{"to":29,"from":10,"isLink":false},{"to":30,"from":29,"isLink":false},{"to":32,"from":30,"isLink":false},{"to":33,"from":32,"isLink":false},{"to":14,"from":33,"isLink":true},{"to":34,"from":32,"isLink":false},{"to":35,"from":34,"isLink":false},{"to":32,"from":35,"isLink":true},{"to":31,"from":29,"isLink":false},{"to":37,"from":31,"isLink":false},{"to":38,"from":37,"isLink":false},{"to":40,"from":38,"isLink":false},{"to":41,"from":40,"isLink":false},{"to":28,"from":41,"isLink":true},{"to":42,"from":40,"isLink":false},{"to":14,"from":42,"isLink":true},{"to":39,"from":37,"isLink":false},{"to":28,"from":39,"isLink":true}];
+		//var test_arrows_info = [{"to":9,"from":0,"isLink":false},{"to":11,"from":9,"isLink":false},{"to":12,"from":11,"isLink":false},{"to":15,"from":12,"isLink":false},{"to":16,"from":15,"isLink":false},{"to":18,"from":16,"isLink":false},{"to":17,"from":15,"isLink":false},{"to":19,"from":17,"isLink":false},{"to":20,"from":19,"isLink":false},{"to":14,"from":20,"isLink":true},{"to":21,"from":19,"isLink":false},{"to":23,"from":21,"isLink":false},{"to":24,"from":23,"isLink":false},{"to":28,"from":24,"isLink":false},{"to":25,"from":23,"isLink":false},{"to":26,"from":25,"isLink":false},{"to":13,"from":11,"isLink":false},{"to":14,"from":13,"isLink":false},{"to":10,"from":0,"isLink":false},{"to":29,"from":10,"isLink":false},{"to":30,"from":29,"isLink":false},{"to":32,"from":30,"isLink":false},{"to":33,"from":32,"isLink":false},{"to":14,"from":33,"isLink":true},{"to":34,"from":32,"isLink":false},{"to":35,"from":34,"isLink":false},{"to":32,"from":35,"isLink":true},{"to":31,"from":29,"isLink":false},{"to":37,"from":31,"isLink":false},{"to":38,"from":37,"isLink":false},{"to":40,"from":38,"isLink":false},{"to":41,"from":40,"isLink":false},{"to":28,"from":41,"isLink":true},{"to":42,"from":40,"isLink":false},{"to":14,"from":42,"isLink":true},{"to":39,"from":37,"isLink":false},{"to":28,"from":39,"isLink":true}];
 		
 		//var test_nodes_info = [ {'id': 0, 'data': "Are you computer oriented?"}, {'id': 1, 'data': "No"}, {'id': 2, 'data': "Yes"}, {'id': 3, 'data': "Do you want to learn from the best?"}, {'id': 4, 'data': "Do you want to be computer oriented?"}, {'id': 5, 'data': "Yes"}, {'id': 6, 'data': "No"}, {'id': 7, 'data': "Join RCOS!"}, {'id': 8, 'data': "Maybe you should just invest in our projects then..."}];
 		//var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}, {'to': 5, 'from': 3, 'isLink': false}, {'to': 6, 'from': 3, 'isLink': false}, {'to': 7, 'from': 5, 'isLink': false}, {'to': 8, 'from': 6, 'isLink': false}];
-		this.data_in = [test_title_info, test_nodes_info, test_arrows_info];
+		//////////////this.data_in = [test_title_info, test_nodes_info, test_arrows_info];////////////
 		//this.data_in = /*get user chart data from server*/ null;
 		
 		//If loading data in to be editted
@@ -52,13 +54,13 @@ var Creation_Mode = new Class({
 			var nodes_info_temp = this.data_in[1];
 			//Find the baseNode text from the nodes_info struct (should be id: 0)
 			this.baseNode.setText(nodes_info_temp[0].data);
+			this.baseNode.myId = 0;
 			this.baseNode.setsize(this.baseNode.textField.getBBox().width + 20, this.baseNode.textField.getBBox().height + 20);
 			this.baseNode.position_text();
 			//Now add the rest of the nodes to the stage
 			var arrows_info_temp = this.data_in[2];
 			var unsorted_nodes = new Array();
 			unsorted_nodes.push(this.baseNode);
-			
 			for(var z=0; z<nodes_info_temp.length; z++){
 				for(var w=0; w<arrows_info_temp.length; w++){
 					if(arrows_info_temp[w].from === nodes_info_temp[z].id && !arrows_info_temp[w].isLink){
@@ -159,18 +161,20 @@ var Creation_Mode = new Class({
 			this.baseNode.setColor(this.node_colors[0]);
 			this.baseChain.push(this.baseNode);
 			this.counter++;
-			this.currentArray = this.baseNode.getChildArray();
-			for(var z=1; z<this.currentArray.length; z++){
-				var tempNode;
-				if(typeOf( this.currentArray[z] ) === 'array'){
-					tempNode = this.currentArray[z][0];
+			if(this.baseNode.getChildArray() != null){
+				this.currentArray = this.baseNode.getChildArray();
+				for(var z=1; z<this.currentArray.length; z++){
+					var tempNode;
+					if(typeOf( this.currentArray[z] ) === 'array'){
+						tempNode = this.currentArray[z][0];
+					}
+					else
+						tempNode = this.currentArray[z];
+					tempNode.setColor(this.node_colors[this.counter]);	
+					tempNode.draw();
+					tempNode.setsize(tempNode.textField.getBBox().width + 20, tempNode.textField.getBBox().height + 20);
+					tempNode.position_text();
 				}
-				else
-					tempNode = this.currentArray[z];
-				tempNode.setColor(this.node_colors[this.counter]);	
-				tempNode.draw();
-				tempNode.setsize(tempNode.textField.getBBox().width + 20, tempNode.textField.getBBox().height + 20);
-				tempNode.position_text();
 			}
 			this.saveDisplay = new SaveDisplay(this.fontName);
 			this.reposition_nodes();			
@@ -185,14 +189,8 @@ var Creation_Mode = new Class({
 			this.currentArray.push(this.baseNode);
 			this.saveDisplay = new SaveDisplay(this.fontName);
 		}
-		/*
-		this.v_button = new View_Button();
-		this.v_button.set_x(10);
-		this.v_button.set_y(stage.innerHeight - (this.v_button.height+20));
-		*/
-		//this.save_text.translate(stage.innerWidth - this.save_text.getBBox().width - 10, this.title.height - this.save_text.getBBox().height - 10);
-		this.v_button.set_x(10);
-		this.v_button.set_y(this.title.height/2 -this.v_button.height/2);
+		//this.v_button.set_x(10);
+		//this.v_button.set_y(this.title.height/2 -this.v_button.height/2);
 		
 	},
 	getObjectAt: function(click_x, click_y){
@@ -211,8 +209,8 @@ var Creation_Mode = new Class({
 			else if( this.clickedOn(this.currentArray[i], click_x, click_y) )
 				return this.currentArray[i];
 		}
-		if( this.clickedOn(this.v_button, click_x, click_y))
-			return this.v_button;
+		//if( this.clickedOn(this.v_button, click_x, click_y))
+			//return this.v_button;
 		if( this.clickedOn(this.title, click_x, click_y))
 			return this.title;
 		return null;
@@ -405,7 +403,7 @@ var Creation_Mode = new Class({
 		}
 		this.title.toFront();
 		this.saveDisplay.saveText.toFront();
-		this.v_button.toFront();
+		//this.v_button.toFront();
 	},
 	isLinking: function(){return this.linking},
 	distribute_arrows: function(z_angle, arw, node, num){
@@ -1142,8 +1140,8 @@ var Creation_Mode = new Class({
 	close_all: function(){
 		this.title.undraw();
 		this.title = null;
-		this.v_button.undraw();
-		this.v_button = null;
+		//this.v_button.undraw();
+		//this.v_button = null;
 		this.saveDisplay.saveText.remove();
 		this.saveDisplay = null;
 		this.close_it(this.find_base(this.baseNode));

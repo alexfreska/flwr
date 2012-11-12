@@ -31,6 +31,7 @@ var Linking_Arrow = new Class({
 			var node_radius = 0; //4
 			var node_offset = 1.2;
 			var scale = .7;
+			//console.log(b.linked_node);
 			var n_color =  b.linked_node.getColor();
 			var n_width = b.linked_node.width * scale;
 			var n_height = b.linked_node.height * scale;

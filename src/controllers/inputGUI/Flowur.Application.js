@@ -4,11 +4,13 @@
 // Last updated: 9/4/12
 var paper;
 var creator;
-var creator_up = true;
+var creator_up = false;
 var viewer_up = false;
+var demo_up = true;
 var viewer;
 var current_chart;
 var navigate;
+var demoPage;
 var stage = window;
 
 window.onresize = function()//Resize and reposition everything here.
@@ -16,25 +18,50 @@ window.onresize = function()//Resize and reposition everything here.
 	document.getElementById('application').width = stage.innerWidth;
 	document.getElementById('application').height = stage.innerHeight;
 	paper.setSize(stage.innerWidth, stage.innerHeight);
-	//background.attr({width: stage.innerWidth, height: stage.innerHeight});
 	if(creator_up)
 		creator.reposition_new();	
+	if(demo_up)
+		demoPage.reposition();
 };
 window.addEvent('domready', function(){
     paper = new Raphael(document.getElementById('application'), stage.innerWidth, stage.innerHeight);
-	//background = paper.rect(0,0,stage.innerWidth, stage.innerHeight);
-	//background.attr({fill: "90-#DADADA-#F5F5F5:50-#DADADA", stroke: 'none', 'fill-opacity': 0}); //'fill-opacity': .1
-	navigate = new Command_Navigator();
-	creator = new Creation_Mode();
+	
+	demoPage = new Demo_Page();
 	
 });
 
-var go_to_view = function(){
+var go_to_home = function(){
 	creator.close_all();
 	creator_up = false;
 	creator = null;
 	navigate.close_it();
 	navigate = null;
+	console.log(JSON.stringify(current_chart));
+	//demoPage = new Demo_Page();
+	demoPage.show();
+	demo_up = true;
+};
+
+var go_to_creator = function(){
+	demoPage.close_all();
+	//demo_up = false;
+	//demoPage = null;
+	navigate = new Command_Navigator();
+	creator = new Creation_Mode();
+	creator_up = true;
+	
+};
+
+var go_to_view = function(){
+	demoPage.close_all();
+	demo_up = false;
+	if(creator_up){
+		creator.close_all();
+		creator_up = false;
+		navigate.close_it();
+		navigate = null;	
+	}
+	//demoPage = null;
 	//console.log(JSON.stringify(current_chart));
 	viewer = new Viewing_Mode();
 	viewer_up = true;

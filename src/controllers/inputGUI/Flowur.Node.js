@@ -6,6 +6,7 @@ var Node = new Class({
 	initialize: function(x,y,width,height){
 		this.id = 'node';
 		this.fontName = 'Myriad Pro';
+		this.fontColor = '#FFFFFF';
 		this.radius = 0; //4
 		this.backOffset = 1;//1.2
 		this.x = x;
@@ -59,7 +60,7 @@ var Node = new Class({
 			'text-align' : 'center',
 			'overflow' : 'hidden',
 			'font-family': this.fontName,
-			'color' : '#FFFFFF',
+			'color' : this.fontColor,
 			'font-size' : '20px',
 			'position' : 'absolute',
 			'left' : this.x+(2+this.backOffset),
@@ -81,7 +82,7 @@ var Node = new Class({
 			if( this.myText === "" || this.myText === "\n")
 			{
 				this.myText = "Enter your text here.";
-				this.textField = paper.print(this.x, this.y, this.myText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
+				this.textField = paper.print(this.x, this.y, this.myText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': this.fontColor});
 			}
 			else{
 				var content = this.myText;
@@ -98,12 +99,11 @@ var Node = new Class({
 				}
 				this.textField.remove();
 				this.nlText = tempText.substring(1);
-				this.textField = paper.print(0,0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});	
+				this.textField = paper.print(0,0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': this.fontColor, 'fill-opacity': 0});	
 			}
 			document.getElement('.'+this.text_area_id).destroy();
 		}
 		this.resize(this.textField.getBBox().width + 20, this.textField.getBBox().height + 20);
-		//this.position_text();
 	},
 	//setsize instantly resizes a box
 	setsize: function(w, h){
@@ -153,7 +153,7 @@ var Node = new Class({
 				}
 		}
 		this.textField.remove();
-		this.textField = paper.print(0, 0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
+		this.textField = paper.print(0, 0, tempText.substring(1), paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': this.fontColor});
 		this.nlText = tempText.substring(1);
 		
 		//this.position_text();
@@ -235,10 +235,11 @@ var Node = new Class({
 			//var txt_y = this.y + ((this.height - this.textField.getBBox().height + this.textField.getBBox().height)/2);
 			
 			this.textField.remove();
-			this.textField = paper.print(-3,7, this.nlText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': '#FFFFFF'});
+			this.textField = paper.print(-3,7, this.nlText, paper.getFont(this.fontName), 20).attr({'text-anchor': 'start','fill': this.fontColor, 'fill-opacity': 0});
 			var txt_x = this.x + (this.width/2 - this.textField.getBBox().width/2);
 			var txt_y = this.y + ((this.height - this.textField.getBBox().height)/2);
 			this.textField.translate(txt_x, txt_y);
+			this.textField.attr({'fill-opacity': 1});
 		}
 	},
 	set_x: function(new_x){
@@ -283,9 +284,14 @@ var Node = new Class({
 			this.prev_color = this.myColor;
 			this.back_box.attr({fill: this.myColor});
 			this.top_box.attr({fill: this.myColor});
+			if(this.myColor === '#FFFFFF')
+				this.fontColor = '#333333';
 		}
-		else
+		else{
 			this.prev_color = newColor;
+			this.fontColor = '#FFFFFF';
+			console.log("called");
+		}
 	},
 	getColor: function(){return this.myColor;},
 	getArrowPoint: function(arw, arw_theta){ // arw_theta in radians
