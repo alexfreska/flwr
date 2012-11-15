@@ -1,12 +1,12 @@
 Flowur
 ======
 
-The Flowur project is a collection of tools aimed at optimizing the creation of flowcharts, diagnostics, and other graph based visualizations. Flowur has two main components; controllers and templates. Controllers focus on retrieving user data intuitively and quickly. Templates generate interpretations of the data set they are given.
+The Flowur project is a collection of tools aimed at optimizing the creation of flowcharts, diagnostics, and other graph based visualizations. Flowur has two main components: interfaces and templates. Interfaces focus on retrieving user data intuitively and quickly. Templates generate interpretations of the data set they are given.
 
 
-Controllers
+Interfaces
 ===========
-Controllers are user interfaces that streamline node based data entry and build a JSON file using the Flowur markup.
+Interfaces streamline node based data entry and build a JSON file using the Flowur markup.
 
 
 
