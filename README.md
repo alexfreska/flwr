@@ -1,19 +1,22 @@
 Flowur
 ======
 
-The Flowur API interfaces Controllers and Templates using a standardized JSON markup. The API provides developers with methods for creating JSON data, using node relational info, setting node-placement, and styling graphics. The default graphic system is built on the Raphaël JavaScript library.
+The Flowur project is a collection of tools aimed at optimizing the creation of flowcharts, diagnostics, and other graph based visualizations. Flowur has two main components: interfaces and templates. Interfaces focus on retrieving user data intuitively and quickly. Templates generate interpretations of the data set they are given.
 
 
-Controllers
+Interfaces
 ===========
-Controllers are user interfaces that streamline node based data entry and build a JSON file using the Flowur API.
+Interfaces streamline node based data entry and build a JSON file using the Flowur markup.
 
 
 
 Templates
 =========
-Templates consist of routing algorithms, functionality code, and graphical styling. The Flowur API makes the process of building a template much easier.
+Templates consist of routing algorithms, functionality code, and graphical styling. The existing code associated with the Flowur project along with the standardized markup makes the process of building a template more focused on realizing the actual concept.
 
+Markup
+======
+The JSON markup consists of a title, nodes, and arrows. Nodes have an 'id', 'data', and a 'type'. Arrows have 'from' and 'to' ids that refer to associated nodes. Currently arrows are generated with an 'isLink' value that denotes a back/forward edge but the team plans to cycle out the usage of this value over the next few weeks.
 
 License
 =======
