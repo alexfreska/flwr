@@ -1,0 +1,103 @@
+<!DOCTYPE html>		
+
+<html lang = "en">
+
+<head>
+	 <meta itemprop="image" content="images/favicon_flowur.png"> 
+    <!-- <link rel="shortcut icon" href="images/favicon.ico"> -->
+	<title>Flowur</title>
+	<meta http-equiv = "Content-type" content = "text/html; charset = utf-8" />
+    
+	<meta name = "description" content = "Create and share flowcharts quickly." />
+    <!-- main css file here -->
+    
+	<link rel = "stylesheet" href = "src/controllers/inputGUI/reset.css" media = "screen, projection" type = "text/css" />
+      
+   <!-- <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">--> 
+
+	<!--[if IE 6]>
+		<link rel = "stylesheet" href = "css/ie6.css" media = "screen, projection" />
+	<![endif]-->
+
+	<!--[if gte IE 7]>
+		<link rel = "stylesheet" href = "css/ie.css" media = "screen, projection" />
+	<![endif]-->
+</head>
+	<!--<script type = "text/javascript" src = "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+     <script type = "text/javascript" src = "src/controllers/inputGUI/raphael.js"></script>
+	<script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+    <!-- main js file here -->
+	<script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Application.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Node.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Linked_Arrow.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Linking_Arrow.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Strait_Arrow.js"></script>
+    
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Viewing_Box.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Command_Navigator.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Click_Command.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Add_Node_Command.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Delete_Node_Command.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Link_Node_Command.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Edit_Node_Command.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Display_Message.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Title_Box.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Link.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Creation_Mode.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Viewing_Mode.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.View_Button.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Boundary_Box.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Arrow_Head.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Arrow_Router.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Router_Line.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Viewer_Navigator.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Slider.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Horizontal_Slider.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Vertical_Slider.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.SaveDisplay.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.Demo_Page.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/Flowur.View_Page.js"></script>
+    
+    
+    <script type = "text/javascript" src = "src/templates/tree/tree.js"></script>
+    <script type = "text/javascript" src = "src/templates/tree/underscore-min.js"></script>
+    <script type = "text/javascript" src = "src/templates/diagnostic/diagnostic.js"></script>
+    <script type = "text/javascript" src = "src/templates/diagnostic/smartphone.js"></script>
+    
+    
+    <script type = "text/javascript" src = "src/controllers/inputGUI/myriad-pro.js"></script>
+    <script type = "text/javascript" src = "src/controllers/inputGUI/walkway.js"></script>
+<script type = "text/javascript">
+
+</script>
+    <style type="text/css">  
+	*
+	{
+		top: 0;
+		left: 0;
+		padding: 0;
+		margin: 0;
+	}
+	@font-face {
+  		font-family: 'Myriad Pro';
+  		src: url('src/controllers/inputGUI/myriad_pro.eot?') format('eot'), url('src/controllers/inputGUI/myriad_pro.woff') format('woff'), url('src/controllers/inputGUI/myriad_pro.ttf') format('truetype');
+	}
+	@font-face {
+  		font-family: 'Walkway';
+  		src: url('src/controllers/inputGUI/walkway.eot?') format('eot'), url('src/controllers/inputGUI/walkway.woff') format('woff'), url('src/controllers/inputGUI/walkway.ttf') format('truetype');
+	}
+            #application {   
+				width: auto;
+				height: auto;
+				background-color: #F0F0F0; 
+				/*background-image: url('images/large_grid.png');*/
+            }  
+    </style>
+    
+</head>
+<body scroll="no" style="overflow: hidden">
+    <div id = "application">
+    </div>
+</body>
+
+</html>
