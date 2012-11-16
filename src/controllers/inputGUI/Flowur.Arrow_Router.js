@@ -789,7 +789,7 @@ var Arrow_Router = new Class({
 							 if(newP1['x'] != oldP1['x'] || newP1['y'] != oldP1['y']){
 								 //noInterfereYet = false;
 								 oldP1 = newP1;
-								 var marker = paper.circle(newP1['x']+tis.thickness/2, newP1['y']+tis.thickness/2, 3).attr({fill: '#0000FF', stroke: 'none'});
+								 var marker = viewPaper.circle(newP1['x']+tis.thickness/2, newP1['y']+tis.thickness/2, 3).attr({fill: '#0000FF', stroke: 'none'});
 								 //console.log("To case reached");
 							 }
 							 noInterfereYet = false;
@@ -802,7 +802,7 @@ var Arrow_Router = new Class({
 								 noInterfereYet = false;
 								 oldP1 = newP1;
 								 possibleBoxes.splice(possibleBoxes.indexOf(boxes[j]), 1);
-								 var marker = paper.circle(newP1['x']+tis.thickness/2, newP1['y']+tis.thickness/2, 3).attr({fill: '#0000FF', stroke: 'none'});
+								 var marker = viewPaper.circle(newP1['x']+tis.thickness/2, newP1['y']+tis.thickness/2, 3).attr({fill: '#0000FF', stroke: 'none'});
 								 //console.log("Interfered");
 							 }
 							 j++;
@@ -884,8 +884,8 @@ var Arrow_Router = new Class({
 			 
 			 var point1 = interfering(from, {'x': fromX, 'y': fromY}, toX-fromX, toY-fromY);
 			 var point2 = {'x': toX, 'y': toY};
-			 //var marker1 = paper.circle(point1['x']+this.thickness/2, point1['y']+this.thickness/2, 3).attr({fill: '#00FF00', stroke: 'none'});
-			 //var marker2 = paper.circle(toX+this.thickness/2, toY+this.thickness/2, 3).attr({fill: '#FF0000', stroke: 'none'});
+			 //var marker1 = viewPaper.circle(point1['x']+this.thickness/2, point1['y']+this.thickness/2, 3).attr({fill: '#00FF00', stroke: 'none'});
+			 //var marker2 = viewPaper.circle(toX+this.thickness/2, toY+this.thickness/2, 3).attr({fill: '#FF0000', stroke: 'none'});
 			 advConnect(point1, point2);
 			 //console.log("---------------------------");
 			 condense(); //Take the arrow and condense it's segments

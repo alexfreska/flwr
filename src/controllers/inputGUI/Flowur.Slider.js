@@ -24,14 +24,14 @@ var Slider = new Class({
 		if(this.onStage)
 			this.top_box.remove();
 		this.onStage = true;
-		this.top_box = paper.rect(this.x, this.y, this.width, this.height,2).attr({'fill': this.myColor, 'stroke': this.stroke, 'fill-opacity': this.f_opacity});
+		this.top_box = viewPaper.rect(this.x, this.y, this.width, this.height,2).attr({'fill': this.myColor, 'stroke': this.stroke, 'fill-opacity': this.f_opacity});
 	},
 	set_x: function(new_x){
 		this.x = new_x;
 		if(this.onStage)
 			this.top_box.remove();
 		this.onStage = true;
-		this.top_box = paper.rect(this.x, this.y, this.width, this.height,2).attr({'fill': this.myColor, 'stroke': this.stroke, 'fill-opacity': this.f_opacity});
+		this.top_box = viewPaper.rect(this.x, this.y, this.width, this.height,2).attr({'fill': this.myColor, 'stroke': this.stroke, 'fill-opacity': this.f_opacity});
 	},
 	
 });

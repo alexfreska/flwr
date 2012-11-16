@@ -27,10 +27,10 @@ var Router_Line = new Class({
 	draw: function(){
 		var line;
 		if(this.horOrVert === 'h'){ //Draw a horizontal line
-			line = paper.rect(this.x,this.y,this.length,this.thickness);
+			line = viewPaper.rect(this.x,this.y,this.length,this.thickness);
 		}
 		else{ //Draw a vertical line
-			line = paper.rect(this.x,this.y,this.thickness,this.length);
+			line = viewPaper.rect(this.x,this.y,this.thickness,this.length);
 		}
 		line.attr({'fill': this.myColor, 'stroke': 'none'});
 	},

@@ -4,7 +4,7 @@
 
 var Viewer_Navigator = new Class({
 	initialize: function(){
-		this.drag_space = paper.rect(0,0,stage.innerWidth, stage.innerHeight).attr({'fill': '#000000', 'fill-opacity': 0, 'stroke': 'none'});
+		this.drag_space = viewPaper.rect(0,0,stage.innerWidth, stage.innerHeight).attr({'fill': '#000000', 'fill-opacity': 0, 'stroke': 'none'});
 		this.h_slider = new Horizontal_Slider(); //Horizontal Slider
 		this.v_slider = new Vertical_Slider(); //Vertical Slider
 		this.addListeners();
@@ -13,13 +13,13 @@ var Viewer_Navigator = new Class({
 		var t = this;
 		var start_x;
 		var start_y;
-		paper.setViewBox(0,0,stage.innerWidth, stage.innerHeight);
+		viewPaper.setViewBox(0,0,stage.innerWidth, stage.innerHeight);
 		var onMove = function(dx, dy){
 			dx = -dx;
 			dy = -dy;
 			//dx, dy the amount to shift everything.
 			//test_box.animate({'x': start_x+dx, 'y': start_y+dy});
-			//paper.setViewBox(x, y, w, h, fit);
+			//viewPaper.setViewBox(x, y, w, h, fit);
 			var x_loc = start_x + dx;
 			var y_loc = start_y + dy;
 			if(x_loc < viewer.current_bounds.x)
@@ -30,7 +30,7 @@ var Viewer_Navigator = new Class({
 				y_loc = viewer.current_bounds.y;
 			else if(y_loc+stage.innerHeight > viewer.current_bounds.y+viewer.current_bounds.height)
 				y_loc = (viewer.current_bounds.height+viewer.current_bounds.y) - stage.innerHeight;
-			paper.setViewBox(x_loc, y_loc, stage.innerWidth, stage.innerHeight);
+			viewPaper.setViewBox(x_loc, y_loc, stage.innerWidth, stage.innerHeight);
 			t.h_slider.set_y( y_loc+5);
 			t.v_slider.set_x( x_loc + stage.innerWidth - 5 - t.v_slider.width);
 			t.drag_space.attr({'x': x_loc, 'y': y_loc});
@@ -60,8 +60,8 @@ var Viewer_Navigator = new Class({
 					t.v_slider.set_y(slider_y-(slider_height/2));
 				}
 			}
-			start_x = paper._viewBox[0];
-			start_y = paper._viewBox[1];
+			start_x = viewPaper._viewBox[0];
+			start_y = viewPaper._viewBox[1];
 			
 		};
 		var onEnd = function(){

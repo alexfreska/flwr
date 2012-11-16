@@ -15,7 +15,7 @@ var Viewing_Mode = new Class({
 		
 		this.use_textures = true;
 		this.texture_scheme = 0;
-		this.texture_scheme_1 = ['images/tinyStripes.png', 'images/tinyStripes.png', 'images/tinyStripes.png', 'images/stripes.png']; //Dark scheme
+		this.texture_scheme_1 = ['src/controllers/inputGUI/images/tinyStripes.png', 'src/controllers/inputGUI/images/tinyStripes.png', 'src/controllers/inputGUI/images/tinyStripes.png', 'src/controllers/inputGUI/images/stripes.png']; //Dark scheme
 		this.texture_schemes = [this.texture_scheme_1]; 
 		
 		this.text_array = new Array();

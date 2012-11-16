@@ -11,9 +11,9 @@ var Demo_Page = new Class({
 	intro: function(x, y){
 		this.introGraphic = paper.set();
 		
-		this.introGraphic.push( paper.image("images/FlowurIntroBack.png", (stage.innerWidth-1856)/2, (stage.innerHeight-1044)/2, 1856, 1044));
-		this.introGraphic.push( paper.image("images/FlowurIntroTop.png", (stage.innerWidth-372)/2, (stage.innerHeight-373)/2, 372, 373));
-		//this.introGraphic.push( paper.image("images/FlowurIntro.png", (stage.innerWidth-372)/2, (stage.innerHeight-373)/2, 372, 373));
+		this.introGraphic.push( paper.image("src/controllers/inputGUI/images/FlowurIntroBack.png", (stage.innerWidth-1856)/2, (stage.innerHeight-1044)/2, 1856, 1044));
+		this.introGraphic.push( paper.image("src/controllers/inputGUI/images/FlowurIntroTop.png", (stage.innerWidth-372)/2, (stage.innerHeight-373)/2, 372, 373));
+		//this.introGraphic.push( paper.image("src/controllers/inputGUI/images/FlowurIntro.png", (stage.innerWidth-372)/2, (stage.innerHeight-373)/2, 372, 373));
 	},
 	draw: function(font){
 		this.topHeader = new TopHeader();
@@ -27,8 +27,8 @@ var Demo_Page = new Class({
 			var backColor = '#FFFFFF';
 			
 			graphic.push( paper.rect(x, y, width, height).attr({'fill': backColor, 'stroke': 'none'}) );
-			//graphic.push( paper.image("images/FlowurLogoAlt.png", 15, 15, 33, 28));
-			graphic.push( paper.image("images/FlowurLogoAlt2.png", 10, 10, 35, 40));
+			//graphic.push( paper.image("src/controllers/inputGUI/images/FlowurLogoAlt.png", 15, 15, 33, 28));
+			graphic.push( paper.image("src/controllers/inputGUI/images/FlowurLogoAlt2.png", 10, 10, 35, 40));
 			var logoText = paper.print(x-4, y+2, "FLOWUR", paper.getFont(font), 30).attr({'fill': '#888'});
 			logoText.translate(50, logoText.getBBox().height*3/2);
 			graphic.push( logoText);

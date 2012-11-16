@@ -1,4 +1,4 @@
-window.addEvent('moise
+//window.addEvent('moise'
 
 
 //document ready
@@ -113,8 +113,9 @@ $(function()
 });//closemain
 
 //item first focused
+/*
 runOnLoad(function()
 {
 	$('#container').select().focus();
 });
-
+*/
