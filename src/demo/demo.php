@@ -18,7 +18,7 @@
 	<script src = "http://canvg.googlecode.com/svn/trunk/canvg.js"></script> 
 	<script src = "ui.js"></script>
 	<script src = "demo.js"></script>
-	<link rel = "stylesheet" href = "../../css/reset.css" media = "screen, projection" type = "text/css" />
+	<link rel = "stylesheet" href = "reset.css" media = "screen, projection" type = "text/css" />
 	<link rel = "stylesheet" href = "demo.css" media = "screen, projection" type = "text/css" />
 	<link rel = "stylesheet" href = "ui.css" media = "screen, projection" type = "text/css" />
 
