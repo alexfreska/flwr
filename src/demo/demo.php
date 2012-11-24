@@ -8,12 +8,12 @@
 	<script type="text/javascript" src="//use.typekit.net/yxz0qgs.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 	<script data-type = "js/main" src = "lib/require.js"></script>
-	<script src = "../lib/jquery-1.7.2.js"></script>
-	<script src = "../lib/raphael.js"></script>
-	<script src = "../lib/underscore-min.js"></script>
-	<script src = "../lib/json2.js"></script>
-	<script src = "../lib/backbone-min.js"></script>
-	<script src = "../lib/jquery.zoomooz.js"></script>
+	<script src = "../../lib/jquery-1.7.2.js"></script>
+	<script src = "../../lib/raphael.js"></script>
+	<script src = "../../lib/underscore-min.js"></script>
+	<script src = "../../lib/json2.js"></script>
+	<script src = "../../lib/backbone-min.js"></script>
+	<script src = "../../lib/jquery.zoomooz.js"></script>
 	<script src = "http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
 	<script src = "http://canvg.googlecode.com/svn/trunk/canvg.js"></script> 
 	<script src = "ui.js"></script>
