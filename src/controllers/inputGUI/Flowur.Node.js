@@ -284,12 +284,15 @@ var Node = new Class({
 			this.prev_color = this.myColor;
 			this.back_box.attr({fill: this.myColor});
 			this.top_box.attr({fill: this.myColor});
-			if(this.myColor === '#FFFFFF')
+			if(this.myColor === '#FFFFFF'){
 				this.fontColor = '#333333';
+				this.textField.attr({'fill': this.fontColor});
+			}
 		}
 		else{
 			this.prev_color = newColor;
 			this.fontColor = '#FFFFFF';
+			this.textField.attr({'fill': this.fontColor});
 			console.log("called");
 		}
 	},

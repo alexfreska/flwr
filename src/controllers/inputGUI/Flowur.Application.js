@@ -7,6 +7,7 @@ var viewPaper;
 var creator;
 var creator_up = false;
 var viewer_up = false;
+var share_up = false;
 var demo_up = true;
 var viewPage;
 var viewer;
@@ -24,6 +25,8 @@ window.onresize = function()//Resize and reposition everything here.
 		creator.reposition_new();	
 	if(demo_up)
 		demoPage.reposition();
+	if(viewer_up)
+		viewPaper.setSize(stage.innerWidth, stage.innerHeight-60);
 };
 window.addEvent('domready', function(){
     paper = new Raphael(document.getElementById('application'), stage.innerWidth, stage.innerHeight);
@@ -39,43 +42,65 @@ var go_to_home = function(){
 	navigate.close_it();
 	navigate = null;
 	console.log(JSON.stringify(current_chart));
-	//demoPage = new Demo_Page();
 	demoPage.show();
 	demo_up = true;
+	if(viewPage && viewer_up && !viewPage.selector_up)
+		viewer.remove();
+	if(viewPage)
+		viewPaper.remove();
+	viewer_up = false;
 };
 
 var go_to_creator = function(){
 	demoPage.close_all();
+	if((viewPage != null) && viewer_up && (!viewPage.selector_up) ){
+		console.log(viewPage.selector_up);
+		viewer.remove();
+	}
+	if(viewPage != null){
+		if(viewPaper)
+			viewPaper.remove();
+		viewPage = null;
+	}
 	if(viewPage && viewPage.selector_up){
 		viewPage.close_all();
 		viewPaper.remove();
 		viewPaper = null;
 	}
-	//demo_up = false;
-	//demoPage = null;
 	navigate = new Command_Navigator();
 	creator = new Creation_Mode();
 	creator_up = true;
 	
+	viewer_up = false;
+	share_up = false;
 };
 
 var go_to_view = function(){
 	demoPage.close_all();
-	demo_up = false;
+	//demo_up = false;
 	if(creator_up){
 		creator.close_all();
 		creator_up = false;
 		navigate.close_it();
 		navigate = null;	
 	}
-	//demoPage = null;
-	//console.log(JSON.stringify(current_chart));
 	viewPaper = Raphael(0, 60, stage.innerWidth, stage.innerHeight-60);
 	viewPage = new View_Page();
 	viewer_up = true;
-	
+	share_up = false;
 };
 
 var go_to_share = function(){
-	
+	if(creator_up){
+		creator.close_all();
+		creator_up = false;
+		navigate.close_it();
+		navigate = null;	
+	}
+	if(viewPage && viewer_up && !viewPage.selector_up)
+		viewer.remove();
+	if(viewPage)
+		viewPaper.remove();
+	viewer_up = false;
+	share_up = true;
 };

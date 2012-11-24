@@ -31,12 +31,12 @@ var View_Page = new Class({
 			var tree = new Button((stage.innerWidth-150)/2, 300, '#FF0034', "TREE");
 			tree.addClick(function(e){
 				this.removeSelf();
-				//viewer = new Tree_Mode();
+				viewer = new Tree();
 			},this);
 			var diagnostic = new Button((stage.innerWidth-150)/2, 250, '#FF0034', "DIAGNOSTIC");
 			diagnostic.addClick(function(e){
 				this.removeSelf();
-				//viewer = new Diagnostic_Mode();
+				viewer = new Diagnostic2(font);
 			},this);
 		}
 		function Button(x, y, backColor, myText){

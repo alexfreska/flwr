@@ -11,7 +11,7 @@
 *			INITIAL_ANIMATIONS				
 *
 */
-$(function() {
+var Diagnostic = function() {
 
 //helpers
 var newNode = '<div class="node"></div>';
@@ -19,13 +19,16 @@ var newArrow = '<div class="arrow"></div>';
 var oldBoxes = '.node,.arrow';
 
 //json file from constructor
-var jsonChart;
-
+var title = current_chart[0]; 
+var nodes = current_chart[1]; 
+var arrows = current_chart[2];
+var stack = [];
+/*
 var title = []; 
 var nodes = []; 
 var arrows = [];
 var stack = [];
-
+*/
 var addGlobalButtons = function() {
 
 	//Add back button div
@@ -42,6 +45,7 @@ var addGlobalButtons = function() {
 *	Temporary JSON Retrieval
 *
 ******************************/
+/*
 $.ajax({
 	url: 'chart.json',
 	async: false,
@@ -52,7 +56,7 @@ $.ajax({
 		arrows = data.arrows;
 	}
 });//close ajax
-	
+*/	
 
 
 /*******************************************************
@@ -181,4 +185,4 @@ $('body').on({
 	}
 },'.back');
 
-});//closemain
+};//closemain

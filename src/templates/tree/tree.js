@@ -1,17 +1,35 @@
-$(function() {
+var Tree = function() {
 
 //json file from constructor
 // var jsonChart;
 
+var aColor = '#FF2C18';
+var aFontFill = '#FFFFFF';
+var qsColor = '#FFFFFF';
+var qsFontFill = '#999999';
+
+var title = current_chart[0]; 
+var nodes = current_chart[1]; 
+var arrows = current_chart[2];
+
+var titleGraphic = viewPaper.print(-4, 5, title, viewPaper.getFont("Myriad Pro"), 26, "baseline").attr({'fill': '#666', 'text-anchor': 'start'});
+titleGraphic.translate(stage.innerWidth/2-titleGraphic.getBBox().width/2, titleGraphic.getBBox().height*3/2);
+//var titleBack = viewPaper.rect(titleGraphic.getBBox().x-10, titleGraphic.getBBox().y - 10, titleGraphic.getBBox().width + 20, titleGraphic.getBBox().height + 20).attr({'fill': '#FFF', 'stroke': '#CCC', 'stroke-width': .5, 'stroke-linecap': "square"});
+var titleBack = viewPaper.rect(titleGraphic.getBBox().x-10, titleGraphic.getBBox().y2 + 10, titleGraphic.getBBox().width + 20, 1).attr({'fill': '#AAA', 'stroke': 'none'});
+titleGraphic.toFront();
+
+var paths = [];
+/*
 var title = []; 
 var nodes = []; 
 var arrows = [];
 var stack = [];
-
+*/
 /******************************
 *	Temporary JSON Retrieval
 *
 ******************************/
+/*
 $.ajax({
 	url: 'chart.json',
 	async: false,
@@ -22,6 +40,20 @@ $.ajax({
 		arrows = data.arrows;
 	}
 });//close ajax
+*/
+this.remove = function(){
+	titleGraphic.remove();
+	titleBack.remove();
+	_.each(paths, function(path) {
+		path.remove();
+	});
+	_.each(layers.layers, function (layer) {
+		_.each(layer, function (node) {
+			node.textBox.remove();
+			node.designBox.remove();
+		});
+	});
+};
 
 /************************************************************
 *	Temporary Tree Check Helper function
@@ -53,7 +85,9 @@ var Tree = {
 	},
 	getStart: function ( ) {
 		for(var each in this.nodes) {
-			if(this.nodes[each].type === "start")
+			//temporary fix for:
+			//if (this.nodes[each].type === "start")
+			if(this.nodes[each].id === 0)
 				return this.nodes[each];
 		}
 	},
@@ -190,8 +224,8 @@ Tree.nodes = _.sortBy(Tree.nodes, function(node) {
 *		drawing in back and forward edges.
 *
 * 	Params:
-* 		paper height:           windowHeight,
-*		paper width:            windowWidth,    
+* 		viewPaper height:           windowHeight,
+*		viewPaper width:            windowWidth,    
 *		horizontal spacing: 	spacingX,
 *		vertical spacing:       spacingY,
 *		maximum node width:     maxNodeWidth,
@@ -202,7 +236,7 @@ Tree.nodes = _.sortBy(Tree.nodes, function(node) {
 
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-var paper = Raphael(document.getElementById("container"), windowWidth, windowHeight);
+//var viewPaper = Raphael(document.getElementById("container"), windowWidth, windowHeight);
 
 //Tree check
 if(isRealTree())
@@ -213,7 +247,7 @@ if(isRealTree())
 *
 ************************/
 var spacingX = 50;
-var spacingY = 100;
+var spacingY = 50;
 var maxNodeWidth = 150;
 var nodeBuffer = 10;
 var maxTextWidth = maxNodeWidth - nodeBuffer*2;
@@ -250,7 +284,7 @@ var layerWidth = ( ( layer.length - 1 ) * spacingX );
 		var words = content.split(" ");
 		var tempText = "";
 
-		textBox = paper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Ubuntu", 'fill': 'black', 'font-size': 18});
+		textBox = viewPaper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Ubuntu", 'fill': '#FFFFFF', 'font-size': 18});
 		_.each(words, function (word) {
 				textBox.attr("text", tempText + " " + word);
 				if(textBox.getBBox().width > maxTextWidth){
@@ -260,12 +294,14 @@ var layerWidth = ( ( layer.length - 1 ) * spacingX );
 				}
 				//console.log(tempText);
 		});
-		textBox.attr("text", tempText.substring(1));
+		textBox.remove();
+		textBox = viewPaper.print(-4,2, tempText.substring(1), viewPaper.getFont("Myriad Pro"), 18, "baseline").attr({'text-anchor': 'start', 'fill': qsFontFill});
+		//textBox.attr("text", tempText.substring(1));
 		if(textBox.getBBox().height > greatestTextHeightInLayer) {
 			greatestTextHeightInLayer = textBox.getBBox().height;
 		}
 		node.textBox = textBox;
-		node.designBox = paper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2);
+		node.designBox = viewPaper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2).attr({'stroke': 'none'});
 
 		layerWidth += node.textBox.getBBox().width + nodeBuffer*2;
 		//console.log(node.textBox.getBBox().width+ ": "+node.designBox.attr("width"));
@@ -302,7 +338,7 @@ currentY += layer.height + spacingY;
 /******************************************************
 *	Set currentX
 *
-*	The center of the paper is selected and half of
+*	The center of the viewPaper is selected and half of
 *	the widest layer (bottom in a tree) is subtracted.
 ******************************************************/
 currentX = windowWidth / 2 - layers.layers[bottomLayerIndex].width / 2;
@@ -314,12 +350,12 @@ currentX = windowWidth / 2 - layers.layers[bottomLayerIndex].width / 2;
 _.each(layers.layers[bottomLayerIndex], function (node) {
 
 	node.designBox.attr({ "x": currentX, "y": currentY - (node.designBox.attr("height")/2) });
-	node.textBox.attr({ "x": currentX + nodeBuffer, "y": currentY });
-	console.log(currentX);
+	node.textBox.translate(currentX + nodeBuffer, currentY - node.textBox.getBBox().height/2 + 10 );
+	//console.log(currentX);
 	currentX += (node.designBox.attr("width") + spacingX);
 
 	//styling
-	node.designBox.attr({fill: '#447744'}).toBack();
+	node.designBox.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
 
 });
 
@@ -352,16 +388,24 @@ _.each(layers.layers, function (layer,index) {
 			lastAdjacentNode = _.find(layers.layers[layerIndex-1], function (node) {
 				return node.id === lastAdjacent;
 			});
-
-			var nodeSpanStart = firstAdjacentNode.designBox.attr("x");
-			var nodeSpanEnd = lastAdjacentNode.designBox.attr("x") + lastAdjacentNode.designBox.attr("width");
-			nodePosition = (nodeSpanEnd - nodeSpanStart)/2 + nodeSpanStart - node.designBox.attr("width")/2;
-			
-			console.log(node.id+": "+nodePosition);
-			node.designBox.attr({"x": nodePosition, "y": currentY - (node.designBox.attr("height")/2)});
-			node.textBox.attr({"x": nodePosition + nodeBuffer, "y": currentY });
-
-			node.designBox.attr({fill: '#447744'}).toBack();
+			if(firstAdjacentNode != undefined){
+				var nodeSpanStart = firstAdjacentNode.designBox.attr("x");
+				var nodeSpanEnd = lastAdjacentNode.designBox.attr("x") + lastAdjacentNode.designBox.attr("width");
+				nodePosition = (nodeSpanEnd - nodeSpanStart)/2 + nodeSpanStart - node.designBox.attr("width")/2;
+				
+				//console.log(node.id+": "+nodePosition);
+				node.designBox.attr({"x": nodePosition, "y": currentY - (node.designBox.attr("height")/2)});
+				//node.textBox.attr({"x": nodePosition + nodeBuffer, "y": currentY });
+				node.textBox.translate(nodePosition + nodeBuffer, currentY - node.textBox.getBBox().height/2 + 10 );
+				if(index%2 === 0){
+					node.designBox.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
+					node.textBox.attr({'fill': qsFontFill});
+				}
+				else{
+					node.designBox.attr({'fill': aColor}).toBack();
+					node.textBox.attr({'fill': aFontFill});
+				}
+			}
 		});
 		if(layers.layers[index+1]) {
 			currentY -= (layer.height/2 + layers.layers[index+1].height/2 + spacingY);
@@ -400,7 +444,7 @@ _.each(layers.layers, function (layer,index) {
 			lineEndX = lineStartX + 0;
 			lineEndY = lineStartY + 30;
 
-			paper.path('M'+lineStartX+','+lineStartY+'L'+lineEndX+','+lineEndY);
+			paths.push( viewPaper.path('M'+lineStartX+','+lineStartY+'L'+lineEndX+','+lineEndY).attr({'stroke': '#999'}) );
 
 			//find first and last adjacent node x positions.
 
@@ -419,7 +463,7 @@ _.each(layers.layers, function (layer,index) {
 			lastAX = lastA.designBox.attr('x') + lastA.designBox.attr('width') / 2;
 
 			//draw a horizontal line from firstX to lastX at lineY height
-			paper.path('M'+firstAX+','+lineEndY+'L'+lastAX+','+lineEndY);
+			paths.push( viewPaper.path('M'+firstAX+','+lineEndY+'L'+lastAX+','+lineEndY).attr({'stroke': '#999'}) );
 
 			//for each adjacent node draw a line down from lineY height to the middle of the node's top edge
 			_.each(node.adjacent, function (adj) {
@@ -431,7 +475,7 @@ _.each(layers.layers, function (layer,index) {
 				var endX = adjacentNode.designBox.attr('x') + adjacentNode.designBox.attr('width')/2;
 				var endY = adjacentNode.designBox.attr('y');
 
-				paper.path('M'+endX+','+lineEndY+'L'+endX+','+endY);
+				paths.push( viewPaper.path('M'+endX+','+lineEndY+'L'+endX+','+endY).attr({'stroke': '#999'}) );
 
 			});
 			
@@ -444,7 +488,7 @@ _.each(layers.layers, function (layer,index) {
 }
 // if the data is not a tree output an error message
 else {
-	paper.text(windowWidth/2-40,windowHeight/2-40)
+	viewPaper.text(windowWidth/2-40,windowHeight/2-40)
 	.attr({'text-anchor': 'start', 'font-family': "Ubuntu", 'fill': 'black', 'font-size': 18, 'text': 'Not a Tree!'})
 }
 
@@ -452,7 +496,7 @@ else {
 //console.log(layers);
 
 
-});//endall
+};//endall
 
 
 
