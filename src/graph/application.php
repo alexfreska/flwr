@@ -14,9 +14,9 @@
 		width: 100%;
 	}
 	</style>
-	<script src = "/lib/mootools-core-1.4.5-full-compat.js"></script>
-	<script src = "/lib/mootools-more-1.4.0.1_all.js"></script>
-	<script src = "/lib/raphael.js"></script>
+	<script src = "../../lib/mootools-core-1.4.5-full-compat.js"></script>
+	<script src = "../../lib/mootools-more-1.4.0.1_all.js"></script>
+	<script src = "../../lib/raphael.js"></script>
 	<script>
 	var Flowur = {};
 	var snap = function(x)
