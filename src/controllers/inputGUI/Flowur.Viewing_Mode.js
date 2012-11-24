@@ -35,6 +35,9 @@ var Viewing_Mode = new Class({
 		this.current_bounds.y = stage.innerHeight/2 - this.current_bounds.height/2;
 		
 		//End debugging code
+		
+		this.titleBox = paper.print(-4, 2, current_chart[0], paper.getFont("Myriad Pro"), 26, "baseline").attr({'fill': '#999', 'text-anchor': 'start'});
+		this.titleBox.translate(stage.innerWidth/2 - this.titleBox.getBBox().width/2, 10+ this.titleBox.getBBox().height*3/2);
 	},
 	draw: function(){
 		//this.log_input();
@@ -307,5 +310,14 @@ var Viewing_Mode = new Class({
 			console.log(nodes_info[i].data+ " with id: "+nodes_info[i].id);	
 		}
 		console.log("End input log");
+	},
+	remove: function(){
+		this.titleBox.remove();
+		for(var i=0; i< this.layers.length; i++){
+			for(var j=0; j<this.layers[i].length; j++){
+				this.layers[i][j].remove();
+			}
+		}
+		this.layers = null;
 	}
 });

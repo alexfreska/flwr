@@ -6,7 +6,7 @@
 var Creation_Mode = new Class({
 	initialize: function(){
 		document.getElementById('application').style.backgroundColor = '#F0F0F0';
-		this.node_colors = ['#FF2D18', '#FFFFFF', '#FF4F23', '#333333'];
+		this.node_colors = ['#FF2D18', '#FFFFFF', '#FF2D18', '#333333'];
 		//this.node_colors = ['#FB9700', '#E00000', '#00A870', '#0099CC'];
 		this.fontName = "Myriad Pro";
 		this.counter;
@@ -35,15 +35,6 @@ var Creation_Mode = new Class({
 		
 		this.data_in = current_chart;
 		//this.data_in = JSON.parse(string_in);
-		/*Sample JSON array input */
-		//var test_title_info = "Should I join RCOS?";
-		
-		//var test_nodes_info = [{"id":0,"data":"Is it something cringe-worthy about your boss?"},{"id":9,"data":"Yes"},{"id":11,"data":"Is there a twitpic of a private part?"},{"id":12,"data":"Yes"},{"id":15,"data":"Is it your boss's private part?"},{"id":16,"data":"Yes"},{"id":18,"data":"Ask for a raise."},{"id":17,"data":"No"},{"id":19,"data":"Is it your private part?"},{"id":20,"data":"Yes"},{"id":21,"data":"No"},{"id":23,"data":"Do you want more followers?"},{"id":24,"data":"Yes"},{"id":28,"data":"You're sitting pretty. Leave it up."},{"id":25,"data":"No"},{"id":26,"data":"Come on, what are you doing on Twitter?"},{"id":13,"data":"No"},{"id":14,"data":"Delete that tweet!"},{"id":10,"data":"No"},{"id":29,"data":"Is it about an EX, your ATM pin, or that Twilight hunk?"},{"id":30,"data":"Yes"},{"id":32,"data":"Were you drunk-twittering at 3 AM?"},{"id":33,"data":"Yes"},{"id":34,"data":"No"},{"id":35,"data":"Yes, you were. Try again."},{"id":31,"data":"No"},{"id":37,"data":"The coordinates of a \"package\" from Colombia?"},{"id":38,"data":"Yes"},{"id":40,"data":"Are you using someone else's twitter account?"},{"id":41,"data":"Yes"},{"id":42,"data":"No"},{"id":39,"data":"No"}];
-		
-		//var test_arrows_info = [{"to":9,"from":0,"isLink":false},{"to":11,"from":9,"isLink":false},{"to":12,"from":11,"isLink":false},{"to":15,"from":12,"isLink":false},{"to":16,"from":15,"isLink":false},{"to":18,"from":16,"isLink":false},{"to":17,"from":15,"isLink":false},{"to":19,"from":17,"isLink":false},{"to":20,"from":19,"isLink":false},{"to":14,"from":20,"isLink":true},{"to":21,"from":19,"isLink":false},{"to":23,"from":21,"isLink":false},{"to":24,"from":23,"isLink":false},{"to":28,"from":24,"isLink":false},{"to":25,"from":23,"isLink":false},{"to":26,"from":25,"isLink":false},{"to":13,"from":11,"isLink":false},{"to":14,"from":13,"isLink":false},{"to":10,"from":0,"isLink":false},{"to":29,"from":10,"isLink":false},{"to":30,"from":29,"isLink":false},{"to":32,"from":30,"isLink":false},{"to":33,"from":32,"isLink":false},{"to":14,"from":33,"isLink":true},{"to":34,"from":32,"isLink":false},{"to":35,"from":34,"isLink":false},{"to":32,"from":35,"isLink":true},{"to":31,"from":29,"isLink":false},{"to":37,"from":31,"isLink":false},{"to":38,"from":37,"isLink":false},{"to":40,"from":38,"isLink":false},{"to":41,"from":40,"isLink":false},{"to":28,"from":41,"isLink":true},{"to":42,"from":40,"isLink":false},{"to":14,"from":42,"isLink":true},{"to":39,"from":37,"isLink":false},{"to":28,"from":39,"isLink":true}];
-		
-		//var test_nodes_info = [ {'id': 0, 'data': "Are you computer oriented?"}, {'id': 1, 'data': "No"}, {'id': 2, 'data': "Yes"}, {'id': 3, 'data': "Do you want to learn from the best?"}, {'id': 4, 'data': "Do you want to be computer oriented?"}, {'id': 5, 'data': "Yes"}, {'id': 6, 'data': "No"}, {'id': 7, 'data': "Join RCOS!"}, {'id': 8, 'data': "Maybe you should just invest in our projects then..."}];
-		//var test_arrows_info = [ {'to': 1, 'from': 0, 'isLink': false}, {'to': 2, 'from': 0, 'isLink': false}, {'to': 3, 'from': 1, 'isLink': false}, {'to': 4, 'from': 2, 'isLink': false}, {'to': 4, 'from': 0, 'isLink': true}, {'to': 5, 'from': 3, 'isLink': false}, {'to': 6, 'from': 3, 'isLink': false}, {'to': 7, 'from': 5, 'isLink': false}, {'to': 8, 'from': 6, 'isLink': false}];
 		//////////////this.data_in = [test_title_info, test_nodes_info, test_arrows_info];////////////
 		//this.data_in = /*get user chart data from server*/ null;
 		
