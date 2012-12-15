@@ -24,7 +24,8 @@ var Viewing_Box = new Class({
 		this.radius = 0;  //2
 	},
 	draw: function(){
-		this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});		
+		//this.top_text.attr({'x': (this.x+10), 'y': (this.y+this.height/2)});		
+		this.top_text.translate( this.x+10-this.top_text.getBBox().x, this.y-this.top_text.getBBox().y+10);
 		this.back_box = viewPaper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
 		this.top_box = viewPaper.rect(this.x, this.y, this.width, this.height, this.radius).attr({'fill': this.myColor, 'stroke': 'none'});
 		if(this.myTexture != null){
@@ -44,13 +45,12 @@ var Viewing_Box = new Class({
 		temp_text.remove();
 		temp_text = null;
 		
-		this.top_text = viewPaper.text( this.x, this.y, this.myText).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 18});
 		if(this.width > 200){
 			this.width = 200;
 			var content = this.myText;
 			var words = content.split(" ");
 			var tempText = "";
-			this.top_text.remove();
+			//this.top_text.remove();
 			this.top_text = viewPaper.text( this.x, this.y).attr({'text-anchor': 'start', 'font-family': "Myriad Pro", 'fill': '#FFFFFF', 'font-size': 18});
 			for(var i=0; i<words.length; i++){
 					this.top_text.attr("text", tempText + " " + words[i]);
@@ -60,11 +60,17 @@ var Viewing_Box = new Class({
 						tempText += " " + words[i];	
 					}
 			}
-			this.top_text.attr("text", tempText.substring(1));
+			this.top_text.remove();
+			this.top_text = viewPaper.print(this.x+6, this.y+12, tempText.substring(1), viewPaper.getFont("Myriad Pro"), 18, "baseline").attr({'fill': '#FFF', 'text-anchor': 'start'});
+			//this.top_text.attr("text", tempText.substring(1));
 			this.width = this.top_text.getBBox().width + 20;
 			this.height = this.top_text.getBBox().height + 20;	
 		}
-		
+		else{
+			this.top_text = viewPaper.print( this.x+6, this.y+12, this.myText, viewPaper.getFont("Myriad Pro"), 18, "baseline" ).attr({'fill': '#FFF', 'text-anchor': 'start'});
+			this.width = this.top_text.getBBox().width + 20;
+			this.height = this.top_text.getBBox().height + 20;
+		}
 	},
 	toFront: function(){
 		this.back_box.toFront();
@@ -81,4 +87,9 @@ var Viewing_Box = new Class({
 	get_text: function(){return this.myText;},
 	get_type: function(){return this.myType;},
 	set_type: function(new_type){this.myType = new_type;},
+	remove: function(){
+		this.top_text.remove();
+		this.back_box.remove();
+		this.top_box.remove();
+	},
 });

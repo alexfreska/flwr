@@ -1,0 +1,76 @@
+/*	input
+ *	--------------------------------------------------------------------------*/
+
+/*	structural elements	------------------------------------------------------*/
+.node-container
+{
+	padding	: 4rem;
+	max-height	: 2rem;
+	max-width	: 2rem;
+	min-width	: 2rem;
+	min-height	: 2rem;
+}
+
+/* absolute positioning */
+.node-container
+{
+	position	: absolute;
+	overflow	: hidden;
+}
+
+/*	museo sans default size	*/
+.node
+{
+	position		: absolute;
+	padding			: 0.25rem;
+	min-width		: 1.5rem;
+	min-height		: 1.5rem;
+	max-height		: 4.625rem;
+	max-width		: 7rem;
+	display			: inline-block;
+	text-align		: center;
+	outline			: 0;
+	border			: 0;
+	color			: #ffffff;
+	font-size		: 1.625rem;
+	font-family		: "proxima-nova-alt-ext-cond", sans-serif;
+	font-weight		: Bold;
+	cursor			: text;
+	overflow		: hidden;
+}
+.node-container
+{
+	cursor	: pointer;
+}
+
+/*	turqoise background	*/
+.node-container
+{
+	background-color	: #00eeee;
+	opacity				: 0.5;
+}
+
+/*	dark gray background */
+
+/*	circle	*/
+.node-container
+{
+	border-radius	: 50%;
+}
+
+#container
+{
+	margin-left: -9999em;
+}
+
+#settings-menu
+{
+	position		: absolute;
+	right			: 0;
+	top				: 0;
+	width			: 24em;
+	height			: 100%;
+	color			: #ffffff;
+	z-index			: 10;
+	background-color	: #f62525;
+}

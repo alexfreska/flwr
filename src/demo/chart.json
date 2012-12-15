@@ -1,0 +1,82 @@
+{
+	"title": "Should I check my e-mail?",
+	"nodes": [
+	{
+		"id": 0,
+		"data": "Have you checked in the past 3 minutes?",
+		"type": "start"
+	},
+	{
+		"id": 1,
+		"data": "Yes",
+		"type": "answer"
+	},
+	{
+		"id": 2,
+		"data": "No",
+		"type": "answer"
+	},
+	{
+		"id": 3,
+		"data": "Why are you reading this?",
+		"type": "question"
+	},
+	{
+		"id": 4,
+		"data": "Why Not?",
+		"type": "question"
+	},
+	{
+		"id": 5,
+		"data": "Because",
+		"type": "answer"
+	},
+	{
+		"id": 6,
+		"data": "Dunno",
+		"type": "answer"
+	},
+	{
+		"id": 7,
+		"data": "Dont feel like it",
+		"type": "answer"
+	},
+	{
+		"id": 45,
+		"data": "I lied.",
+		"type": "answer"
+	}],
+	"arrows": [
+	{
+		"from": 0,
+		"to": 1
+	},
+	{
+		"from": 0,
+		"to": 2
+	},
+	{
+		"from": 1,
+		"to": 3
+	},
+	{
+		"from": 3,
+		"to": 5
+	},
+	{
+		"from": 3,
+		"to": 6
+	},
+	{
+		"from": 2,
+		"to": 4
+	},
+	{
+		"from": 4,
+		"to": 7
+	},
+	{
+		"from": 4,
+		"to": 45
+	}]
+}

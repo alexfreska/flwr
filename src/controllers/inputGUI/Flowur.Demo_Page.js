@@ -34,21 +34,33 @@ var Demo_Page = new Class({
 			graphic.push( logoText);
 			var share = new CompletionBox(width-20, y+5, "SHARE");
 			share.addClick(function(e){
-				share.graphic.attr({'fill': share.fillOn});
-				share.fillOut = share.fillOn;
-				go_to_share();
+				if(!share_up){
+					share.graphic.attr({'fill': share.fillOn});
+					share.fillOut = share.fillOn;
+					view.turnOff();
+					create.turnOff();
+					go_to_share();
+				}
 			});
 			var view = new CompletionBox(width - share.width-19.5, y+5.752, "VIEW");
 			view.addClick(function(e){
-				view.graphic.attr({'fill': view.fillOn});
-				view.fillOut = view.fillOn;
-				go_to_view();
+				if(!viewer_up){
+					view.graphic.attr({'fill': view.fillOn});
+					view.fillOut = view.fillOn;
+					share.turnOff();
+					create.turnOff();
+					go_to_view();
+				}
 			});
 			var create = new CompletionBox(width - share.width - view.width-20, y+5, "CREATE");
 			create.addClick(function(e){
-				create.graphic.attr({'fill': create.fillOn});
-				create.fillOut = create.fillOn;
-				go_to_creator();
+				if(!creator_up){
+					create.graphic.attr({'fill': create.fillOn});
+					create.fillOut = create.fillOn;
+					view.turnOff();
+					share.turnOff();
+					go_to_creator();
+				}
 			});
 			
 			this.reposition = function(){
@@ -126,6 +138,10 @@ var Demo_Page = new Class({
 				};
 				this.show = function(){
 					this.graphic.show();
+				};
+				this.turnOff = function(){
+					this.fillOut = fillOff;
+					this.graphic.attr({'fill': this.fillOut});
 				};
 			};
 			
