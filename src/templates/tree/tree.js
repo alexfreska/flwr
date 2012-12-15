@@ -153,8 +153,8 @@ var dfs = function (node,layer) {
 	node.layer = layer; 
 	//for each of the nodes adjacencies
 	_.each(node.adjacent,function(val) {
+		
 		//grab node from nodes
-		parent = node.pre;
 		var adjacency = Tree.getNode(val);
 		
 		//if it has not been visited

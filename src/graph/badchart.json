@@ -1,0 +1,104 @@
+{
+    "title": "Should I join RCOS?",
+    "nodes": [{
+        "id": 0,
+        "data": "Are you computer oriented?",
+        "type": "start"
+    }, {
+        "id": 1,
+        "data": "No",
+        "type": "answer"
+    }, {
+        "id": 3,
+        "data": "Do you want to learn from the best?",
+        "type": "question"
+    }, {
+        "id": 5,
+        "data": "Yes",
+        "type": "answer"
+    }, {
+        "id": 7,
+        "data": "Join RCOS!",
+        "type": "answer"
+    }, {
+        "id": 6,
+        "data": "No"
+    }, {
+        "id": 8,
+        "data": "Maybe you should just invest in our projects then...",
+        "type": "answer"
+    }, {
+        "id": 2,
+        "data": "Yes",
+        "type": "answer"
+    }, {
+        "id": 4,
+        "data": "Do you want to be computer oriented?",
+        "type": "question"
+    }, {
+        "id": 9,
+        "data": "Yes",
+        "type": "answer"
+    }, {
+        "id": 10,
+        "data": "No",
+        "type": "answer"
+    }, {
+        "id": 11,
+        "data": "No",
+        "type": "answer"
+    }],
+    "arrows": [{
+        "to": 1,
+        "from": 0,
+        "isLink": false
+    }, {
+        "to": 3,
+        "from": 1,
+        "isLink": false
+    }, {
+        "to": 5,
+        "from": 3,
+        "isLink": false
+    }, {
+        "to": 7,
+        "from": 5,
+        "isLink": false
+    }, {
+        "to": 6,
+        "from": 3,
+        "isLink": false
+    }, {
+        "to": 8,
+        "from": 6,
+        "isLink": false
+    }, {
+        "to": 2,
+        "from": 0,
+        "isLink": false
+    }, {
+        "to": 4,
+        "from": 2,
+        "isLink": false
+    }, {
+        "to": 9,
+        "from": 4,
+        "isLink": false
+    }, {
+        "to": 7,
+        "from": 9,
+        "isLink": true
+    }, {
+        "to": 10,
+        "from": 4,
+        "isLink": false
+    }, {
+        "to": 8,
+        "from": 10,
+        "isLink": true
+    }, {
+        "to": 1,
+        "from": 11,
+        "isLink": false
+    }]
+}
