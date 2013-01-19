@@ -1,4 +1,4 @@
-var Tree = function() {
+$(function() {
 
 //json file from constructor
 // var jsonChart;
@@ -7,7 +7,7 @@ var aColor = '#FF2C18';
 var aFontFill = '#FFFFFF';
 var qsColor = '#FFFFFF';
 var qsFontFill = '#999999';
-
+/*
 var title = current_chart[0]; 
 var nodes = current_chart[1]; 
 var arrows = current_chart[2];
@@ -18,18 +18,20 @@ titleGraphic.translate(stage.innerWidth/2-titleGraphic.getBBox().width/2, titleG
 var titleBack = viewPaper.rect(titleGraphic.getBBox().x-10, titleGraphic.getBBox().y2 + 10, titleGraphic.getBBox().width + 20, 1).attr({'fill': '#AAA', 'stroke': 'none'});
 titleGraphic.toFront();
 
+*/
+
 var paths = [];
-/*
+
 var title = []; 
 var nodes = []; 
 var arrows = [];
 var stack = [];
-*/
+
 /******************************
 *	Temporary JSON Retrieval
 *
 ******************************/
-/*
+
 $.ajax({
 	url: 'chart.json',
 	async: false,
@@ -40,7 +42,7 @@ $.ajax({
 		arrows = data.arrows;
 	}
 });//close ajax
-*/
+
 this.remove = function(){
 	titleGraphic.remove();
 	titleBack.remove();
@@ -496,7 +498,7 @@ else {
 //console.log(layers);
 
 
-};//endall
+});//endall
 
 
 
