@@ -43,6 +43,7 @@ $.ajax({
 	}
 });//close ajax
 
+
 this.remove = function(){
 	titleGraphic.remove();
 	titleBack.remove();
@@ -89,7 +90,7 @@ var Tree = {
 		for(var each in this.nodes) {
 			//temporary fix for:
 			//if (this.nodes[each].type === "start")
-			if(this.nodes[each].id === 0)
+			if(this.nodes[each].id == 0)
 				return this.nodes[each];
 		}
 	},
@@ -181,6 +182,7 @@ var start = Tree.getStart();
 if(typeof start === undefined) {
 	return;
 }
+console.log(start);
 
 //add Pre and Post numbering to nodes through depth first search procedure
 var dfs = function (node,layer) {
@@ -238,7 +240,7 @@ Tree.nodes = _.sortBy(Tree.nodes, function(node) {
 
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-//var viewPaper = Raphael(document.getElementById("container"), windowWidth, windowHeight);
+var viewPaper = Raphael(document.getElementById("container"), windowWidth, windowHeight);
 
 //Tree check
 if(isRealTree())

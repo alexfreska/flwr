@@ -40,12 +40,12 @@
 		"id": 7,
 		"data": "Dont feel like it",
 		"type": "answer"
-	},
+	}/*,
 	{
 		"id": 45,
 		"data": "I lied.",
 		"type": "answer"
-	}],
+	}*/],
 	"arrows": [
 	{
 		"from": 0,
@@ -74,9 +74,9 @@
 	{
 		"from": 4,
 		"to": 7
-	},
+	}/*,
 	{
 		"from": 4,
 		"to": 45
-	}]
+	}*/]
 }
