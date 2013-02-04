@@ -33,7 +33,7 @@ var stack = [];
 ******************************/
 
 $.ajax({
-	url: 'chart.json',
+	url: 'chart2.json',
 	async: false,
 	dataType: 'json',
 	success: function(data) {
@@ -43,6 +43,8 @@ $.ajax({
 	}
 });//close ajax
 
+
+console.log(nodes);
 
 this.remove = function(){
 	titleGraphic.remove();

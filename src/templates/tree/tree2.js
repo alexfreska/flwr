@@ -1,4 +1,3 @@
-
 $(function() {
 /******************************************************
 *	Tree Visualization
@@ -28,7 +27,19 @@ var tree = function (chart, container, windowWidth, windowHeight, maxNodeWidth, 
 	*	Temporary JSON Retrieval
 	*
 	******************************/
+	var chart = [];
 
+	$.ajax({
+		url: 'chart2.json',
+		async: false,
+		dataType: 'json',
+		success: function(data) {
+			console.log(data);
+		},
+		error: function(e,header) {
+			console.log(header);
+		}
+	});//close ajax
 
 
 	console.log(nodes);
@@ -40,15 +51,6 @@ var tree = function (chart, container, windowWidth, windowHeight, maxNodeWidth, 
 
 //////////
 var chart = [];
-
-$.ajax({
-	url: 'chart.json',
-	async: false,
-	dataType: 'json',
-	success: function(data) {
-		console.log(data);
-	}
-});//close ajax
 
 tree(chart,document.getElementById("container"),500,500,150,10,50,50);
 
