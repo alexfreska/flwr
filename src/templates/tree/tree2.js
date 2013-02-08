@@ -29,23 +29,32 @@ var tree = function (chart, container, windowWidth, windowHeight, maxNodeWidth, 
 	***********************************************/
 	var Tree = {
 		nodes: [],
-		getNode: function (id) {
-			var node = _.find(this.nodes, function(node){
-				console.log("hii");
+		getNode: function ( id ) {
+			
+			var that = this;
+			var node = _.find(that.nodes, function (node) {
 				return node.id == id;
 			});
 			return node;
+			
+			/*
+			var self = this;
+			for(var each in self.nodes) {
+				if(self.nodes[each].id === id)
+				return self.nodes[each];
+			}
+			*/
 		},
 		getStart: function ( ) {
 				//temporary fix for:
 				//if (this.nodes[each].type === "start")
-			var temp = _.find(this.nodes, function (node){
+			var temp = _.find(this.nodes, function (node) {
 				return node.id == 0;
 			});
 			return temp;
 		},
 		printPrePost: function ( ) {
-			this.nodes = _.sortBy(this.nodes, function(node) { 
+			this.nodes = _.sortBy(this.nodes, function (node) { 
 				return node.post;
 			});
 			_.each(this.nodes, function (val) {
@@ -96,7 +105,7 @@ var tree = function (chart, container, windowWidth, windowHeight, maxNodeWidth, 
 	********************************************************/
 	var formatedNodes = [];
 
-
+	console.log(typeof Tree.getStart());
 	console.log("Type of Tree.getLayers(): "+ typeof Tree.getLayers());
 	console.log("Type of Tree.getNode(): "+ typeof Tree.getNode());
 
