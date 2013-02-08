@@ -33,7 +33,7 @@ var stack = [];
 ******************************/
 
 $.ajax({
-	url: 'chart2.json',
+	url: 'chart.json',
 	async: false,
 	dataType: 'json',
 	success: function(data) {
