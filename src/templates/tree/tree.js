@@ -132,10 +132,10 @@ var Tree = {
 	},
 	getLayers: function ( ) {
 		var layers = this.listOfLayers();
-		var layersObject = {layers: []};
+		var layersObject = [];
 		var that = this;
 		_.each(layers, function (val) {
-			layersObject.layers.push(that.getLayer(val));
+			layersObject.push(that.getLayer(val));
 		});
 		return layersObject;
 	}
@@ -265,8 +265,11 @@ var maxTextWidth = maxNodeWidth - nodeBuffer*2;
 *
 ***********************************************/
 var layers = Tree.getLayers();
-
-
+console.log(layers);
+_.sortBy(layers, function (layer) {
+	return layer.layer;
+});
+console.log(layers);
 /******************************************************
 *	Calculate Node and Layer Graphical Information
 *
@@ -276,7 +279,7 @@ var layers = Tree.getLayers();
 *			layer height
 *			( maxTextHeight+nodeBuffer = layerHeight )
 ******************************************************/
-_.each(layers.layers, function (layer) {
+_.each(layers, function (layer) {
 
 var layerHeight = 0;
 var greatestTextHeightInLayer = 0;
@@ -341,6 +344,7 @@ var bottomLayerIndex = 0;
 _.each(layers.layers, function (layer) {
 currentY += layer.height + spacingY;
 });
+
 /******************************************************
 *	Set currentX
 *
