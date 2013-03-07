@@ -127,7 +127,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 		node.pre = -1;
 		node.post = -1;
 		node.layer = -1;
-		node.parent = -1;
+		node.parents = [];
 		node.zone = 0;
 		node.zoneXpos = 0;
 		node.xCurrent = 0;
@@ -181,7 +181,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 			//if it has not been visited
 			if(adjacency.pre === -1) {
 				//run dfs on adjacency
-				adjacency.parent = node;
+				adjacency.parents.push(node);
 				dfs(adjacency,layer+1);
 			}
 		});
@@ -209,6 +209,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	var aFontFill = '#FFFFFF';
 	var qsColor = '#FFFFFF';
 	var qsFontFill = '#999999';
+	var currentY = 0;
 
 	//console.log(Tree.layers);
 	
@@ -226,7 +227,12 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	*			layer height
 	*			( maxTextHeight+nodeBuffer = layerHeight )
 	******************************************************/
-	var currentY = spacingY*3;
+
+
+	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
+
+	currentY += Tree.title.getBBox().height + spacingY*2;
+
 	_.each(Tree.layers, function (layer) {
 
 	var greatestTextHeightInLayer = 0;
@@ -253,9 +259,6 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 			//textBox.remove();
 			//textBox = viewPaper.print(-4,2, tempText.substring(1), viewPaper.getFont("Myriad Pro"), 18, "baseline").attr({'text-anchor': 'start', 'fill': qsFontFill});
 			node.textBox.attr("text", tempText.substring(1));
-			if(node.textBox.getBBox().height > greatestTextHeightInLayer) {
-				greatestTextHeightInLayer = node.textBox.getBBox().height;
-			}
 
 			node.designBox = viewPaper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2);
 
@@ -263,6 +266,10 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 			//console.log(node.textBox.getBBox().width+ ": "+node.designBox.attr("width"));
 			node.width = node.designBox.attr("width")+spacingX;
 			node.height = node.designBox.attr("height");
+
+			if(node.height > greatestTextHeightInLayer) {
+				greatestTextHeightInLayer = node.height;
+			}
 
 		});
 
@@ -322,35 +329,41 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	}
 	createZones(start);
 
+
 	var setNodePositions = function (node) {
-		if(node.parent == -1) {
+		if(node.parents.length == 0) {
 			node.zoneXpos = windowWidth / 2 - node.zone / 2;
 			node.xCurrent = node.zoneXpos;
 		}
 		else {
-			node.zoneXpos = node.parent.xCurrent;
-			node.parent.xCurrent += node.zone;
+			node.zoneXpos = node.parents[0].xCurrent;
+			node.parents[0].xCurrent += node.zone;
 			node.xCurrent = node.zoneXpos;
 		}
 
 		node.textBox.attr({ 'x': node.zoneXpos + node.zone / 2 + nodeBuffer - node.designBox.attr('width') / 2, 
-							'y': Tree.layers[node.layer].startY + node.designBox.attr('height') / 2, 'fill': qsFontFill});
+							'y': Tree.layers[node.layer].startY, 'fill': qsFontFill});
+
+		node.designBox.attr({'x': node.zoneXpos + node.zone / 2  - node.designBox.attr('width') / 2
+									,'y': Tree.layers[node.layer].startY - node.designBox.attr('height') / 2})
+								.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
+
 		if(testing) {
 		viewPaper.rect(node.zoneXpos + 2,Tree.layers[node.layer].startY,node.zone - 4,1);//TESTING 
 		viewPaper.rect(node.zoneXpos+node.zone / 2,Tree.layers[node.layer].startY,1,4);//TESTING 
+		viewPaper.rect(node.textBox.getBBox().x,node.textBox.getBBox().y,5,5);//TESTING 
+		viewPaper.rect(node.designBox.attr('x'),node.designBox.attr('y'),5,5);//TESTING 
 		}
-		node.designBox.attr({'x': node.zoneXpos + node.zone / 2  - node.designBox.attr('width') / 2
-									,'y': Tree.layers[node.layer].startY })
-								.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
-
 		_.each(node.adjacent, function (adj) {
 			setNodePositions(adj);
 		});
 	}
 	setNodePositions(start);
+
 	//draw title
-	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
-	Tree.title.attr({'x': start.zoneXpos + start.zone / 2 - Tree.title.getBBox().width/2, 'y': spacingY*1.5});
+	console.log("ggg"+spacingY);
+	Tree.title.attr({'x': start.zoneXpos + start.zone / 2 - Tree.title.getBBox().width/2, 'y': spacingY*3});
+
 	var routePaths = function (node) {
 		_.each(node.adjacent, function (adj) {
 			var pathStartX, pathStartY, pathTurn1X, pathTurn1Y, pathTurn2X, pathTurn2Y, pathEndX, pathEndY;
@@ -378,96 +391,162 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 		if(arrow.used == 0) {
 			var fromNode = Tree.getNode(arrow.from);
 			var toNode = Tree.getNode(arrow.to);
-			var pathString = 'M'+fromNode.designBox.attr('x')+','+fromNode.designBox.attr('y')
-			+'L'+toNode.designBox.attr('x')+','+toNode.designBox.attr('y');
+
+			var pathStartX, pathStartY, pathTurn1X, pathTurn1Y, pathTurn2X, pathTurn2Y, pathEndX, pathEndY;
+
+			pathStartX 	= fromNode.designBox.attr('x') + fromNode.designBox.attr('width') / 2;
+			pathStartY 	= fromNode.designBox.attr('y') + fromNode.designBox.attr('height') /2;
+			pathTurn1X 	= pathStartX;
+			pathTurn1Y 	= fromNode.designBox.attr('y') + fromNode.designBox.attr('height')/2;
+			pathTurn2X 	= toNode.designBox.attr('x') + toNode.designBox.attr('width') / 2;
+			pathTurn2Y 	= pathTurn1Y;
+			pathEndX 	= pathTurn2X;
+			pathEndY 	= toNode.designBox.attr('y') + toNode.designBox.attr('height') / 2;
+
+			var pathString = 'M'+pathStartX+','+pathStartY+'L'+pathTurn1X+','+pathTurn1Y+'L'+pathTurn2X+','+pathTurn2Y
+				+'L'+pathEndX+','+pathEndY;
+
 			var newPath = viewPaper.path(pathString).attr({'stroke': '#999'}).toBack();
+			newPath.child = toNode;
+
+			//add from node as parent since it was not counting in the dfs
+			toNode.parents.push(fromNode);
+			fromNode.paths.push(newPath);
 		}
 	});
 	
 	_.each(Tree.nodes, function (node) {
 		routePaths(node);
-		
+
+	/*
+		//initialize glow variables so remove works
+		_.each(Tree.nodes, function (node) {
+
+			node.g = node.designBox.glow(1,false,10);
+			node.g.remove();
+			node.c = node.designBox.glow(1,false,10);
+			node.c.remove();
+
+			_.each(node.paths, function (path) {
+
+				path.g = path.glow(1,false,10);
+				path.g.remove();
+				path.c = path.glow(1,false,10);
+				path.c.remove();
+			});
+		});
 		node.designBox.hover(
 			function () {
-
+				node.g.remove();
 				node.g = node.designBox.glow(1,false,10);
+
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
-						
+						currNode.g.remove();
 						currNode.g = currNode.designBox.glow(1,false,10);
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+								path.g.remove();
 								path.g = path.glow(1,false,10);
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			},
 			function () {
 
 				node.g.remove();
+
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						
 						currNode.g.remove();
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+
 								path.g.remove();
+
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			}
 		);
 		node.textBox.hover(
 			function () {
+				node.g.remove();
 				node.g = node.designBox.glow(1,false,10);
+
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
-						
+						currNode.g.remove();
 						currNode.g = currNode.designBox.glow(1,false,10);
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+								path.g.remove();
 								path.g = path.glow(1,false,10);
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			},
 			function () {
-				
+
 				node.g.remove();
+
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						
 						currNode.g.remove();
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+
 								path.g.remove();
+
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			}
 		);
 		node.designBox.click(
@@ -484,24 +563,31 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 				recRemove(start);
 				////////////
 
+				node.c.remove();
 				node.c = node.designBox.glow(1,false,10);
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
-						
+						currNode.c.remove();
 						currNode.c = currNode.designBox.glow(1,false,10);
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+								path.c.remove();
 								path.c = path.glow(1,false,10);
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			}
 		);
 		node.textBox.click(
@@ -518,29 +604,35 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 				recRemove(start);
 				////////////
 
+				node.c.remove();
 				node.c = node.designBox.glow(1,false,10);
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
-						
+						currNode.c.remove();
 						currNode.c = currNode.designBox.glow(1,false,10);
+
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
+								path.c.remove();
 								path.c = path.glow(1,false,10);
 							}
 						});
 
-						rec(currNode.parent,currNode);
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
 					}
 
 				}
-				rec(node.parent,node);
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
 			}
 		);
-
+	*/
 	});
-
 
 
 
@@ -571,6 +663,6 @@ $.ajax({
 
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-treeMain(chart,document.getElementById("container"),windowWidth,windowHeight,150,5,50,50);
+treeMain(chart,document.getElementById("container"),windowWidth,windowHeight,150,5,20,20);
 
 });
