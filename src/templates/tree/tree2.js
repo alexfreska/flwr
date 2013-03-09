@@ -256,8 +256,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 					}
 					//console.log(tempText);
 			});
-			//textBox.remove();
-			//textBox = viewPaper.print(-4,2, tempText.substring(1), viewPaper.getFont("Myriad Pro"), 18, "baseline").attr({'text-anchor': 'start', 'fill': qsFontFill});
+			
 			node.textBox.attr("text", tempText.substring(1));
 
 			node.designBox = viewPaper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2);

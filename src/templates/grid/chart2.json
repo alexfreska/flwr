@@ -1,0 +1,106 @@
+{
+    "title": "Should I make a startup?",
+    "nodes": [{
+        "id": 0,
+        "data": "First Q of harry potter omg what"
+    }, {
+        "id": 16,
+        "data": "Yes yes yes inddeeed"
+    }, {
+        "id": 18,
+        "data": "Second Q let go gog go go go yea"
+    }, {
+        "id": 19,
+        "data": "Yes"
+    }, {
+        "id": 21,
+        "data": "Third Q whats the question?"
+    }, {
+        "id": 23,
+        "data": "Yes"
+    }, {
+        "id": 26,
+        "data": "End alot of ends are around here"
+    }, {
+        "id": 24,
+        "data": "No"
+    }, {
+        "id": 25,
+        "data": "End"
+    }, {
+        "id": 20,
+        "data": "No"
+    }, {
+        "id": 27,
+        "data": "End"
+    }, {
+        "id": 17,
+        "data": "No"
+    }, {
+        "id": 28,
+        "data": "End"
+    }, {
+        "id": 29,
+        "data": "dddd"
+    }, {
+        "id": 30,
+        "data": "End"
+    }],
+    "arrows": [{
+        "to": 16,
+        "from": 0,
+        "isLink": false
+    }, {
+        "to": 18,
+        "from": 16,
+        "isLink": false
+    }, {
+        "to": 19,
+        "from": 18,
+        "isLink": false
+    }, {
+        "to": 21,
+        "from": 19,
+        "isLink": false
+    }, {
+        "to": 23,
+        "from": 21,
+        "isLink": false
+    }, {
+        "to": 26,
+        "from": 23,
+        "isLink": false
+    }, {
+        "to": 24,
+        "from": 21,
+        "isLink": false
+    }, {
+        "to": 25,
+        "from": 24,
+        "isLink": false
+    }, {
+        "to": 20,
+        "from": 18,
+        "isLink": false
+    }, {
+        "to": 27,
+        "from": 20,
+        "isLink": false
+    }, {
+        "to": 17,
+        "from": 0,
+        "isLink": false
+    }, {
+        "to": 28,
+        "from": 17,
+        "isLink": false
+    }, {
+        "to": 29,
+        "from": 28,
+        "isLink": false
+    }, {
+        "to": 30,
+        "from": 28,
+        "isLink": false
+    }]
+}
