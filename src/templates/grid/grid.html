@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv = 'Content-type' content = 'text/html; charset = utf-8' />
 <title>Template</title>
-<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+<script src = 'jquery-min.js'></script>
 <script src = 'underscore-min.js'></script>
 <script src = 'raphael-min.js'></script>
 <script src = 'grid.js'></script>
@@ -19,14 +19,16 @@ body
 {
 	background: url('noise_lines.png');
 }
-#container {
-	scroll: auto;
-	border: 1px solid black;
+#inputBox {
+	width: 500px;
+	height: 500px;
+	overflow: auto;
+
 }
 </style>
 </head>
 <body>
-<div id = "container">
+<div id = 'inputBox'>
 
 </div>
 </body>
