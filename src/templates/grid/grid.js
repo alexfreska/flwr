@@ -111,6 +111,7 @@ var GridApp = function (chart, inputBox ) {
 					current = diff;
 				}
 			}
+			
 
 		});
 
