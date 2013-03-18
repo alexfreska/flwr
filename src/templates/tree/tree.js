@@ -1,512 +1,665 @@
 $(function() {
+/******************************************************
+*	Tree Visualization
+*
+*		chart: takes data
+*		container: the html element
+*		
+*	OPTIONAL PARAMETERS:
+*		maxNodeWidth
+*		nodeBuffer
+*		spacingX
+*		spacingY
+*
+*	DEFAULTS:  maxNodeWidth = 150,nodeBuffer = 10, spacingX = 50, spacingY = 50 
+******************************************************/
+var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWidth, nodeBuffer, spacingX, spacingY ) {
 
-//json file from constructor
-// var jsonChart;
+	var viewPaper = Raphael(container, windowWidth, windowHeight);
+	var testing = 0;
+	var title = chart.title;
+	var nodes = chart.nodes;
+	var arrows = chart.arrows;
+	var paths = [];
+	var stack = [];
 
-var aColor = '#FF2C18';
-var aFontFill = '#FFFFFF';
-var qsColor = '#FFFFFF';
-var qsFontFill = '#999999';
-/*
-var title = current_chart[0]; 
-var nodes = current_chart[1]; 
-var arrows = current_chart[2];
+	/***********************************************
+	*	Initialize Tree Object and Helper functions
+	*	
+	***********************************************/
+	var Tree = {
+		nodes: [],
+		getNode: function ( id ) {
+			
+			var that = this;
+			var node = _.find(that.nodes, function (node) {
+				return node.id == id;
+			});
+			return node;
+			
+			/*
+			var self = this;
+			for(var each in self.nodes) {
+				if(self.nodes[each].id === id)
+				return self.nodes[each];
+			}
+			*/
+		},
+		getStart: function ( ) {
+				//temporary fix for:
+				//if (this.nodes[each].type === "start")
+			var temp = _.find(this.nodes, function (node) {
+				return node.id == 0;
+			});
+			return temp;
+		},
+		printPrePost: function ( ) {
+			this.nodes = _.sortBy(this.nodes, function (node) { 
+				return node.post;
+			});
+			_.each(this.nodes, function (val) {
+				console.log(val.pre+", "+val.post);
+			});
+		},
+		printNodes: function ( ) {
+			_.each(this.nodes, function (val) {
+				console.log(val.data);
+			});
+		},
+		//returns array of nodes in given layer
+		getLayer: function (layer) {
+			var arr = [];
+			_.each(this.nodes, function (node) {
+				if(node.layer === layer) {
+					arr.push(node);
+				}
+			});
+			return arr;
+		},
+		//returns list of layer numbers
+		listOfLayers: function ( ) {
+			return _.uniq(_.pluck(Tree.nodes, 'layer'));
+		},
+		getLayers: function ( ) {
+			var layers = this.listOfLayers();
+			var arr = [];
+			var that = this;
+			_.each(layers, function (val) {
+				arr.push(that.getLayer(val));
+			});
+			return arr;
+		}
+	}
 
-var titleGraphic = viewPaper.print(-4, 5, title, viewPaper.getFont("Myriad Pro"), 26, "baseline").attr({'fill': '#666', 'text-anchor': 'start'});
-titleGraphic.translate(stage.innerWidth/2-titleGraphic.getBBox().width/2, titleGraphic.getBBox().height*3/2);
-//var titleBack = viewPaper.rect(titleGraphic.getBBox().x-10, titleGraphic.getBBox().y - 10, titleGraphic.getBBox().width + 20, titleGraphic.getBBox().height + 20).attr({'fill': '#FFF', 'stroke': '#CCC', 'stroke-width': .5, 'stroke-linecap': "square"});
-var titleBack = viewPaper.rect(titleGraphic.getBBox().x-10, titleGraphic.getBBox().y2 + 10, titleGraphic.getBBox().width + 20, 1).attr({'fill': '#AAA', 'stroke': 'none'});
-titleGraphic.toFront();
+	/*******************************************************
+	*	Create Nodes
+	*	
+	*	nodes = array of { Node id, Array of adjacent nodes}
+	********************************************************/
+	Tree.nodes = nodes;
 
-*/
+	//change to extend prototype
+	_.each(arrows, function (arrow) {
+		arrow.used = 0;
+	});
 
-var paths = [];
 
-var title = []; 
-var nodes = []; 
-var arrows = [];
-var stack = [];
+	var checkForAdjacencies = function (node) {
+		var adjacencies = [];
+		console.log("node: "+node.id);
+		_.each(arrows, function (arrow) {
+			if(node.id === arrow.from) {
+
+				console.log(arrow.to);
+				var retrievedNode = Tree.getNode(arrow.to);
+				if(retrievedNode.used == 0) {
+					arrow.used = 1;
+					retrievedNode.used = 1;
+					adjacencies.push(retrievedNode);
+				}
+				
+			}
+		});
+		return adjacencies;
+	}	
+
+	_.each(Tree.nodes, function (node) {
+		node.pre = -1;
+		node.post = -1;
+		node.layer = -1;
+		node.parents = [];
+		node.zone = 0;
+		node.zoneXpos = 0;
+		node.xCurrent = 0;
+		node.used = 0;
+		node.paths = [];
+	});
+	_.each(Tree.nodes, function (node) {
+		node.adjacent = checkForAdjacencies(node);
+	});
+
+	/***************************
+	*	Depth First Search
+	***************************/
+	var numbering = 1;
+	var parent = 0;
+	var start = Tree.getStart();
+
+	//a starting node is required
+	if(typeof start === undefined) {
+		return;
+	}
+
+	/************************************************************
+	*	Temporary Tree Check Helper function
+	*
+	*	FIX: by modifying node drawing to only draw adjacencies 
+	*	if the particular node has not been used
+	*
+	*	OR JUST CHECK FOR BACK EDGE or CROSS EDGE
+	*
+	************************************************************/
+	var isRealTree =  function ( ) {
+
+		var isTree = 1;
+		_.each(arrows, function (arrow) {
+			if(arrow.isLink && arrow.isLink === true)
+				isTree = 0;
+		});
+		return isTree;
+
+	}
+	//add Pre and Post numbering to nodes through depth first search procedure
+	var dfs = function (node,layer) {
+		//set nodes pre and then increment counter
+		node.pre = numbering++;
+		node.layer = layer; 
+		//for each of the nodes adjacencies
+
+		_.each(node.adjacent,function(adjacency) {
+
+			//if it has not been visited
+			if(adjacency.pre === -1) {
+				//run dfs on adjacency
+				adjacency.parents.push(node);
+				dfs(adjacency,layer+1);
+			}
+		});
+		node.post = numbering++;
+	}
+	//Run dfs to build Tree data structure
+	dfs(start,0);
+
+
+	/*********************************
+	*	Template specific code below
+	*
+	*********************************/
+
+	//sort Tree object's nodes for reverse usage
+	/*
+	Tree.nodes = _.sortBy(Tree.nodes, function(node) { 
+		return node.post;
+	});
+	*/
+	//build layers // could change to just have Tree.layers
+	Tree.layers = Tree.getLayers();
+	var maxTextWidth = maxNodeWidth - nodeBuffer*2;
+	var aColor = '#FF2C18';
+	var aFontFill = '#FFFFFF';
+	var qsColor = '#FFFFFF';
+	var qsFontFill = '#999999';
+	var currentY = 0;
+
+	//console.log(Tree.layers);
+	
+
+	//Tree check
+	if(isRealTree())
+	{
+
+	/******************************************************
+	*	Calculate Node and Layer Graphical Information
+	*
+	*		each nodes:
+	*			textWidth & height based on maxNodeWidth
+	*		each layers:
+	*			layer height
+	*			( maxTextHeight+nodeBuffer = layerHeight )
+	******************************************************/
+
+
+	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
+
+	currentY += Tree.title.getBBox().height + spacingY*2;
+
+	_.each(Tree.layers, function (layer) {
+
+	var greatestTextHeightInLayer = 0;
+	layer.width = ( ( layer.length - 1 ) * spacingX );
+
+		//for each node in the layer
+		_.each(layer, function (node) {
+
+			var content = node.data;
+			var words = content.split(" ");
+			
+			var tempText = "";
+
+			node.textBox = viewPaper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': 'black', 'font-size': 18});
+			_.each(words, function (word) {
+					node.textBox.attr("text", tempText + " " + word);
+					if(node.textBox.getBBox().width > maxTextWidth){
+						tempText += "\n" + word;	
+					} else {
+						tempText += " " + word;	
+					}
+					//console.log(tempText);
+			});
+			
+			node.textBox.attr("text", tempText.substring(1));
+
+			node.designBox = viewPaper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2);
+
+			layer.width += node.textBox.getBBox().width + nodeBuffer*2;
+			//console.log(node.textBox.getBBox().width+ ": "+node.designBox.attr("width"));
+			node.width = node.designBox.attr("width")+spacingX;
+			node.height = node.designBox.attr("height");
+
+			if(node.height > greatestTextHeightInLayer) {
+				greatestTextHeightInLayer = node.height;
+			}
+
+		});
+
+	layer.height = greatestTextHeightInLayer + nodeBuffer*2;
+	//console.log("width: "+layer.width);
+	layer.startX = windowWidth/2 - layer.width / 2;
+	layer.startY = currentY;
+	currentY += layer.height + spacingY;
+
+	});
+
+
+	var initZone = function (node) {
+		node.zone = 0;
+		/*
+		if(node.adjacent>0) {
+		node.zone -= spacingX;
+		*/
+		//console.log(node.id);
+		_.each(node.adjacent, function (adj) {
+
+			node.zone += initZone(adj);
+		});
+		if(node.zone < node.width) {
+			node.zone = node.width;
+		}
+		//console.log("node #"+node.id+" zone: "+node.zone);
+		return node.zone;
+	}	
+
+	var zoneBalancer = function (node) {
+
+		var totalAdjZones = 0;
+		_.each(node.adjacent, function (adj) {
+			totalAdjZones += adj.zone;
+		});
+		if(totalAdjZones < node.zone) {
+
+			var newZoneSize = node.zone / node.adjacent.length;
+
+			_.each(node.adjacent, function (adj) {
+				 adj.zone = newZoneSize;
+				zoneBalancer(adj);
+			});
+		}
+		else {
+			_.each(node.adjacent, function (adj) {
+				zoneBalancer(adj);
+			});
+		}
+
+	}
+
+	var createZones = function (node) {
+		initZone(node);
+		zoneBalancer(node);
+	}
+	createZones(start);
+
+
+	var setNodePositions = function (node) {
+		if(node.parents.length == 0) {
+			node.zoneXpos = windowWidth / 2 - node.zone / 2;
+			node.xCurrent = node.zoneXpos;
+		}
+		else {
+			node.zoneXpos = node.parents[0].xCurrent;
+			node.parents[0].xCurrent += node.zone;
+			node.xCurrent = node.zoneXpos;
+		}
+
+		node.textBox.attr({ 'x': node.zoneXpos + node.zone / 2 + nodeBuffer - node.designBox.attr('width') / 2, 
+							'y': Tree.layers[node.layer].startY, 'fill': qsFontFill});
+
+		node.designBox.attr({'x': node.zoneXpos + node.zone / 2  - node.designBox.attr('width') / 2
+									,'y': Tree.layers[node.layer].startY - node.designBox.attr('height') / 2})
+								.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
+
+		if(testing) {
+		viewPaper.rect(node.zoneXpos + 2,Tree.layers[node.layer].startY,node.zone - 4,1);//TESTING 
+		viewPaper.rect(node.zoneXpos+node.zone / 2,Tree.layers[node.layer].startY,1,4);//TESTING 
+		viewPaper.rect(node.textBox.getBBox().x,node.textBox.getBBox().y,5,5);//TESTING 
+		viewPaper.rect(node.designBox.attr('x'),node.designBox.attr('y'),5,5);//TESTING 
+		}
+		_.each(node.adjacent, function (adj) {
+			setNodePositions(adj);
+		});
+	}
+	setNodePositions(start);
+
+	//draw title
+	console.log("ggg"+spacingY);
+	Tree.title.attr({'x': start.zoneXpos + start.zone / 2 - Tree.title.getBBox().width/2, 'y': spacingY*3});
+
+	var routePaths = function (node) {
+		_.each(node.adjacent, function (adj) {
+			var pathStartX, pathStartY, pathTurn1X, pathTurn1Y, pathTurn2X, pathTurn2Y, pathEndX, pathEndY;
+
+			//console.log(node.designBox.attr('x'));
+
+			pathStartX 	= node.designBox.attr('x') + node.designBox.attr('width') / 2;
+			pathStartY 	= node.designBox.attr('y') + node.designBox.attr('height') /2;
+			pathTurn1X 	= pathStartX;
+			pathTurn1Y 	= node.designBox.attr('y') + node.designBox.attr('height')/2;
+			pathTurn2X 	= adj.designBox.attr('x') + adj.designBox.attr('width') / 2;
+			pathTurn2Y 	= pathTurn1Y;
+			pathEndX 	= pathTurn2X;
+			pathEndY 	= adj.designBox.attr('y') + adj.designBox.attr('height') / 2;
+			var pathString = 'M'+pathStartX+','+pathStartY+'L'+pathTurn1X+','+pathTurn1Y+'L'+pathTurn2X+','+pathTurn2Y
+				+'L'+pathEndX+','+pathEndY;
+			//console.log(pathString);
+			var newPath = viewPaper.path(pathString).attr({'stroke': '#999'}).toBack();
+			newPath.child = adj;
+			node.paths.push(newPath);
+		});
+	}
+
+	_.each(arrows, function (arrow) {
+		if(arrow.used == 0) {
+			var fromNode = Tree.getNode(arrow.from);
+			var toNode = Tree.getNode(arrow.to);
+
+			var pathStartX, pathStartY, pathTurn1X, pathTurn1Y, pathTurn2X, pathTurn2Y, pathEndX, pathEndY;
+
+			pathStartX 	= fromNode.designBox.attr('x') + fromNode.designBox.attr('width') / 2;
+			pathStartY 	= fromNode.designBox.attr('y') + fromNode.designBox.attr('height') /2;
+			pathTurn1X 	= pathStartX;
+			pathTurn1Y 	= fromNode.designBox.attr('y') + fromNode.designBox.attr('height')/2;
+			pathTurn2X 	= toNode.designBox.attr('x') + toNode.designBox.attr('width') / 2;
+			pathTurn2Y 	= pathTurn1Y;
+			pathEndX 	= pathTurn2X;
+			pathEndY 	= toNode.designBox.attr('y') + toNode.designBox.attr('height') / 2;
+
+			var pathString = 'M'+pathStartX+','+pathStartY+'L'+pathTurn1X+','+pathTurn1Y+'L'+pathTurn2X+','+pathTurn2Y
+				+'L'+pathEndX+','+pathEndY;
+
+			var newPath = viewPaper.path(pathString).attr({'stroke': '#999'}).toBack();
+			newPath.child = toNode;
+
+			//add from node as parent since it was not counting in the dfs
+			toNode.parents.push(fromNode);
+			fromNode.paths.push(newPath);
+		}
+	});
+	
+	_.each(Tree.nodes, function (node) {
+		routePaths(node);
+
+	
+		//initialize glow variables so remove works
+		_.each(Tree.nodes, function (node) {
+
+			node.g = node.designBox.glow(1,false,10);
+			node.g.remove();
+			node.c = node.designBox.glow(1,false,10);
+			node.c.remove();
+
+			_.each(node.paths, function (path) {
+
+				path.g = path.glow(1,false,10);
+				path.g.remove();
+				path.c = path.glow(1,false,10);
+				path.c.remove();
+			});
+		});
+		node.designBox.hover(
+			function () {
+				node.g.remove();
+				node.g = node.designBox.glow(1,false,10);
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						currNode.g.remove();
+						currNode.g = currNode.designBox.glow(1,false,10);
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+								path.g.remove();
+								path.g = path.glow(1,false,10);
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			},
+			function () {
+
+				node.g.remove();
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						
+						currNode.g.remove();
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+
+								path.g.remove();
+
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			}
+		);
+		node.textBox.hover(
+			function () {
+				node.g.remove();
+				node.g = node.designBox.glow(1,false,10);
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						currNode.g.remove();
+						currNode.g = currNode.designBox.glow(1,false,10);
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+								path.g.remove();
+								path.g = path.glow(1,false,10);
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			},
+			function () {
+
+				node.g.remove();
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						
+						currNode.g.remove();
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+
+								path.g.remove();
+
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			}
+		);
+		node.designBox.click(
+			function () {
+
+				//FIRST RUN DOWNWARD REC FUNCTION THAT REMOVES ALL GLOW
+				var recRemove = function (currNode) {
+					currNode.c.remove();
+						_.each(currNode.paths, function (path) {
+								path.c.remove();
+								recRemove(path.child);
+						});			
+				}
+				recRemove(start);
+				////////////
+
+				node.c.remove();
+				node.c = node.designBox.glow(1,false,10);
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						currNode.c.remove();
+						currNode.c = currNode.designBox.glow(1,false,10);
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+								path.c.remove();
+								path.c = path.glow(1,false,10);
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			}
+		);
+		node.textBox.click(
+			function () {
+
+				//FIRST RUN DOWNWARD REC FUNCTION THAT REMOVES ALL GLOW
+				var recRemove = function (currNode) {
+					currNode.c.remove();
+						_.each(currNode.paths, function (path) {
+								path.c.remove();
+								recRemove(path.child);
+						});			
+				}
+				recRemove(start);
+				////////////
+
+				node.c.remove();
+				node.c = node.designBox.glow(1,false,10);
+
+				var rec = function (currNode,prevNode) {
+					
+					if(currNode != -1) {
+						currNode.c.remove();
+						currNode.c = currNode.designBox.glow(1,false,10);
+
+						_.each(currNode.paths, function (path) {
+							if(path.child === prevNode) {
+								path.c.remove();
+								path.c = path.glow(1,false,10);
+							}
+						});
+
+						_.each(currNode.parents, function (parent) {
+							rec(parent,currNode);
+						});
+					}
+
+				}
+				_.each(node.parents, function (parent) {
+					rec(parent,node);
+				});
+			}
+		);
+	
+	});
+
+	}
+	else {
+		console.log("Not a tree!");
+	}
+}
+
 
 /******************************
 *	Temporary JSON Retrieval
 *
 ******************************/
+var chart = [];
 
 $.ajax({
 	url: 'chart.json',
 	async: false,
 	dataType: 'json',
 	success: function(data) {
-		title = data.title;
-		nodes = data.nodes;
-		arrows = data.arrows;
+		chart = data;
+	},
+	error: function(e,header) {
+		console.log(header);
 	}
 });//close ajax
 
-
-console.log(nodes);
-
-this.remove = function(){
-	titleGraphic.remove();
-	titleBack.remove();
-	_.each(paths, function(path) {
-		path.remove();
-	});
-	_.each(layers.layers, function (layer) {
-		_.each(layer, function (node) {
-			node.textBox.remove();
-			node.designBox.remove();
-		});
-	});
-};
-
-/************************************************************
-*	Temporary Tree Check Helper function
-*
-*	FIX: by modifying node drawing to only draw adjacencies 
-*	if the particular node has not been used
-************************************************************/
-var isRealTree =  function ( ) {
-
-	var isTree = 1;
-	_.each(arrows, function (arrow) {
-		if(arrow.isLink && arrow.isLink === true)
-			isTree = 0;
-	});
-	return isTree;
-
-}
-/***********************************************
-*	Initialize Tree Object and Helper functions
-*	
-***********************************************/
-var Tree = {
-	nodes: [],
-	getNode: function (id) {
-		for(var each in this.nodes) {
-			if(this.nodes[each].id === id)
-			return this.nodes[each];
-		}
-	},
-	getStart: function ( ) {
-		for(var each in this.nodes) {
-			//temporary fix for:
-			//if (this.nodes[each].type === "start")
-			if(this.nodes[each].id == 0)
-				return this.nodes[each];
-		}
-	},
-	printPrePost: function ( ) {
-		this.nodes = _.sortBy(this.nodes, function(node) { 
-			return node.post;
-		});
-		_.each(this.nodes, function (val) {
-			console.log(val.pre+", "+val.post);
-		});
-	},
-	printNodes: function ( ) {
-		_.each(this.nodes, function (val) {
-			console.log(val.data);
-		});
-	},
-	//returns array of nodes in given layer
-	getLayer: function (layer) {
-		var array = [];
-		_.each(this.nodes, function (val) {
-			if(val.layer === layer) {
-				array.push(val);
-			}
-		});
-		return array;
-	},
-	//returns list of layer numbers
-	listOfLayers: function ( ) {
-		var array = [];
-		_.each(this.nodes, function (val,key) {
-			if(_.indexOf(array, val.layer) === -1) {
-				array.push(val.layer);
-			}
-		});
-		_.sortBy(array, function(val){ return val; });
-		return array;
-	},
-	getLayers: function ( ) {
-		var layers = this.listOfLayers();
-		var layersObject = [];
-		var that = this;
-		_.each(layers, function (val) {
-			layersObject.push(that.getLayer(val));
-		});
-		return layersObject;
-	}
-}
-	
-
-/*******************************************************
-*	Create Nodes
-*	
-*	nodes = array of { Node id, Array of adjacent nodes}
-********************************************************/
-var treeFormatNodes = [];
-
-
-var checkForAdjacencies = function (node) {
-	var adjacencies = [];
-
-	_.each(arrows, function (arrow) {
-		if(node.id === arrow.from) {
-			adjacencies.push(arrow.to);
-		}
-	});
-	return adjacencies;
-}	
-
-_.each(nodes, function (node) {
-
-	treeFormatNodes.push( { id: node.id, data: node.data, 
-							type: node.type, pre: -1, post: -1, 
-							layer: -1, adjacent: checkForAdjacencies(node) } );
-
-});
-
-//add formated nodes to Tree data structure
-Tree.nodes = treeFormatNodes;
-
-
-/***************************
-*	Depth First Search
-***************************/
-var numbering = 1;
-var parent = 0;
-var start = Tree.getStart();
-
-//a starting node is required
-if(typeof start === undefined) {
-	return;
-}
-console.log(start);
-
-//add Pre and Post numbering to nodes through depth first search procedure
-var dfs = function (node,layer) {
-	//set nodes pre and then increment counter
-	node.pre = numbering++;
-	node.layer = layer; 
-	//for each of the nodes adjacencies
-	_.each(node.adjacent,function(val) {
-		
-		//grab node from nodes
-		var adjacency = Tree.getNode(val);
-		
-		//if it has not been visited
-		if(adjacency.pre === -1) {
-			//run dfs on adjacency
-			dfs(adjacency,layer+1);
-		}
-	});
-	node.post = numbering++;
-}
-//Run dfs to build Tree data structure
-dfs(start,0);
-
-/*********************************
-*	Template specific code below
-*
-*********************************/
-
-//sort Tree object's nodes for reverse usage
-Tree.nodes = _.sortBy(Tree.nodes, function(node) { 
-	return node.post;
-});
-
-
-
-
-/*****************************************************************
-*	Standard Tree Template
-*
-*	Restrictions: 
-*		Currently does not support: Back Edges, Forward Edges
-*		Template could be modified to force a tree or awkwardly 
-*		drawing in back and forward edges.
-*
-* 	Params:
-* 		viewPaper height:           windowHeight,
-*		viewPaper width:            windowWidth,    
-*		horizontal spacing: 	spacingX,
-*		vertical spacing:       spacingY,
-*		maximum node width:     maxNodeWidth,
-*			Forces long text string to take more vertical space.
-*		node buffer:            nodeBuffer 
-*
-*****************************************************************/
-
 var windowWidth = window.innerWidth;
 var windowHeight = window.innerHeight;
-var viewPaper = Raphael(document.getElementById("container"), windowWidth, windowHeight);
-
-//Tree check
-if(isRealTree())
-{
-
-/************************
-*	Setting parameters
-*
-************************/
-var spacingX = 50;
-var spacingY = 50;
-var maxNodeWidth = 150;
-var nodeBuffer = 10;
-var maxTextWidth = maxNodeWidth - nodeBuffer*2;
-
-/***********************************************
-*	Create layers object from Tree object
-*
-*	NOTE: Could be created with the tree object
-*
-***********************************************/
-var layers = Tree.getLayers();
-console.log(layers);
-_.sortBy(layers, function (layer) {
-	return layer.layer;
-});
-console.log(layers);
-/******************************************************
-*	Calculate Node and Layer Graphical Information
-*
-*		each nodes:
-*			textWidth & height based on maxNodeWidth
-*		each layers:
-*			layer height
-*			( maxTextHeight+nodeBuffer = layerHeight )
-******************************************************/
-_.each(layers, function (layer) {
-
-var layerHeight = 0;
-var greatestTextHeightInLayer = 0;
-var layerWidth = ( ( layer.length - 1 ) * spacingX );
-
-
-	//for each node in the layer
-	_.each(layer, function (node) {
-
-		var content = node.data;
-		var words = content.split(" ");
-		var tempText = "";
-
-		textBox = viewPaper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Ubuntu", 'fill': '#FFFFFF', 'font-size': 18});
-		_.each(words, function (word) {
-				textBox.attr("text", tempText + " " + word);
-				if(textBox.getBBox().width > maxTextWidth){
-					tempText += "\n" + word;	
-				} else {
-					tempText += " " + word;	
-				}
-				//console.log(tempText);
-		});
-		textBox.remove();
-		textBox = viewPaper.print(-4,2, tempText.substring(1), viewPaper.getFont("Myriad Pro"), 18, "baseline").attr({'text-anchor': 'start', 'fill': qsFontFill});
-		//textBox.attr("text", tempText.substring(1));
-		if(textBox.getBBox().height > greatestTextHeightInLayer) {
-			greatestTextHeightInLayer = textBox.getBBox().height;
-		}
-		node.textBox = textBox;
-		node.designBox = viewPaper.rect(0,0,node.textBox.getBBox().width + nodeBuffer*2,node.textBox.getBBox().height + nodeBuffer*2).attr({'stroke': 'none'});
-
-		layerWidth += node.textBox.getBBox().width + nodeBuffer*2;
-		//console.log(node.textBox.getBBox().width+ ": "+node.designBox.attr("width"));
-	});
-
-layerHeight = greatestTextHeightInLayer + nodeBuffer*2;
-layer.height = layerHeight;
-layer.width = layerWidth;
-//console.log("width: "+layer.width);
-layer.startX = windowWidth/2 - layerWidth / 2;
+treeMain(chart,document.getElementById("container"),windowWidth,windowHeight,150,5,20,20);
 
 });
-
-
-/**********************************
-*	Layout Graphics
-*
-**********************************/
-
-
-// variables to track X and Y positions during layout
-var currentX = currentY = 0;
-var bottomLayerIndex = 0;
-
-/******************************************************
-*	Set currentY
-*
-*	Since layout is run from bottom up currentY is set
-*	down the screen leaving room for layers above.
-******************************************************/
-_.each(layers.layers, function (layer) {
-currentY += layer.height + spacingY;
-});
-
-/******************************************************
-*	Set currentX
-*
-*	The center of the viewPaper is selected and half of
-*	the widest layer (bottom in a tree) is subtracted.
-******************************************************/
-currentX = windowWidth / 2 - layers.layers[bottomLayerIndex].width / 2;
-
-/**************************
-*	Layout Bottom Layer
-*
-**************************/
-_.each(layers.layers[bottomLayerIndex], function (node) {
-
-	node.designBox.attr({ "x": currentX, "y": currentY - (node.designBox.attr("height")/2) });
-	node.textBox.translate(currentX + nodeBuffer, currentY - node.textBox.getBBox().height/2 + 10 );
-	//console.log(currentX);
-	currentX += (node.designBox.attr("width") + spacingX);
-
-	//styling
-	node.designBox.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
-
-});
-
-//move current y up the page
-currentY -= (layers.layers[bottomLayerIndex].height + spacingY);
-
-/******************************
-*	Layout Remaining Layers
-*
-******************************/
-_.each(layers.layers, function (layer,index) {
-
-	var layerIndex = index;
-
-	//skip the bottom layer since it is already drawn
-	if(index !== bottomLayerIndex) {
-
-		_.each(layer, function (node) {
-			var amountOfAdjacent = node.adjacent.length;
-			var firstAdjacent = node.adjacent[0];
-			var lastAdjacent = node.adjacent[amountOfAdjacent-1];
-			var firstAdjacentNode, lastAdjacentNode, nodePosition;
-
-			//find first adjacenct in layer below
-			firstAdjacentNode = _.find(layers.layers[layerIndex-1], function (node) {
-				return node.id === firstAdjacent;
-			});
-
-			//find last adjacenct in layer below
-			lastAdjacentNode = _.find(layers.layers[layerIndex-1], function (node) {
-				return node.id === lastAdjacent;
-			});
-			if(firstAdjacentNode != undefined){
-				var nodeSpanStart = firstAdjacentNode.designBox.attr("x");
-				var nodeSpanEnd = lastAdjacentNode.designBox.attr("x") + lastAdjacentNode.designBox.attr("width");
-				nodePosition = (nodeSpanEnd - nodeSpanStart)/2 + nodeSpanStart - node.designBox.attr("width")/2;
-				
-				//console.log(node.id+": "+nodePosition);
-				node.designBox.attr({"x": nodePosition, "y": currentY - (node.designBox.attr("height")/2)});
-				//node.textBox.attr({"x": nodePosition + nodeBuffer, "y": currentY });
-				node.textBox.translate(nodePosition + nodeBuffer, currentY - node.textBox.getBBox().height/2 + 10 );
-				if(index%2 === 0){
-					node.designBox.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
-					node.textBox.attr({'fill': qsFontFill});
-				}
-				else{
-					node.designBox.attr({'fill': aColor}).toBack();
-					node.textBox.attr({'fill': aFontFill});
-				}
-			}
-		});
-		if(layers.layers[index+1]) {
-			currentY -= (layer.height/2 + layers.layers[index+1].height/2 + spacingY);
-		}
-		else {
-			currentY -= (layer.height/2 + spacingY);
-		}
-	}
-
-});
-/*****************************************************************
-*	Arrow Routing
-*
-*	A line is drawn vertically down from each node. A second line 
-*	is draw horizontally spanning adjacent nodes. Lines are drawn 
-*	vertically down from the horizonal line to each adjacency.
-*
-*****************************************************************/
-_.each(layers.layers, function (layer,index) {
-
-	var layerIndex = index;
-
-	//skip bottom layer since there are no outgoing edges
-	if(index !== bottomLayerIndex) {
-
-		_.each(layer, function (node) {
-
-			var numAdj = node.adjacent.length;
-
-			//draw line extending down from middle of node and set bottom end X and Y coordinates to lineX lineY
-
-			var lineStartX, lineStartY, lineEndX, lineEndY;
-
-			lineStartX = node.designBox.attr('x') + node.designBox.attr('width') / 2;
-			lineStartY = node.designBox.attr('y') + node.designBox.attr('height');
-			lineEndX = lineStartX + 0;
-			lineEndY = lineStartY + 30;
-
-			paths.push( viewPaper.path('M'+lineStartX+','+lineStartY+'L'+lineEndX+','+lineEndY).attr({'stroke': '#999'}) );
-
-			//find first and last adjacent node x positions.
-
-			var firstA, lastA, lastAIndex, firstAX, lastAX;
-
-			lastAIndex = node.adjacent.length - 1;
-
-			firstA = _.find(layers.layers[layerIndex-1], function (val) {
-						return val.id === node.adjacent[0];
-					});
-			lastA = _.find(layers.layers[layerIndex-1], function (val) {
-						return val.id === node.adjacent[lastAIndex];
-					});;
-
-			firstAX = firstA.designBox.attr('x') + firstA.designBox.attr('width') / 2;
-			lastAX = lastA.designBox.attr('x') + lastA.designBox.attr('width') / 2;
-
-			//draw a horizontal line from firstX to lastX at lineY height
-			paths.push( viewPaper.path('M'+firstAX+','+lineEndY+'L'+lastAX+','+lineEndY).attr({'stroke': '#999'}) );
-
-			//for each adjacent node draw a line down from lineY height to the middle of the node's top edge
-			_.each(node.adjacent, function (adj) {
-
-				var adjacentNode = _.find(layers.layers[layerIndex-1], function (node) {
-					return node.id === adj;
-				});
-
-				var endX = adjacentNode.designBox.attr('x') + adjacentNode.designBox.attr('width')/2;
-				var endY = adjacentNode.designBox.attr('y');
-
-				paths.push( viewPaper.path('M'+endX+','+lineEndY+'L'+endX+','+endY).attr({'stroke': '#999'}) );
-
-			});
-			
-
-			
-		});
-
-	}
-});
-}
-// if the data is not a tree output an error message
-else {
-	viewPaper.text(windowWidth/2-40,windowHeight/2-40)
-	.attr({'text-anchor': 'start', 'font-family': "Ubuntu", 'fill': 'black', 'font-size': 18, 'text': 'Not a Tree!'})
-}
-
-
-//console.log(layers);
-
-
-});//endall
-
-
-
