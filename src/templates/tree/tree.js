@@ -13,15 +13,32 @@ $(function() {
 *
 *	DEFAULTS:  maxNodeWidth = 150,nodeBuffer = 10, spacingX = 50, spacingY = 50 
 ******************************************************/
-var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWidth, nodeBuffer, spacingX, spacingY ) {
+var treeMain = function (chart, container, maxNodeWidth, nodeBuffer, spacingX, spacingY ) {
 
-	var viewPaper = Raphael(container, windowWidth, windowHeight);
+	windowWidth = $(container).width();
+	windowHeight = $(container).height();
+
+	var innerContainer = document.createElement('div');
+	container.appendChild(innerContainer);
+
+	$(innerContainer).width = windowWidth;
+	$(innerContainer).height = windowHeight;
+
+	windowWidth = 5000;
+	windowHeight = 5000;
+
+	var viewPaper = Raphael(innerContainer,windowWidth,windowHeight);
+	$(container).css(
+	    {'background-image': "url('noise_lines.png')"}
+	);
+
 	var testing = 0;
 	var title = chart.title;
 	var nodes = chart.nodes;
 	var arrows = chart.arrows;
 	var paths = [];
 	var stack = [];
+
 
 	/***********************************************
 	*	Initialize Tree Object and Helper functions
@@ -106,11 +123,9 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 
 	var checkForAdjacencies = function (node) {
 		var adjacencies = [];
-		console.log("node: "+node.id);
 		_.each(arrows, function (arrow) {
 			if(node.id === arrow.from) {
 
-				console.log(arrow.to);
 				var retrievedNode = Tree.getNode(arrow.to);
 				if(retrievedNode.used == 0) {
 					arrow.used = 1;
@@ -228,10 +243,15 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	*			( maxTextHeight+nodeBuffer = layerHeight )
 	******************************************************/
 
+	//FIX TITLE AND BASE SIZE ON THE SIZE OF GIVEN DIV ELEMENT!!!
+	//
+	// OR: MAKE AN TITLE OVERLAY AT THE TOP THAT ALSO HAS A LITTLE BUTTON TO DOWNLOAD PNG
+	//
+	//
 
 	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
 
-	currentY += Tree.title.getBBox().height + spacingY*2;
+	currentY += Tree.title.getBBox().height + spacingY*4;
 
 	_.each(Tree.layers, function (layer) {
 
@@ -281,6 +301,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	});
 
 
+
 	var initZone = function (node) {
 		node.zone = 0;
 		/*
@@ -327,7 +348,17 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 		zoneBalancer(node);
 	}
 	createZones(start);
+	titleWidth = Tree.title.getBBox().width;
+	if(start.zone > titleWidth) {
+		windowWidth = start.zone;
+	}
+	else {
+		windowWidth = titleWidth;
+	}
+	windowWidth += 100;
+	viewPaper.setSize(windowWidth,currentY);
 
+	//$(innerContainer).scrollTo( '50%', {axis: 'x'} );
 
 	var setNodePositions = function (node) {
 		if(node.parents.length == 0) {
@@ -348,10 +379,10 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 								.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
 
 		if(testing) {
-		viewPaper.rect(node.zoneXpos + 2,Tree.layers[node.layer].startY,node.zone - 4,1);//TESTING 
-		viewPaper.rect(node.zoneXpos+node.zone / 2,Tree.layers[node.layer].startY,1,4);//TESTING 
-		viewPaper.rect(node.textBox.getBBox().x,node.textBox.getBBox().y,5,5);//TESTING 
-		viewPaper.rect(node.designBox.attr('x'),node.designBox.attr('y'),5,5);//TESTING 
+		viewPaper.rect(node.zoneXpos + 2,Tree.layers[node.layer].startY,node.zone - 4,1);
+		viewPaper.rect(node.zoneXpos+node.zone / 2,Tree.layers[node.layer].startY,1,4); 
+		viewPaper.rect(node.textBox.getBBox().x,node.textBox.getBBox().y,5,5); 
+		viewPaper.rect(node.designBox.attr('x'),node.designBox.attr('y'),5,5); 
 		}
 		_.each(node.adjacent, function (adj) {
 			setNodePositions(adj);
@@ -359,8 +390,9 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 	}
 	setNodePositions(start);
 
+
+
 	//draw title
-	console.log("ggg"+spacingY);
 	Tree.title.attr({'x': start.zoneXpos + start.zone / 2 - Tree.title.getBBox().width/2, 'y': spacingY*3});
 
 	var routePaths = function (node) {
@@ -413,42 +445,45 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 			fromNode.paths.push(newPath);
 		}
 	});
+
+
 	
 	_.each(Tree.nodes, function (node) {
 		routePaths(node);
+		//set background
 
-	
+		/*
 		//initialize glow variables so remove works
 		_.each(Tree.nodes, function (node) {
 
-			node.g = node.designBox.glow(1,false,10);
+			node.g = node.designBox.glow({'width': 10, 'opacity': .5});
 			node.g.remove();
-			node.c = node.designBox.glow(1,false,10);
+			node.c = node.designBox.glow({'width': 10, 'opacity': .5});
 			node.c.remove();
 
 			_.each(node.paths, function (path) {
 
-				path.g = path.glow(1,false,10);
+				path.g = path.glow({'width': 10, 'opacity': .5});
 				path.g.remove();
-				path.c = path.glow(1,false,10);
+				path.c = path.glow({'width': 10, 'opacity': .5});
 				path.c.remove();
 			});
 		});
 		node.designBox.hover(
 			function () {
 				node.g.remove();
-				node.g = node.designBox.glow(1,false,10);
+				node.g = node.designBox.glow({'width': 10, 'opacity': .5});
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						currNode.g.remove();
-						currNode.g = currNode.designBox.glow(1,false,10);
+						currNode.g = currNode.designBox.glow({'width': 10, 'opacity': .5});
 
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
 								path.g.remove();
-								path.g = path.glow(1,false,10);
+								path.g = path.glow({'width': 10, 'opacity': .5});
 							}
 						});
 
@@ -494,18 +529,18 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 		node.textBox.hover(
 			function () {
 				node.g.remove();
-				node.g = node.designBox.glow(1,false,10);
+				node.g = node.designBox.glow({'width': 10, 'opacity': .5});
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						currNode.g.remove();
-						currNode.g = currNode.designBox.glow(1,false,10);
+						currNode.g = currNode.designBox.glow({'width': 10, 'opacity': .5});
 
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
 								path.g.remove();
-								path.g = path.glow(1,false,10);
+								path.g = path.glow({'width': 10, 'opacity': .5});
 							}
 						});
 
@@ -563,18 +598,18 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 				////////////
 
 				node.c.remove();
-				node.c = node.designBox.glow(1,false,10);
+				node.c = node.designBox.glow({'width': 10, 'opacity': .5});
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						currNode.c.remove();
-						currNode.c = currNode.designBox.glow(1,false,10);
+						currNode.c = currNode.designBox.glow({'width': 10, 'opacity': .5});
 
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
 								path.c.remove();
-								path.c = path.glow(1,false,10);
+								path.c = path.glow({'width': 10, 'opacity': .5});
 							}
 						});
 
@@ -604,18 +639,18 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 				////////////
 
 				node.c.remove();
-				node.c = node.designBox.glow(1,false,10);
+				node.c = node.designBox.glow({'width': 10, 'opacity': .5});
 
 				var rec = function (currNode,prevNode) {
 					
 					if(currNode != -1) {
 						currNode.c.remove();
-						currNode.c = currNode.designBox.glow(1,false,10);
+						currNode.c = currNode.designBox.glow({'width': 10, 'opacity': .5});
 
 						_.each(currNode.paths, function (path) {
 							if(path.child === prevNode) {
 								path.c.remove();
-								path.c = path.glow(1,false,10);
+								path.c = path.glow({'width': 10, 'opacity': .5});
 							}
 						});
 
@@ -630,7 +665,7 @@ var treeMain = function (chart, container, windowWidth, windowHeight, maxNodeWid
 				});
 			}
 		);
-	
+		*/
 	});
 
 	}
@@ -658,8 +693,6 @@ $.ajax({
 	}
 });//close ajax
 
-var windowWidth = window.innerWidth;
-var windowHeight = window.innerHeight;
-treeMain(chart,document.getElementById("container"),windowWidth,windowHeight,150,5,20,20);
+treeMain(chart,document.getElementById('container'),150,5,20,20);
 
 });

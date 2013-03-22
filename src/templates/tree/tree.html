@@ -3,10 +3,11 @@
 <head>
 <meta http-equiv = 'Content-type' content = 'text/html; charset = utf-8' />
 <title>Template</title>
-<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+<script src = 'jquery-min.js'></script>
+<script type="jquery.scrollTo-1.4.3.1-min.js"></script>
 <script src = 'underscore-min.js'></script>
 <script src = 'raphael-min.js'></script>
-<script src = 'tree2.js'></script>
+<script src = 'tree.js'></script>
  
 <style type='text/css'>
 @import url('reset.css');
@@ -17,11 +18,22 @@
 
 body 
 {
-	background: url('noise_lines.png');
+	background: url('low_contrast_linen.png');
 }
 #container {
-	scroll: auto;
-	border: 1px solid black;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -300px;
+	margin-top: -300px;
+	width: 600px;
+	height: 600px;
+	overflow: auto;
+	border: 2px solid black;
+}
+#title {
+	font-family: 'Lucidia Grande';
+	font-size: 50px;
 }
 </style>
 </head>

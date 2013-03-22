@@ -1,5 +1,5 @@
 $(function() {
-TESTING = 1;
+TESTING = 0;
 var GridApp = function (chart, inputBox ) {
 
 	windowWidth = $(inputBox).width();
@@ -12,6 +12,9 @@ var GridApp = function (chart, inputBox ) {
 	$(container).height = windowHeight;
 
 	var paper = Raphael(container, windowWidth, windowHeight);
+	$(container).css(
+	    {'background-image': "url('noise_lines.png')"}
+	);
 
 	Grid = {
 		'title': chart.title,
@@ -60,60 +63,60 @@ var GridApp = function (chart, inputBox ) {
 	*/
 	
 	//Node initialization function
-	nodeInit = function (provDat) {
-		newNode 			= {};
-		newNode.paths 		= [];
-		newNode.adjacent	= [];
-		newNode.id 			= provDat.id;
-		newNode.data 		= provDat.data;
+	var Node = function (provDat) {
+		var current = 99999999; //get rid of
 
-		newNode.box 		= paper.rect(0,0,50,50);
-		newNode.text 		= paper.text(50,50,newNode.data).attr(
-			{'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': '18px'});
-		newNode.textSpace 	= newNode.text.getBBox().width * newNode.text.getBBox().height;
+		this.paths 		= [];
+		this.adjacent	= [];
+		this.id 		= provDat.id;
+		this.data 		= provDat.data;
+
+		this.box 		= paper.rect(0,0,50,50);
+		this.text 		= paper.text(50,50,this.data).attr(
+			{'text-anchor': 'start', 'font-family': 'Lucidia Grande', 'fill': qsFontFill, 'font-size': '18px'});
+		this.textSpace 	= this.text.getBBox().width * this.text.getBBox().height;
+		//setup size based on space taken by text
 
 		// function for computing textbox for given size dimensions
-		var computeTextBox = function (w) {
-			var words = newNode.data.split(" ");
+		var computeTextBox = function(w) {
+			var words = this.data.split(" ");
 			
 			var tempText = "";
 			//console.log('overflow per line');
-			_.each(words, function (word) {
-					newNode.text.attr("text", tempText + " " + word);
-					//console.log(newNode.text.getBBox().width);
-					//console.log(newNode.text.getBBox().width - (newNode.width - buffer*2) );
-					if(newNode.text.getBBox().width > w - buffer*2){
+			_.each(words, (function (word) {
+					this.text.attr("text", tempText + " " + word);
+					//console.log(this.text.getBBox().width);
+					//console.log(this.text.getBBox().width - (this.width - buffer*2) );
+					if(this.text.getBBox().width > w - buffer*2){
 						tempText += "\n" + word;	
 					} else {
 						tempText += " " + word;	
 					}
-			});
-			newNode.text.attr('text', tempText.substring(1));
-		}
-		//setup size based on space taken by text
+			}).bind(this));
+			this.text.attr('text', tempText.substring(1));
+		}.bind(this);		
 
-		
-		var current = 99999999;
-		_.each(boxSizes, function (size,index) {
+		_.each(boxSizes, (function (size,index) {
 
 			var computeSize 		= (size.x - buffer * 2)*(size.y - buffer * 2);
-			var diff 				= computeSize - newNode.textSpace;
+			var diff 				= computeSize - this.textSpace;
 
 			//2000 from minor testing
 			var wordWrapErrorFactor = 2000;
 
 			if( diff < current && diff > wordWrapErrorFactor) {
 				computeTextBox(size.x);
-				if(newNode.text.getBBox().height < size.y ) {
-					newNode.box.attr({'width': size.x, 'height': size.y});
-					newNode.width 	= size.x;
-					newNode.height 	= size.y;
+				if(this.text.getBBox().height < size.y ) {
+					this.box.attr({'width': size.x, 'height': size.y});
+					this.width 	= size.x;
+					this.height 	= size.y;
 					current = diff;
 				}
 			}
 			
 
-		});
+		}).bind(this));
+
 
 		//IN PROGRESS - NOT OLD
 		// CONVERTING TO SUPPORT AUTO NODE SIZE GENERATION
@@ -128,14 +131,14 @@ var GridApp = function (chart, inputBox ) {
 
 		while(!sizeFound) {
 			var computeSize 	= (curX - buffer * 2)*(curY - buffer * 2);
-			var diff 			= computeSize - newNode.textSpace;
+			var diff 			= computeSize - this.textSpace;
 
 			if(diff > wordWrapErrorFactor) {
 				computeTextBox(curX);
-				if(newNode.text.getBBox().height < curY ) {
-					newNode.box.attr({'width': curX, 'height': curY});
-					newNode.width 	= curX;
-					newNode.height 	= curY;
+				if(this.text.getBBox().height < curY ) {
+					this.box.attr({'width': curX, 'height': curY});
+					this.width 	= curX;
+					this.height 	= curY;
 					sizeFound = 1;
 				}
 			}
@@ -154,16 +157,16 @@ var GridApp = function (chart, inputBox ) {
 		if(!sizeFound)
 			console.log('not found');
 		*/
-		//console.log("width: "+newNode.width);
+		//console.log("width: "+this.width);
 
-		newNode.box.attr({fill: qsColor, 'stroke': 'none', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
+		this.box.attr({fill: qsColor, 'stroke': 'none', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
 
-		newNode.setX = function (x) {
+		this.setX = function (x) {
 			this.box.attr({'x': x});
 			var horizCenter 		= ( this.box.attr('width') - this.text.getBBox().width ) / 2;
 			this.text.attr({'x': x+horizCenter});
 		}
-		newNode.setY = function (y) {
+		this.setY = function (y) {
 
 			this.box.attr({'y': y});
 
@@ -172,26 +175,25 @@ var GridApp = function (chart, inputBox ) {
 
 			this.text.attr({'y': y+halfTextHeight+vertCenter});
 		}
-		newNode.getTopRight = function ( ) {
+		this.getTopRight = function ( ) {
 			return { 'x': this.box.attr('x') + this.box.attr('width') , 'y': this.box.attr('y') };
 		}
-		newNode.getTopLeft = function ( ) {
+		this.getTopLeft = function ( ) {
 			return { 'x': this.box.attr('x') , 'y': this.box.attr('y') };
 		}
-		newNode.getBottomRight = function ( ) {
+		this.getBottomRight = function ( ) {
 			return { 'x': this.box.attr('x') + this.box.attr('width') , 'y': this.box.attr('y') + this.box.attr('height') };
 		}
-		newNode.getBottomLeft = function ( ) {
+		this.getBottomLeft = function ( ) {
 			return { 'x': this.box.attr('x') , 'y': this.box.attr('y') + this.box.attr('height') };
 		}
-		//setup adjacent here or after
-		return newNode;
+
 	}
 
 	//initialization Loop
 	_.each(chart.nodes, function (data) {
 		//node.adjacent = checkForAdjacencies(node);
-		Grid.nodes.push(nodeInit(data));
+		Grid.nodes.push(new Node(data));
 	});
 	//console.log(Grid);
 
@@ -232,17 +234,7 @@ var GridApp = function (chart, inputBox ) {
 		paper.rect(0,0,windowWidth - boxBuffer*2,1);
 	}
 
-	var found = 0;
-
-	_.each(Grid.nodes, function (node) {
-		//find next zone that fits width
-		found = 0;
-		zones.l = _.sortBy(zones.l, function (zone) {
-			//FIX TO: sort by smallest within 2 layers
-			return zone.priority;
-		});
-		//Try to combine zones
-
+	var combineAndDeleteZones = function () {
 		_.each(zones.l, function (zone1,index1) {
 			_.each(zones.l, function (zone2,index2) {
 				if(zone1.y == zone2.y && !zone1.toBeDeleted && !zone2.toBeDeleted ) {
@@ -265,6 +257,18 @@ var GridApp = function (chart, inputBox ) {
 				//console.log("delete!")
 			}
 		});
+	}
+
+	var found = 0;
+
+	_.each(Grid.nodes, function (node) {
+		//find next zone that fits width
+		found = 0;
+		zones.l = _.sortBy(zones.l, function (zone) {
+			//FIX TO: sort by smallest within 2 layers
+			return zone.priority;
+		});
+
 		_.each(zones.l, function (zone,index) {
 			//console.log('width: '+node.width+', zonewidth: '+zone.width);
 			if(Math.floor(1000*node.width)/1000 <= Math.floor(1000*zone.width)/1000 && !found) {
@@ -288,14 +292,30 @@ var GridApp = function (chart, inputBox ) {
 					zones.l.splice(index,1);
 				}
 			}
+		//Try to combine zones
+		combineAndDeleteZones();
+
 		});
 		if(!found)
 			console.log('no zone found');
 	});
+
+	console.log(zones.l);
+
+	//find the lowest priority zone which is the bottom edge
 	var maxDepth = 0;
 	_.each(zones.l, function (zone) {
-		if(zone.priority > maxDepth)
+		if(zone.priority > maxDepth) {
 			maxDepth = zone.priority; 
+		}
+	});
+	_(zones.l).each( function (zone) {	
+		if(zone.priority != maxDepth) {
+			paper.rect(zone.x,zone.y,zone.width,maxDepth-zone.y-1)
+				.attr({fill: qsColor, 'stroke': 'none', 
+				'stroke-width': .5, 'stroke-linecap': "square"})
+				.toBack();
+		}
 	});
 	paper.setSize(windowWidth,maxDepth);
 
