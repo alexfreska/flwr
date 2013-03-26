@@ -1,142 +1,36 @@
 {
     "nodes": [{
+        "id": 1,
+        "data": "Input Interface"
+    }, {
         "id": 0,
-        "data": "Who is in danger?"
+        "data": "User"
     }, {
         "id": 2,
-        "data": "Middle Earth"
+        "data": "Visualization"
     }, {
         "id": 3,
-        "data": "Yourself"
+        "data": "Visualization"
     }, {
         "id": 4,
-        "data": "Can someone else deal with it?"
-    }, {
-        "id": 5,
-        "data": "Yes"
-    }, {
-        "id": 6,
-        "data": "No"
-    }, {
-        "id": 7,
-        "data": "Good"
-    }, {
-        "id": 8,
-        "data": "What about hobbits?"
-    }, {
-        "id": 9,
-        "data": "\"YOU SHALL NOT PASS!\""
-    }, {
-        "id": 10,
-        "data": "Proceed to find a suitable Hobbit"
-    }, {
-        "id": 12,
-        "data": "Found one? good!"
-    }, {
-        "id": 13,
-        "data": "Problem eventually solved!"
-    }, {
-        "id": 15,
-        "data": "Yes"
-    }, {
-        "id": 16,
-        "data": "No"
-    }, {
-        "id": 18,
-        "data": "Does magic work?"
-    }, {
-        "id": 19,
-        "data": "Yes"
-    }, {
-        "id": 20,
-        "data": "Problem Solved!"
-    }, {
-        "id": 21,
-        "data": "No"
-    }, {
-        "id": 22,
-        "data": "Call the Eagles!"
+        "data": "Visualization"
     }],
     "arrows": [{
         "id": 1,
         "from": 0,
-        "to": 2
+        "to": 1
     }, {
         "id": 2,
-        "from": 0,
+        "from": 1,
         "to": 3
     }, {
         "id": 3,
-        "from": 2,
+        "from": 1,
         "to": 4
     }, {
         "id": 4,
-        "from": 4,
-        "to": 5
-    }, {
-        "id": 5,
-        "from": 4,
-        "to": 6
-    }, {
-        "id": 6,
-        "from": 5,
-        "to": 7
-    }, {
-        "id": 7,
-        "from": 6,
-        "to": 8
-    }, {
-        "id": 8,
-        "from": 3,
-        "to": 9
-    }, {
-        "id": 13,
-        "from": 12,
-        "to": 13
-    }, {
-        "id": 16,
-        "from": 8,
-        "to": 15
-    }, {
-        "id": 17,
-        "from": 15,
-        "to": 10
-    }, {
-        "id": 18,
-        "from": 8,
-        "to": 16
-    }, {
-        "id": 20,
-        "from": 10,
-        "to": 12
-    }, {
-        "id": 21,
-        "from": 16,
-        "to": 18
-    }, {
-        "id": 22,
-        "from": 18,
-        "to": 19
-    }, {
-        "id": 23,
-        "from": 19,
-        "to": 20
-    }, {
-        "id": 24,
-        "from": 18,
-        "to": 21
-    }, {
-        "id": 25,
-        "from": 21,
-        "to": 22
-    }, {
-        "id": 26,
-        "from": 13,
-        "to": 9
-    }, {
-        "id": 26,
-        "from": 7,
-        "to": 22
+        "from": 1,
+        "to": 2
     }],
     "title": "Gandalf Problem Solving"
 }

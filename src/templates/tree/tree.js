@@ -11,9 +11,13 @@ $(function() {
 *		spacingX
 *		spacingY
 *
-*	DEFAULTS:  maxNodeWidth = 150,nodeBuffer = 10, spacingX = 50, spacingY = 50 
 ******************************************************/
-var treeMain = function (chart, container, maxNodeWidth, nodeBuffer, spacingX, spacingY ) {
+var treeMain = function (chart, container) {
+
+	maxNodeWidth = 150;
+	nodeBuffer = 5;
+	spacingX = 20;
+	spacingY = 20;
 
 	windowWidth = $(container).width();
 	windowHeight = $(container).height();
@@ -693,6 +697,6 @@ $.ajax({
 	}
 });//close ajax
 
-treeMain(chart,document.getElementById('container'),150,5,20,20);
+treeMain(chart,document.getElementById('container'));
 
 });
