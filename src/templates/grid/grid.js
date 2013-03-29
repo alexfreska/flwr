@@ -26,7 +26,7 @@ var GridApp = function (chart, inputBox ) {
 	var stack 		= [];
 	var aColor 		= '#FF2C18';
 	var aFontFill 	= '#FFFFFF';
-	var qsColor 	= '#3B5998';
+	var qsColor 	= '#1ba1e2';
 	var qsFontFill 	= '#FFFFFF';
 	var fontSize 	= 0;
 
@@ -73,7 +73,7 @@ var GridApp = function (chart, inputBox ) {
 
 		this.box 		= paper.rect(0,0,50,50);
 		this.text 		= paper.text(50,50,this.data).attr(
-			{'text-anchor': 'start', 'font-family': 'Lucidia Grande', 'fill': qsFontFill, 'font-size': '18px'});
+			{'text-anchor': 'start', 'font-family': 'Helvetica Neue','font-weight': 100, 'fill': qsFontFill, 'font-size': '18px'});
 		this.textSpace 	= this.text.getBBox().width * this.text.getBBox().height;
 		//setup size based on space taken by text
 

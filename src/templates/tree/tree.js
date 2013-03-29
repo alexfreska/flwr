@@ -14,6 +14,8 @@ $(function() {
 ******************************************************/
 var treeMain = function (chart, container) {
 
+	TESTING = 1;
+
 	maxNodeWidth = 150;
 	nodeBuffer = 5;
 	spacingX = 20;
@@ -108,7 +110,7 @@ var treeMain = function (chart, container) {
 			_.each(layers, function (val) {
 				arr.push(that.getLayer(val));
 			});
-			return arr;
+			this.layers = arr;
 		}
 	}
 
@@ -141,17 +143,19 @@ var treeMain = function (chart, container) {
 		});
 		return adjacencies;
 	}	
-
+	var Node = function () {
+		this.paths 		= [];
+		this.parents 	= [];
+		this.pre 		= -1;
+		this.post 		= -1;
+		this.layer 		= -1;
+		this.zone 		= 0;
+		this.zoneXpos 	= 0;
+		this.xCurrent 	= 0;
+		this.used 		= 0;
+	}
 	_.each(Tree.nodes, function (node) {
-		node.pre = -1;
-		node.post = -1;
-		node.layer = -1;
-		node.parents = [];
-		node.zone = 0;
-		node.zoneXpos = 0;
-		node.xCurrent = 0;
-		node.used = 0;
-		node.paths = [];
+		node = new Node();
 	});
 	_.each(Tree.nodes, function (node) {
 		node.adjacent = checkForAdjacencies(node);
@@ -222,7 +226,7 @@ var treeMain = function (chart, container) {
 	});
 	*/
 	//build layers // could change to just have Tree.layers
-	Tree.layers = Tree.getLayers();
+	Tree.getLayers();
 	var maxTextWidth = maxNodeWidth - nodeBuffer*2;
 	var aColor = '#FF2C18';
 	var aFontFill = '#FFFFFF';
@@ -253,8 +257,9 @@ var treeMain = function (chart, container) {
 	//
 	//
 
-	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
-
+	// Initialize title, moved later based on center of chart
+	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Helvetica Neue",'font-weight': 100, 'fill': qsFontFill, 'font-size': 80});
+	//move the y-tracker down based on title height
 	currentY += Tree.title.getBBox().height + spacingY*4;
 
 	_.each(Tree.layers, function (layer) {
@@ -270,7 +275,7 @@ var treeMain = function (chart, container) {
 			
 			var tempText = "";
 
-			node.textBox = viewPaper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': 'black', 'font-size': 18});
+			node.textBox = viewPaper.text(0,0).attr({'text-anchor': 'start', 'font-family': "Helvetica Neue",'font-weight': 100, 'fill': 'black', 'font-size': 18});
 			_.each(words, function (word) {
 					node.textBox.attr("text", tempText + " " + word);
 					if(node.textBox.getBBox().width > maxTextWidth){
@@ -376,10 +381,10 @@ var treeMain = function (chart, container) {
 		}
 
 		node.textBox.attr({ 'x': node.zoneXpos + node.zone / 2 + nodeBuffer - node.designBox.attr('width') / 2, 
-							'y': Tree.layers[node.layer].startY, 'fill': qsFontFill});
+							'y': Tree.layers[node.layer].startY + node.textBox.getBBox().height / 2 + nodeBuffer, 'fill': qsFontFill});
 
 		node.designBox.attr({'x': node.zoneXpos + node.zone / 2  - node.designBox.attr('width') / 2
-									,'y': Tree.layers[node.layer].startY - node.designBox.attr('height') / 2})
+									,'y': Tree.layers[node.layer].startY })
 								.attr({fill: qsColor, 'stroke': '#999999', 'stroke-width': .5, 'stroke-linecap': "square"}).toBack();
 
 		if(testing) {
@@ -456,7 +461,7 @@ var treeMain = function (chart, container) {
 		routePaths(node);
 		//set background
 
-		/*
+		if(!TESTING) {
 		//initialize glow variables so remove works
 		_.each(Tree.nodes, function (node) {
 
@@ -669,7 +674,7 @@ var treeMain = function (chart, container) {
 				});
 			}
 		);
-		*/
+		}
 	});
 
 	}
