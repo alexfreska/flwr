@@ -14,10 +14,10 @@ $(function() {
 ******************************************************/
 var treeMain = function (chart, container) {
 
-	maxNodeWidth = 150;
-	nodeBuffer = 5;
-	spacingX = 20;
-	spacingY = 20;
+	maxNodeWidth 	= 200;
+	nodeBuffer 		= 5;
+	spacingX 		= 20;
+	spacingY 		= 20;
 
 	windowWidth = $(container).width();
 	windowHeight = $(container).height();
@@ -32,8 +32,13 @@ var treeMain = function (chart, container) {
 	windowHeight = 5000;
 
 	var viewPaper = Raphael(innerContainer,windowWidth,windowHeight);
+	/*
 	$(container).css(
 	    {'background-image': "url('noise_lines.png')"}
+	);
+	*/
+	$(container).css(
+	    {'background': "white"}
 	);
 
 	var testing = 0;
@@ -253,7 +258,7 @@ var treeMain = function (chart, container) {
 	//
 	//
 
-	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 80});
+	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Lucidia Grande", 'fill': qsFontFill, 'font-size': 60});
 
 	currentY += Tree.title.getBBox().height + spacingY*4;
 
@@ -686,7 +691,7 @@ var treeMain = function (chart, container) {
 var chart = [];
 
 $.ajax({
-	url: 'chart.json',
+	url: 'chart2.json',
 	async: false,
 	dataType: 'json',
 	success: function(data) {
