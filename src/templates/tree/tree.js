@@ -119,14 +119,13 @@ var treeMain = function (chart, container) {
 	*	
 	*	nodes = array of { Node id, Array of adjacent nodes}
 	********************************************************/
-	Tree.nodes = nodes;
 
 	//change to extend prototype
 	_.each(arrows, function (arrow) {
 		arrow.used = 0;
 	});
 
-
+	//should I add this to Node?
 	var checkForAdjacencies = function (node) {
 		var adjacencies = [];
 		_.each(arrows, function (arrow) {
@@ -143,7 +142,9 @@ var treeMain = function (chart, container) {
 		});
 		return adjacencies;
 	}	
-	var Node = function () {
+	var Node = function (node) {
+		this.id 		= node.id;
+		this.data 		= node.data;
 		this.paths 		= [];
 		this.parents 	= [];
 		this.pre 		= -1;
@@ -154,8 +155,8 @@ var treeMain = function (chart, container) {
 		this.xCurrent 	= 0;
 		this.used 		= 0;
 	}
-	_.each(Tree.nodes, function (node) {
-		node = new Node();
+	_.each(nodes, function (node) {
+		Tree.nodes.push(new Node(node));
 	});
 	_.each(Tree.nodes, function (node) {
 		node.adjacent = checkForAdjacencies(node);
