@@ -234,6 +234,7 @@ var treeMain = function (chart, container) {
 	var qsColor = '#FFFFFF';
 	var qsFontFill = '#999999';
 	var currentY = 0;
+	var temp444;
 
 	//console.log(Tree.layers);
 	
