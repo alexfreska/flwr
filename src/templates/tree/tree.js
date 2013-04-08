@@ -44,7 +44,7 @@ var treeMain = function (chart, container) {
 	var arrows = chart.arrows;
 	var paths = [];
 	var stack = [];
-
+	
 
 	/***********************************************
 	*	Initialize Tree Object and Helper functions
@@ -114,13 +114,7 @@ var treeMain = function (chart, container) {
 		}
 	}
 
-	/*******************************************************
-	*	Create Nodes
-	*	
-	*	nodes = array of { Node id, Array of adjacent nodes}
-	********************************************************/
-
-	//change to extend prototype
+	//add 1 more necessary boolean to arrows
 	_.each(arrows, function (arrow) {
 		arrow.used = 0;
 	});
