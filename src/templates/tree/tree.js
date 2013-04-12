@@ -21,7 +21,6 @@ var treeMain = function (chart, container) {
 	spacingX = 20;
 	spacingY = 20;
 
-
 	windowWidth = $(container).width();
 	windowHeight = $(container).height();
 
@@ -35,13 +34,8 @@ var treeMain = function (chart, container) {
 	windowHeight = 5000;
 
 	var viewPaper = Raphael(innerContainer,windowWidth,windowHeight);
-	/*
 	$(container).css(
 	    {'background-image': "url('noise_lines.png')"}
-	);
-	*/
-	$(container).css(
-	    {'background': "white"}
 	);
 
 	var testing = 0;
@@ -262,7 +256,6 @@ var treeMain = function (chart, container) {
 	// Initialize title, moved later based on center of chart
 	Tree.title = viewPaper.text(0,0).attr({'text': title,'text-anchor': 'start', 'font-family': "Helvetica Neue",'font-weight': 100, 'fill': qsFontFill, 'font-size': 80});
 	//move the y-tracker down based on title height
-
 	currentY += Tree.title.getBBox().height + spacingY*4;
 
 	_.each(Tree.layers, function (layer) {
@@ -694,7 +687,7 @@ var treeMain = function (chart, container) {
 var chart = [];
 
 $.ajax({
-	url: 'chart2.json',
+	url: 'chart.json',
 	async: false,
 	dataType: 'json',
 	success: function(data) {
