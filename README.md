@@ -1,4 +1,4 @@
-Flowur
+flowur
 ======
 
 The Flowur project is a collection of tools aimed at optimizing the creation of flowcharts, diagnostics, and other graph based visualizations. Flowur has two main components: interfaces and templates. Interfaces focus on retrieving user data intuitively and quickly. Templates generate interpretations of the data set they are given.
